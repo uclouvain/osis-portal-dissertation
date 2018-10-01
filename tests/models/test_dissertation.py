@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
 
 from django.test import TestCase
 from base.tests.factories.academic_year import AcademicYearFactory
@@ -55,14 +56,14 @@ class DissertationModelTestCase(TestCase):
                                                 email='laurent.dermine@uclouvain.be')
         self.student2 = StudentFactory.create(person=a_person_student2)
         self.offer1 = OfferFactory(title="test_offer1")
-        self.academic_year2017 = AcademicYearFactory(year=2017)
-        self.offer_year_start2017 = OfferYearFactory(acronym="test_offer1", offer=self.offer1,
-                                                  academic_year=self.academic_year2017)
+        self.current_academic_year = AcademicYearFactory(year=datetime.date.today().year)
+        self.current_offer_year = OfferYearFactory(acronym="test_offer1", offer=self.offer1,
+                                                   academic_year=self.current_academic_year)
         self.academic_year2015 = AcademicYearFactory(year=2015)
         self.offer_year_start2015 = OfferYearFactory(acronym="test_offer1", offer=self.offer1,
                                                   academic_year=self.academic_year2015)
 
-        self.offer_enrollment2017 = OfferEnrollmentFactory(offer_year= self.offer_year_start2017,
+        self.offer_enrollment2017 = OfferEnrollmentFactory(offer_year= self.current_offer_year,
                                                            student= self.student1)
         self.offer_enrollment2015 = OfferEnrollmentFactory(offer_year=self.offer_year_start2015,
                                                            student=self.student2)
@@ -82,7 +83,7 @@ class DissertationModelTestCase(TestCase):
                                                                dissertation_role__status='PROMOTEUR')
 
         self.dissertation_test_count2017 = DissertationFactory(author=self.student2,
-                                                               offer_year_start=self.offer_year_start2017,
+                                                               offer_year_start=self.current_offer_year,
                                                                proposition_dissertation=self.proposition_dissertation,
                                                                status='COM_SUBMIT',
                                                                active=True,
