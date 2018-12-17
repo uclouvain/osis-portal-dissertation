@@ -34,11 +34,13 @@ from base import models as mdl
 
 
 class DissertationAdmin(SerializableModelAdmin):
-    list_display = ('uuid', 'title', 'author', 'status', 'active', 'proposition_dissertation', 'modification_date')
-    raw_id_fields = ('author', 'offer_year_start', 'proposition_dissertation', 'location')
+    list_display = ('uuid', 'title', 'author', 'status', 'active', 'proposition_dissertation', 'modification_date',
+                    'education_group_year_start')
+    raw_id_fields = ('author', 'offer_year_start', 'proposition_dissertation', 'location', 'education_group_year_start')
     search_fields = ('uuid', 'title', 'author__person__last_name', 'author__person__first_name',
                      'proposition_dissertation__title', 'proposition_dissertation__author__person__last_name',
-                     'proposition_dissertation__author__person__first_name')
+                     'proposition_dissertation__author__person__first_name', 'education_group_year_start__id')
+
 
 STATUS_CHOICES = (
     ('DRAFT', _('draft')),
@@ -74,6 +76,11 @@ class Dissertation(SerializableModel):
     defend_periode = models.CharField(max_length=12, choices=DEFEND_PERIODE_CHOICES, default='UNDEFINED', null=True)
     defend_year = models.IntegerField(blank=True, null=True)
     offer_year_start = models.ForeignKey(offer_year.OfferYear)
+    education_group_year_start = models.ForeignKey('base.EducationGroupYear',
+                                                   null=True,
+                                                   blank=True,
+                                                   on_delete=models.PROTECT,
+                                                   related_name='dissertations')
     proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation)
     description = models.TextField(blank=True, null=True)
     active = models.BooleanField(default=True)

@@ -31,14 +31,19 @@ from base.models import offer
 
 
 class OfferPropositionAdmin(SerializableModelAdmin):
-    list_display = ('acronym', 'offer')
-    raw_id_fields = ('offer',)
-    search_fields = ('uuid',)
+    list_display = ('acronym', 'offer',
+                    'recent_acronym_education_group')
+    raw_id_fields = ('offer', 'education_group')
+    search_fields = ('uuid', 'acronym', 'offer_id', 'education_group_id',)
 
 
 class OfferProposition(SerializableModel):
     acronym = models.CharField(max_length=200)
     offer = models.ForeignKey(offer.Offer)
+    education_group = models.OneToOneField('base.EducationGroup',
+                                           null=True,
+                                           blank=True,
+                                           on_delete=models.PROTECT)
     student_can_manage_readers = models.BooleanField(default=True)
     adviser_can_suggest_reader = models.BooleanField(default=False)
     evaluation_first_year = models.BooleanField(default=False)
@@ -56,6 +61,12 @@ class OfferProposition(SerializableModel):
 
     def __str__(self):
         return self.acronym
+
+    @property
+    def recent_acronym_education_group(self):
+        if self.education_group:
+            return self.education_group.most_recent_acronym
+        return None
 
 
 def get_all_offers():
