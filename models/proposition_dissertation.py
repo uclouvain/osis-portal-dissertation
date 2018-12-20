@@ -43,7 +43,7 @@ class PropositionDissertation(SerializableModel):
         ('EMP', _('empirical_research')),
         ('THE', _('theoretical_analysis')),
         ('PRO', _('project_dissertation')),
-        ('DEV', _('development_dissertation')),
+        ('DEV', _('My dissertations projects')),
         ('OTH', _('other')))
 
     LEVELS_CHOICES = (
