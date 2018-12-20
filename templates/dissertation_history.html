@@ -35,18 +35,18 @@
 </ol>
 <ul class="nav nav-tabs">
     <li><a href="{% url 'dissertation_detail' pk=dissertation.pk %}">{% trans 'dissertation' %}</a></li>
-    <li class="active"><a href="#">{% trans 'dissertation_history' %}</a></li>
+    <li class="active"><a href="#">{% trans 'Dissertation history' %}</a></li>
 </ul>
 <div class="panel panel-default">
     <div class="panel-body">
-        <h3>{% trans 'current_status' %}</h3>
+        <h3>{% trans 'Current status' %}</h3>
         <p>{{ dissertation.get_status_display }}</p>
         <h3>{% trans 'history' %}</h3>
         <table class="table table-hover">
             <tr>
-              <td style="text-align: center">{% trans 'change'%}</td>
+              <td style="text-align: center">{% trans 'Change'%}</td>
               <td style="text-align: center">{% trans 'person'%}</td>
-              <td style="text-align: center">{% trans 'date'%}</td>
+              <td style="text-align: center">{% trans 'Date'%}</td>
               <td style="text-align: center">{% trans 'justification'%}</td>
             </tr>
         {% for dissertation_update in dissertation_updates %}

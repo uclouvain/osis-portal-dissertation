@@ -30,7 +30,7 @@
 <ol class="breadcrumb">
     <li><a href="{% url 'dissertation' %}" id="lnk_home_osis"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
     <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'memories_list' %}</a></li>
-    <li class="active">{% trans 'dissertation_edit' %}</li>
+    <li class="active">{% trans 'Dissertation edit' %}</li>
 </ol>
 <div class="panel panel-default">
     <div class="panel-body">
@@ -54,7 +54,7 @@
                 <div class="col-md-6">
                     <div class="panel-group" {% if form.defend_periode.errors %} style="color:red;" {% endif %}>
                         <label for="txt_defend_periode" style="margin-left:-6px;">
-                            {% trans 'defend_periode' %}
+                            {% trans 'Defend period' %}
                             {% for error in form.defend_periode.errors %}
                                 <br>{{ error|escape }}
                             {% endfor %}
@@ -69,7 +69,7 @@
                 <div class="col-md-6">
                     <div class="panel-group" {% if form.defend_year.errors %} style="color:red;" {% endif %}>
                         <label for="txt_defend_year" style="margin-left:-6px;">
-                            {% trans 'defend_year' %}
+                            {% trans 'Defend year' %}
                             {% for error in form.defend_year.errors %}
                                 <br>{{ error|escape }}
                             {% endfor %}
@@ -90,11 +90,11 @@
                 </select>
             </div>
             <div class="panel-group">
-                <label for="txt_description" style="margin-left:-6px;">{% trans 'description' %}</label>
+                <label for="txt_description" style="margin-left:-6px;">{% trans 'Description' %}</label>
                 <textarea class="form-control" id="txt_description"  name="description" rows="10" style="margin:-6px;">{{ form.description.value | default_if_none:''}}</textarea>
             </div>
             <div style="text-align:right">
-                <button type="submit" class="save btn btn-primary" onclick="return confirm('{% trans 'dissertation_confirmation_message' %}')">{% trans 'save' %}</button>
+                <button type="submit" class="save btn btn-primary" onclick="return confirm('{% trans 'Confirm dissertation' %}')">{% trans 'save' %}</button>
             </div>
       </form>
     </div>
