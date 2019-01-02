@@ -59,14 +59,14 @@ class OfferProposition(SerializableModel):
     offer_proposition_group = models.ForeignKey(OfferPropositionGroup, null=True, blank=True)
     global_email_to_commission = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.acronym
-
     @property
     def recent_acronym_education_group(self):
         if self.education_group:
             return self.education_group.most_recent_acronym
         return None
+
+    def __str__(self):
+        return self.recent_acronym_education_group
 
 
 def get_all_offers():
