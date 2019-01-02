@@ -43,29 +43,29 @@ class DissertationAdmin(SerializableModelAdmin):
 
 
 STATUS_CHOICES = (
-    ('DRAFT', _('draft')),
-    ('DIR_SUBMIT', _('submitted_to_director')),
+    ('DRAFT', _('Draft')),
+    ('DIR_SUBMIT', _('Submitted to promoter')),
     ('DIR_OK', _('Accepted by promoter')),
-    ('DIR_KO', _('refused_by_director')),
-    ('COM_SUBMIT', _('submitted_to_commission')),
+    ('DIR_KO', _('Refused by promoter')),
+    ('COM_SUBMIT', _('Submitted to commission')),
     ('COM_OK', _('Accepted by commission')),
-    ('COM_KO', _('refused_by_commission')),
-    ('EVA_SUBMIT', _('submitted_to_first_year_evaluation')),
+    ('COM_KO', _('Refused by commission')),
+    ('EVA_SUBMIT', _('Submitted to first year evaluation')),
     ('EVA_OK', _('Accepted by first year evaluation')),
-    ('EVA_KO', _('refused_by_first_year_evaluation')),
-    ('TO_RECEIVE', _('to_be_received')),
-    ('TO_DEFEND', _('to_be_defended')),
+    ('EVA_KO', _('Refused by first year evaluation')),
+    ('TO_RECEIVE', _('To be received')),
+    ('TO_DEFEND', _('To be received defended')),
     ('DEFENDED', _('Defended')),
-    ('ENDED', _('ended')),
-    ('ENDED_WIN', _('ended_win')),
-    ('ENDED_LOS', _('ended_los')),
+    ('ENDED', _('End')),
+    ('ENDED_WIN', _('Win')),
+    ('ENDED_LOS', _('Reported')),
 )
 
 DEFEND_PERIODE_CHOICES = (
     ('UNDEFINED', _('undefined')),
-    ('JANUARY', _('january')),
-    ('JUNE', _('june')),
-    ('SEPTEMBER', _('september')),
+    ('JANUARY', _('January')),
+    ('JUNE', _('June')),
+    ('SEPTEMBER', _('September')),
 )
 
 

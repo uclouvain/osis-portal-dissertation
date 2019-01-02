@@ -39,21 +39,21 @@ class PropositionDissertationAdmin(SerializableModelAdmin):
 
 class PropositionDissertation(SerializableModel):
     TYPES_CHOICES = (
-        ('RDL', _('litterature_review')),
-        ('EMP', _('empirical_research')),
+        ('RDL', _('Litterature Review')),
+        ('EMP', _('Empirical research')),
         ('THE', _('theoretical_analysis')),
-        ('PRO', _('project_dissertation')),
+        ('PRO', _('Dissertation subject')),
         ('DEV', _('My dissertations projects')),
         ('OTH', _('other')))
 
     LEVELS_CHOICES = (
         ('SPECIFIC', _('specific_subject')),
-        ('THEME', _('large_theme')))
+        ('THEME', _('Theme')))
 
     COLLABORATION_CHOICES = (
-        ('POSSIBLE', _('possible')),
-        ('REQUIRED', _('required')),
-        ('FORBIDDEN', _('forbidden')))
+        ('POSSIBLE', _('Possible')),
+        ('REQUIRED', _('Required')),
+        ('FORBIDDEN', _('Forbidden')))
 
     author = models.ForeignKey('Adviser')
     creator = models.ForeignKey('base.Person', blank=True, null=True)

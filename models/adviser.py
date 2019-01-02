@@ -36,8 +36,8 @@ class AdviserAdmin(SerializableModelAdmin):
 
 class Adviser(SerializableModel):
     TYPES_CHOICES = (
-        ('PRF', _('professor')),
-        ('MGR', _('manager')),
+        ('PRF', _('Professor')),
+        ('MGR', _('Course manager')),
     )
 
     person = models.OneToOneField('base.Person', on_delete=models.CASCADE)

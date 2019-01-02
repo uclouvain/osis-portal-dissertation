@@ -30,24 +30,24 @@
 {% block content %}
 <ol class="breadcrumb">
     <li><a href="{% url 'dissertation' %}" id="lnk_home_osis"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-    <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'memories_list' %}</a></li>
+    <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
     <li class="active">{{ dissertation.title }}</li>
 </ol>
 <ul class="nav nav-tabs">
-    <li><a href="{% url 'dissertation_detail' pk=dissertation.pk %}">{% trans 'dissertation' %}</a></li>
+    <li><a href="{% url 'dissertation_detail' pk=dissertation.pk %}">{% trans 'Dissertation' %}</a></li>
     <li class="active"><a href="#">{% trans 'Dissertation history' %}</a></li>
 </ul>
 <div class="panel panel-default">
     <div class="panel-body">
         <h3>{% trans 'Current status' %}</h3>
         <p>{{ dissertation.get_status_display }}</p>
-        <h3>{% trans 'history' %}</h3>
+        <h3>{% trans 'History' %}</h3>
         <table class="table table-hover">
             <tr>
               <td style="text-align: center">{% trans 'Change'%}</td>
-              <td style="text-align: center">{% trans 'person'%}</td>
+              <td style="text-align: center">{% trans 'Person'%}</td>
               <td style="text-align: center">{% trans 'Date'%}</td>
-              <td style="text-align: center">{% trans 'justification'%}</td>
+              <td style="text-align: center">{% trans 'Add justification'%}</td>
             </tr>
         {% for dissertation_update in dissertation_updates %}
             <tr>
@@ -81,7 +81,7 @@
                             {{ dissertation_update.get_status_to_display }}
                         </span>
                     {% else %}
-                        <span class="label label-info">{% trans 'information'%}</span>
+                        <span class="label label-info">{% trans 'Information'%}</span>
                     {% endif %}
                 </td>
                 <td style="text-align: center">{{ dissertation_update.person }}</td>
