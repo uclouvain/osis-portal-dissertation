@@ -41,8 +41,14 @@ msgstr "Ajouter un lecteur"
 msgid "application_dissertation"
 msgstr "Gestion des mémoires"
 
+msgid "Are you sure you want to put the dissertation back to draft ? Your promoter will receive an information e-mail."
+msgstr "Êtes-vous sûr de vouloir remettre votre mémoire en brouillon? Votre promoteur recevra un e-mail d’information."
+
 msgid "author"
 msgstr "Auteur"
+
+msgid "back to draft"
+msgstr "Retour au brouillon"
 
 msgid "case_study"
 msgstr "Cas d'étude"

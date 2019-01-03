@@ -105,6 +105,12 @@ class Dissertation(SerializableModel):
             emails_dissert.send_email_to_all_promotors(self, 'dissertation_adviser_new_project_dissertation')
         self.set_status(next_status)
 
+    def go_back(self):
+        next_status = get_next_status(self, "go_back")
+        if self.status == 'DIR_SUBMIT' and next_status == 'DRAFT':
+            emails_dissert.send_email_to_all_promotors(self, 'dissertation_back_to_draft')
+        self.set_status(next_status)
+
     def accept(self):
         next_status = get_next_status(self, "accept")
         self.set_status(next_status)
@@ -132,6 +138,11 @@ def get_next_status(memory, operation):
     if operation == "go_forward":
         if memory.status == 'DRAFT' or memory.status == 'DIR_KO':
             return 'DIR_SUBMIT'
+        else:
+            return memory.status
+    elif operation == "go_back":
+        if memory.status == 'DIR_SUBMIT' :
+            return 'DRAFT'
         else:
             return memory.status
     else:
