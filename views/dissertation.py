@@ -255,7 +255,6 @@ def dissertation_to_dir_submit(request, pk):
     person = request.user.person
     student = person.student_set.first()
     submitted_memories_count = dissertation.count_submit_by_user(student, dissert.offer_year_start.offer)
-
     if dissert.author_is_logged_student(request) and submitted_memories_count == 0:
         new_status = dissertation.get_next_status(dissert, "go_forward")
         status_dict = dict(dissertation.STATUS_CHOICES)
