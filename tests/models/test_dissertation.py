@@ -26,7 +26,6 @@
 
 from django.test import TestCase
 
-from base.models.academic_year import starting_academic_year
 from base.tests.factories.academic_year import AcademicYearFactory, create_current_academic_year
 from base.tests.factories.offer import OfferFactory
 from base.tests.factories.offer_enrollment import OfferEnrollmentFactory
@@ -43,16 +42,13 @@ class DissertationModelTestCase(TestCase):
     def setUp(self):
         self.manager = AdviserManagerFactory()
         a_person_teacher = PersonFactory.create(first_name='Pierre',
-                                                last_name='Dupont',
-                                                email='laurent.dermine@uclouvain.be')
+                                                last_name='Dupont')
         self.teacher = AdviserTeacherFactory(person=a_person_teacher)
         a_person_student1 = PersonFactory.create(last_name="Durant",
-                                                user=None,
-                                                email='laurent.dermine@uclouvain.be')
+                                                user=None)
         self.student1 = StudentFactory.create(person=a_person_student1)
         a_person_student2 = PersonFactory.create(last_name="Robert",
-                                                user=None,
-                                                email='laurent.dermine@uclouvain.be')
+                                                user=None)
         self.student2 = StudentFactory.create(person=a_person_student2)
         self.offer1 = OfferFactory(title="test_offer1")
         self.current_academic_year = create_current_academic_year()
@@ -70,28 +66,34 @@ class DissertationModelTestCase(TestCase):
                                                                        creator=a_person_teacher,
                                                                        title='Proposition de memoire'
                                                                        )
-        self.dissertation_to_put_back_to_draft = DissertationFactory(author=self.student1,
-                                                                     offer_year_start=self.current_offer_year,
-                                                                     proposition_dissertation=self.proposition_dissertation,
-                                                                     status='DIR_SUBMIT',
-                                                                     active=True,
-                                                                     dissertation_role__adviser=self.teacher,
-                                                                     dissertation_role__status='PROMOTEUR')
-        self.dissertation_test_count2015 = DissertationFactory(author=self.student1,
-                                                               offer_year_start=self.offer_year_start2015,
-                                                               proposition_dissertation=self.proposition_dissertation,
-                                                               status='COM_SUBMIT',
-                                                               active=True,
-                                                               dissertation_role__adviser=self.teacher,
-                                                               dissertation_role__status='PROMOTEUR')
+        self.dissertation_to_put_back_to_draft = DissertationFactory(
+            author=self.student1,
+            offer_year_start=self.current_offer_year,
+            proposition_dissertation=self.proposition_dissertation,
+            status='DIR_SUBMIT',
+            active=True,
+            dissertation_role__adviser=self.teacher,
+            dissertation_role__status='PROMOTEUR'
+        )
+        self.dissertation_test_count2015 = DissertationFactory(
+            author=self.student1,
+            offer_year_start=self.offer_year_start2015,
+            proposition_dissertation=self.proposition_dissertation,
+            status='COM_SUBMIT',
+            active=True,
+            dissertation_role__adviser=self.teacher,
+            dissertation_role__status='PROMOTEUR'
+        )
 
-        self.dissertation_test_count2017 = DissertationFactory(author=self.student2,
-                                                               offer_year_start=self.current_offer_year,
-                                                               proposition_dissertation=self.proposition_dissertation,
-                                                               status='COM_SUBMIT',
-                                                               active=True,
-                                                               dissertation_role__adviser=self.teacher,
-                                                               dissertation_role__status='PROMOTEUR')
+        self.dissertation_test_count2017 = DissertationFactory(
+            author=self.student2,
+            offer_year_start=self.current_offer_year,
+            proposition_dissertation=self.proposition_dissertation,
+            status='COM_SUBMIT',
+            active=True,
+            dissertation_role__adviser=self.teacher,
+            dissertation_role__status='PROMOTEUR'
+        )
 
 
     def test_count_by_proposition(self):
@@ -113,7 +115,8 @@ class DissertationModelTestCase(TestCase):
         self.assertEqual(next_status, self.dissertation_test_count2017.status)
 
     def test_find_by_id(self):
-        self.assertEqual(dissertation.find_by_id(self.dissertation_to_put_back_to_draft.id), self.dissertation_to_put_back_to_draft)
+        self.assertEqual(dissertation.find_by_id(self.dissertation_to_put_back_to_draft.id),
+                         self.dissertation_to_put_back_to_draft)
 
     def test_by_user(self):
         dissertation_list = dissertation.find_by_user(self.student2)

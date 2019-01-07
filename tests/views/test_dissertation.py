@@ -39,7 +39,6 @@ from dissertation.tests.factories.adviser import AdviserManagerFactory, AdviserT
 from dissertation.tests.factories.dissertation import DissertationFactory
 from dissertation.tests.factories.offer_proposition import OfferPropositionFactory
 from dissertation.tests.factories.proposition_dissertation import PropositionDissertationFactory
-from dissertation.views import dissertation
 from osis_common.models import message_history
 from osis_common.models import message_template
 
@@ -51,54 +50,59 @@ class DissertationViewTestCase(TestCase):
         self.maxDiff = None
         self.manager = AdviserManagerFactory()
         a_person_teacher = PersonFactory(first_name='Pierre',
-                                                last_name='Dupont',
-                                                email='laurent.dermine@uclouvain.be')
+                                                last_name='Dupont')
         self.teacher = AdviserTeacherFactory(person=a_person_teacher)
-        a_person_student = PersonFactory(last_name="Durant",
-                                                email='laurent.dermine@uclouvain.be')
+        a_person_student = PersonFactory(last_name="Durant")
         another_person_student = PersonFactory(last_name="Paul")
         self.student = StudentFactory.create(person=a_person_student)
         self.student_with_1_dissertation = StudentFactory(person=another_person_student)
         self.offer1 = OfferFactory(title="test_offer1")
         self.academic_year1 = AcademicYearFactory()
-        self.offer_year_start1 = OfferYearFactory(acronym="test_offer1", offer=self.offer1,
-                                                  academic_year=self.academic_year1)
+        self.offer_year_start1 = OfferYearFactory(
+            acronym="test_offer1", offer=self.offer1,
+            academic_year=self.academic_year1
+        )
         self.offer_proposition1 = OfferPropositionFactory(offer=self.offer1)
-        self.proposition_dissertation = PropositionDissertationFactory(author=self.teacher,
-                                                                       creator=a_person_teacher,
-                                                                       title='Proposition 1212121'
-                                                                       )
-        self.proposition_dissertation2 = PropositionDissertationFactory(author=self.teacher,
-                                                                       creator=a_person_teacher,
-                                                                       title='Proposition 1212121'
-                                                                       )
-        self.dissertation = DissertationFactory(author=self.student,
-                                                title='Dissertation test',
-                                                offer_year_start=self.offer_year_start1,
-                                                proposition_dissertation=self.proposition_dissertation2,
-                                                status='DIR_SUBMIT',
-                                                active=True,
-                                                dissertation_role__adviser=self.teacher,
-                                                dissertation_role__status='PROMOTEUR'
-                                               )
-        self.dissertation_to_dir_submit = DissertationFactory(author=self.student_with_1_dissertation,
-                                                              status='DRAFT',
-                                                              active=True,
-                                                              dissertation_role__adviser=self.teacher,
-                                                              dissertation_role__status='PROMOTEUR'
-                                                              )
+        self.proposition_dissertation = PropositionDissertationFactory(
+            author=self.teacher,
+            creator=a_person_teacher,
+            title='Proposition 1212121'
+        )
+        self.proposition_dissertation2 = PropositionDissertationFactory(
+            author=self.teacher,
+            creator=a_person_teacher,
+            title='Proposition 1212121'
+        )
+        self.dissertation = DissertationFactory(
+            author=self.student,
+            title='Dissertation test',
+            offer_year_start=self.offer_year_start1,
+            proposition_dissertation=self.proposition_dissertation2,
+            status='DIR_SUBMIT',
+            active=True,
+            dissertation_role__adviser=self.teacher,
+            dissertation_role__status='PROMOTEUR'
+        )
+        self.dissertation_to_dir_submit = DissertationFactory(
+            author=self.student_with_1_dissertation,
+            status='DRAFT',
+            active=True,
+            dissertation_role__adviser=self.teacher,
+            dissertation_role__status='PROMOTEUR'
+        )
 
 
     def test_email_new_dissert(self):
-        self.dissertation_test_email = DissertationFactory(author=self.student,
-                                                           title='Dissertation_test_email',
-                                                           offer_year_start=self.offer_year_start1,
-                                                           proposition_dissertation=self.proposition_dissertation,
-                                                           status='DRAFT',
-                                                           active=True,
-                                                           dissertation_role__adviser=self.teacher,
-                                                           dissertation_role__status='PROMOTEUR'
-                                                           )
+        self.dissertation_test_email = DissertationFactory(
+            author=self.student,
+            title='Dissertation_test_email',
+            offer_year_start=self.offer_year_start1,
+            proposition_dissertation=self.proposition_dissertation,
+            status='DRAFT',
+            active=True,
+            dissertation_role__adviser=self.teacher,
+            dissertation_role__status='PROMOTEUR'
+        )
         self.client.force_login(self.manager.person.user)
         count_messages_before_status_change = len(message_history.find_my_messages(self.teacher.person.id))
         self.dissertation_test_email.go_forward()
@@ -120,10 +124,10 @@ class DissertationViewTestCase(TestCase):
             person=self.student_with_1_dissertation.person,
             action="go_forward",
         )
-        response = self.client.post(reverse('dissertation_to_dir_submit', args=[self.dissertation_to_dir_submit.pk]),
-                                    {
-                                        "form": form,
-                                    })
+        response = self.client.post(
+            reverse('dissertation_to_dir_submit', args=[self.dissertation_to_dir_submit.pk]),
+            {"form": form, }
+        )
         self.assertEqual(response.status_code, HttpResponseRedirect.status_code)
 
 
@@ -134,10 +138,10 @@ class DissertationViewTestCase(TestCase):
             person=self.student_with_1_dissertation.person,
             action="go_forward",
         )
-        response = self.client.post(reverse('dissertation_to_dir_submit', args=[self.dissertation_to_dir_submit.pk]),
-                                    {
-                                        "form": form,
-                                    })
+        response = self.client.post(
+            reverse('dissertation_to_dir_submit', args=[self.dissertation_to_dir_submit.pk]),
+            {"form": form,}
+        )
         self.assertEqual(response.status_code, HttpResponseRedirect.status_code)
 
 
@@ -149,24 +153,24 @@ class DissertationViewTestCase(TestCase):
             person=self.student_with_1_dissertation.person,
             action="go_forward",
         )
-        response = self.client.post(reverse('dissertation_to_dir_submit', args=[self.dissertation_to_dir_submit.pk]),
-                                    {
-                                        "form": form,
-                                    })
+        response = self.client.post(
+            reverse('dissertation_to_dir_submit', args=[self.dissertation_to_dir_submit.pk]),
+            {"form": form,}
+        )
         self.assertEqual(response.status_code, HttpResponse.status_code)
 
 
     def test_dissertation_back_to_draft(self):
         self.client.force_login(self.student.person.user)
         form = DissertationUpdateForm(
-                    dissertation=self.dissertation,
-                    person= self.student.person,
-                    action="go_back",
-               )
-        response = self.client.post(reverse('dissertation_back_to_draft', args=[self.dissertation.pk]),
-                                    {
-                                        "form": form,
-                                    })
+            dissertation=self.dissertation,
+            person= self.student.person,
+            action="go_back",
+        )
+        response = self.client.post(
+            reverse('dissertation_back_to_draft', args=[self.dissertation.pk]),
+            {"form": form,}
+        )
         self.assertEqual(response.status_code, HttpResponseRedirect.status_code)
         self.dissertation.refresh_from_db()
         self.assertEqual(self.dissertation.status, 'DRAFT')
@@ -180,9 +184,9 @@ class DissertationViewTestCase(TestCase):
             person=self.student.person,
             action="go_back",
         )
-        response = self.client.post(reverse('dissertation_back_to_draft', args=[self.dissertation.pk]),
-                                    {
-                                        "form": form,
-                                    })
+        response = self.client.post(
+            reverse('dissertation_back_to_draft', args=[self.dissertation.pk]),
+            {"form": form,}
+        )
         self.assertEqual(response.status_code, HttpResponse.status_code)
 

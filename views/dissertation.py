@@ -258,7 +258,7 @@ def dissertation_to_dir_submit(request, pk):
     if dissert.author_is_logged_student(request) and submitted_memories_count == 0:
         new_status = dissertation.get_next_status(dissert, "go_forward")
         status_dict = dict(dissertation.STATUS_CHOICES)
-        new_status_display = status_dict[new_status]
+        new_status_display = status_dict.get(new_status, "DIR_SUBMIT")
 
         form = DissertationUpdateForm(
             request.POST or None,
@@ -280,7 +280,7 @@ def dissertation_back_to_draft(request, pk):
     person = request.user.person
     new_status = dissertation.get_next_status(dissert, "go_back")
     status_dict = dict(dissertation.STATUS_CHOICES)
-    new_status_display = status_dict[new_status]
+    new_status_display = status_dict.get(new_status, "DRAFT")
     form = DissertationUpdateForm(
         request.POST or None,
         dissertation=dissert,
