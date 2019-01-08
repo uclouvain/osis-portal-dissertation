@@ -54,6 +54,17 @@ def find_by_offers(offers):
                                            )
 
 
+def find_by_education_groups(education_groups):
+    now = timezone.now()
+    return PropositionOffer.objects.filter(
+        proposition_dissertation__active=True,
+        proposition_dissertation__visibility=True,
+        offer_proposition__education_group__in=education_groups,
+        offer_proposition__start_visibility_proposition__lte=now,
+        offer_proposition__end_visibility_proposition__gte=now
+    )
+
+
 def find_by_offers_ordered_by_proposition_dissertation(offers):
     return find_by_offers(offers).order_by('proposition_dissertation')
 
