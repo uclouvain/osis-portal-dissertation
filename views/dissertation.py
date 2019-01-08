@@ -24,16 +24,20 @@
 #
 ##############################################################################
 
-from base.models import offer_year
+from base.models import offer_year, academic_year
+from base.models.enums import offer_enrollment_state
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from base import models as mdl
+from base.models.offer_enrollment import OfferEnrollment
 from base.views import layout
 from dissertation.models import dissertation, dissertation_document_file,  dissertation_role, dissertation_update,\
     offer_proposition, proposition_dissertation, proposition_offer, proposition_role
 from dissertation.forms import DissertationForm, DissertationEditForm, DissertationRoleForm,\
                                 DissertationTitleForm, DissertationUpdateForm
 from django.utils import timezone
+
+from dissertation.models.offer_proposition import OfferProposition
 
 
 @login_required
@@ -197,10 +201,17 @@ def dissertation_jury_new(request, pk):
 
 @login_required
 def dissertation_new(request):
-    person = mdl.person.find_by_user(request.user)
-    student = mdl.student.find_by_person(person)
-    offers = mdl.offer.find_by_student(student)
-    offer_propositions = offer_proposition.search_by_offers(offers)
+    person = request.user.person
+    student = person.student_set.first()
+    this_academic_year = academic_year.starting_academic_year()
+    offer_enrollements = OfferEnrollment.objects.filter(
+        student=student,
+        education_group_year__academic_year=this_academic_year,
+        enrollment_state__in=[
+            offer_enrollment_state.SUBSCRIBED,
+            offer_enrollment_state.PROVISORY
+        ]).select_related('education_group_year').select_related('education_group')
+    offer_propositions = OfferProposition.objects.get(education_group__in=offer_enrollements.education_group_year.education_group)
     date_now = timezone.now().date()
 
     if any(o.start_visibility_dissertation <= date_now <= o.end_visibility_dissertation for o in offer_propositions):
@@ -216,7 +227,10 @@ def dissertation_new(request):
         all_offer_propositions_offers = offer_proposition.get_all_offers()
         form.fields["offer_year_start"].queryset = \
             offer_year.find_by_student_and_offers(student, all_offer_propositions_offers)
-        form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offers(offers)
+        form.fields["education_group_year_start"].queryset = offer_enrollements.education_group_year
+
+        form.fields["proposition_dissertation"].queryset = \
+            proposition_dissertation.find_by_education_groups(offer_enrollements.education_group_year.education_group)
         return layout.render(request, 'dissertation_form.html',
                              {'form': form,
                               'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES})
@@ -273,6 +287,7 @@ def dissertation_to_dir_submit(request, pk):
                              {'form': form, 'dissertation': dissert, "new_status_display": new_status_display})
     else:
         return redirect('dissertations')
+
 
 @login_required
 def dissertation_back_to_draft(request, pk):
