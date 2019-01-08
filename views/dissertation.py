@@ -251,27 +251,44 @@ def dissertations_search(request):
 
 @login_required
 def dissertation_to_dir_submit(request, pk):
-    memory = get_object_or_404(dissertation.Dissertation, pk=pk)
-    person = mdl.person.find_by_user(request.user)
-    student = mdl.student.find_by_person(person)
-    submitted_memories_count = dissertation.count_submit_by_user(student, memory.offer_year_start.offer)
-
-    if memory.author_is_logged_student(request) and submitted_memories_count == 0:
-        old_status = memory.status
-        new_status = dissertation.get_next_status(memory, "go_forward")
+    dissert = get_object_or_404(dissertation.Dissertation, pk=pk)
+    person = request.user.person
+    student = person.student_set.first()
+    submitted_memories_count = dissertation.count_submit_by_user(student, dissert.offer_year_start.offer)
+    if dissert.author_is_logged_student(request) and submitted_memories_count == 0:
+        new_status = dissertation.get_next_status(dissert, "go_forward")
         status_dict = dict(dissertation.STATUS_CHOICES)
-        new_status_display = status_dict[new_status]
-        if request.method == "POST":
-            form = DissertationUpdateForm(request.POST)
-            if form.is_valid():
-                memory.go_forward()
-                data = form.cleaned_data
-                justification = data['justification']
-                dissertation_update.add(request, memory, old_status, justification=justification)
-                return redirect('dissertation_detail', pk=pk)
-        else:
-            form = DissertationUpdateForm()
+        new_status_display = status_dict.get(new_status, "DIR_SUBMIT")
+
+        form = DissertationUpdateForm(
+            request.POST or None,
+            dissertation=dissert,
+            person = person,
+            action = "go_forward")
+        if form.is_valid():
+            form.save()
+            return redirect('dissertation_detail', pk=pk)
+
         return layout.render(request, 'dissertation_add_justification.html',
-                             {'form': form, 'dissertation': memory, "new_status_display": new_status_display})
+                             {'form': form, 'dissertation': dissert, "new_status_display": new_status_display})
     else:
         return redirect('dissertations')
+
+@login_required
+def dissertation_back_to_draft(request, pk):
+    dissert = get_object_or_404(dissertation.Dissertation, pk=pk)
+    person = request.user.person
+    new_status = dissertation.get_next_status(dissert, "go_back")
+    status_dict = dict(dissertation.STATUS_CHOICES)
+    new_status_display = status_dict.get(new_status, "DRAFT")
+    form = DissertationUpdateForm(
+        request.POST or None,
+        dissertation=dissert,
+        person=person,
+        action="go_back")
+    if form.is_valid():
+        form.save()
+        return redirect('dissertation_detail', pk=pk)
+
+    return layout.render(request, 'dissertation_add_justification.html',
+                         {'form': form, 'dissertation': dissert, "new_status_display": new_status_display})

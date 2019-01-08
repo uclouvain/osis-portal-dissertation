@@ -52,6 +52,8 @@ urlpatterns = [
         name='dissertations_search'),
     url(r'^dissertation_to_dir_submit/(?P<pk>[0-9]+)$', dissertation.dissertation_to_dir_submit,
         name='dissertation_to_dir_submit'),
+    url(r'^dissertation_back_to_draft/(?P<pk>[0-9]+)$', dissertation.dissertation_back_to_draft,
+        name='dissertation_back_to_draft'),
 
     url(r'^proposition_dissertations/$', proposition_dissertation.proposition_dissertations,
         name='proposition_dissertations'),
