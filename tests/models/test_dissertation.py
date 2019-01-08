@@ -27,6 +27,8 @@
 from django.test import TestCase
 
 from base.tests.factories.academic_year import AcademicYearFactory, create_current_academic_year
+from base.tests.factories.education_group import EducationGroupFactory
+from base.tests.factories.education_group_year import EducationGroupYearFactory
 from base.tests.factories.offer import OfferFactory
 from base.tests.factories.offer_enrollment import OfferEnrollmentFactory
 from base.tests.factories.offer_year import OfferYearFactory
@@ -41,19 +43,27 @@ from dissertation.tests.factories.proposition_dissertation import PropositionDis
 class DissertationModelTestCase(TestCase):
     def setUp(self):
         self.manager = AdviserManagerFactory()
-        a_person_teacher = PersonFactory.create(first_name='Pierre',
+        a_person_teacher = PersonFactory(first_name='Pierre',
                                                 last_name='Dupont')
         self.teacher = AdviserTeacherFactory(person=a_person_teacher)
-        a_person_student1 = PersonFactory.create(last_name="Durant",
+        a_person_student1 = PersonFactory(last_name="Durant",
                                                 user=None)
-        self.student1 = StudentFactory.create(person=a_person_student1)
-        a_person_student2 = PersonFactory.create(last_name="Robert",
+        self.student1 = StudentFactory(person=a_person_student1)
+        a_person_student2 = PersonFactory(last_name="Robert",
                                                 user=None)
-        self.student2 = StudentFactory.create(person=a_person_student2)
+        self.student2 = StudentFactory(person=a_person_student2)
         self.offer1 = OfferFactory(title="test_offer1")
         self.current_academic_year = create_current_academic_year()
-        self.current_offer_year = OfferYearFactory(acronym="test_offer1", offer=self.offer1,
-                                                   academic_year=self.current_academic_year)
+        self.current_offer_year = OfferYearFactory(
+            acronym="test_offer1", offer=self.offer1,
+            academic_year=self.current_academic_year
+        )
+        self.education_group = EducationGroupFactory()
+        self.current_education_group_year = EducationGroupYearFactory(
+            acronym="test_offer1",
+            education_group =self.education_group,
+            academic_year=self.current_academic_year
+        )
         self.academic_year2015 = AcademicYearFactory(year=2015)
         self.offer_year_start2015 = OfferYearFactory(acronym="test_offer1", offer=self.offer1,
                                                   academic_year=self.academic_year2015)
