@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from osis_common.decorators.deprecated import deprecated
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
 from base import models as mdl
@@ -71,7 +72,7 @@ def search_by_dissertation(memory):
         queryset = queryset.exclude(justification__contains=keyword)
     return queryset
 
-
+@deprecated
 def add(request, memory, old_status, justification=None):
     person = mdl.person.find_by_user(request.user)
     update = DissertationUpdate()

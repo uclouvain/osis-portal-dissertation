@@ -27,8 +27,9 @@
 from django import forms
 from django.forms import ModelForm
 from dissertation.models.dissertation import Dissertation
-from dissertation.models.dissertation_update import DissertationUpdate
+from dissertation.models.dissertation_update import DissertationUpdate, JUSTIFICATION_LINK
 from dissertation.models.dissertation_role import DissertationRole
+from dissertation.utils import emails_dissert
 
 
 class DissertationForm(ModelForm):
@@ -64,6 +65,28 @@ class DissertationTitleForm(ModelForm):
 
 
 class DissertationUpdateForm(ModelForm):
+
+    def __init__(self, *args, dissertation, person, action, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.instance.dissertation = dissertation
+        self.instance.person = person
+        self.action = action
+
     class Meta:
         model = DissertationUpdate
         fields = ('justification',)
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.status_from = instance.dissertation.status
+
+        # getattr action execute go_forward or go_back
+        getattr(instance.dissertation, self.action)()
+        instance.status_to=instance.dissertation.status
+
+        if not instance.justification:
+            instance.justification = "%s%s%s" % (instance.person, JUSTIFICATION_LINK, instance.dissertation.status)
+
+        instance.save()
+        return instance
+

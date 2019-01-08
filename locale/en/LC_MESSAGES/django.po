@@ -69,8 +69,17 @@ msgstr ""
 msgid "Course manager"
 msgstr ""
 
+msgid "Are you sure you want to put the dissertation back to draft ? Your promoter will receive an information e-mail."
+msgstr ""
+
 #: templates/dissertations_list.html:55
 msgid "Create"
+msgstr ""
+
+msgid "back to draft"
+msgstr ""
+
+msgid "Case Study"
 msgstr ""
 
 #: templates/dissertation_add_justification.html:63

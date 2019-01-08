@@ -39,21 +39,21 @@ class PropositionDissertationAdmin(SerializableModelAdmin):
 
 class PropositionDissertation(SerializableModel):
     TYPES_CHOICES = (
-        ('RDL', _('Litterature Review')),
-        ('EMP', _('Empirical research')),
+        ('RDL', _('litterature_review')),
+        ('EMP', _('empirical_research')),
         ('THE', _('theoretical_analysis')),
-        ('PRO', _('Dissertation subject')),
+        ('PRO', _('project_dissertation')),
         ('DEV', _('My dissertations projects')),
         ('OTH', _('other')))
 
     LEVELS_CHOICES = (
         ('SPECIFIC', _('specific_subject')),
-        ('THEME', _('Theme')))
+        ('THEME', _('large_theme')))
 
     COLLABORATION_CHOICES = (
-        ('POSSIBLE', _('Possible')),
-        ('REQUIRED', _('Required')),
-        ('FORBIDDEN', _('Forbidden')))
+        ('POSSIBLE', _('possible')),
+        ('REQUIRED', _('required')),
+        ('FORBIDDEN', _('forbidden')))
 
     author = models.ForeignKey('Adviser')
     creator = models.ForeignKey('base.Person', blank=True, null=True)
@@ -108,4 +108,9 @@ def find_by_id(proposition_id):
 
 def search_by_offers(offers):
     proposition_ids = proposition_offer.find_by_offers(offers).values('proposition_dissertation_id')
+    return PropositionDissertation.objects.filter(pk__in=proposition_ids, active=True, visibility=True)
+
+
+def find_by_education_groups(education_groups):
+    proposition_ids = proposition_offer.find_by_education_groups(education_groups).values('proposition_dissertation_id')
     return PropositionDissertation.objects.filter(pk__in=proposition_ids, active=True, visibility=True)

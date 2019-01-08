@@ -283,6 +283,13 @@
                             <span class="glyphicon glyphicon-circle-arrow-right"
                                   aria-hidden="true"></span> {% trans 'Submit'%}</a>
                     {% endif %}
+                {% elif dissertation.status == 'DIR_SUBMIT' %}
+                    <a href="{% url 'dissertation_back_to_draft' pk=dissertation.pk %}"
+                       id="dissertation_back_to_draft" class="btn btn-default btn-primary pull-right"
+                       role="button" title="{% trans 'back to draft' %}"
+                       onclick="return confirm('{% trans 'Are you sure you want to put the dissertation back to draft ? Your promotor will receive an information e-mail.' %}')">
+                        <span class="glyphicon glyphicon-circle-arrow-left"
+                              aria-hidden="true"></span> {% trans 'back to draft'%}</a>
                 {% endif %}
             </div>
         </div>
