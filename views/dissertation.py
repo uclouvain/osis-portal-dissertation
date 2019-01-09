@@ -24,19 +24,20 @@
 #
 ##############################################################################
 
-from base.models import offer_year, academic_year
-from base.models.enums import offer_enrollment_state
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
-from base import models as mdl
-from base.models.offer_enrollment import OfferEnrollment
-from base.views import layout
-from dissertation.models import dissertation, dissertation_document_file,  dissertation_role, dissertation_update,\
-    offer_proposition, proposition_dissertation, proposition_offer, proposition_role
-from dissertation.forms import DissertationForm, DissertationEditForm, DissertationRoleForm,\
-                                DissertationTitleForm, DissertationUpdateForm
 from django.utils import timezone
 
+from base import models as mdl
+from base.models import offer_year, academic_year
+from base.models.education_group_year import EducationGroupYear
+from base.models.enums import offer_enrollment_state
+from base.models.offer_enrollment import OfferEnrollment
+from base.views import layout
+from dissertation.forms import DissertationForm, DissertationEditForm, DissertationRoleForm, \
+    DissertationTitleForm, DissertationUpdateForm
+from dissertation.models import dissertation, dissertation_document_file, dissertation_role, dissertation_update, \
+    offer_proposition, proposition_dissertation, proposition_offer, proposition_role
 from dissertation.models.offer_proposition import OfferProposition
 
 
@@ -70,42 +71,42 @@ def dissertation_delete(request, pk):
 
 @login_required
 def dissertation_detail(request, pk):
-    memory = get_object_or_404(dissertation.Dissertation, pk=pk)
+    dissert = get_object_or_404(dissertation.Dissertation, pk=pk)
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
 
-    if memory.author_is_logged_student(request):
-        off = memory.offer_year_start.offer
-        offer_pro = offer_proposition.search_by_offer(off)
-        offer_propositions = proposition_offer.search_by_proposition_dissertation(memory.proposition_dissertation)
-        count = dissertation.count_submit_by_user(student, off)
+    if dissert.author_is_logged_student(request):
+        educ_group = dissert.education_group_year_start.education_group
+        offer_pro = offer_proposition.search_by_education_group(educ_group)
+        offer_propositions = proposition_offer.search_by_proposition_dissertation(dissert.proposition_dissertation)
+        count = dissertation.count_disser_submit_by_user_in_educ_group(student, educ_group)
 
-        files = dissertation_document_file.find_by_dissertation(memory)
+        files = dissertation_document_file.find_by_dissertation(dissert)
         filename = ""
         for file in files:
             filename = file.document_file.file_name
 
-        count_dissertation_role = dissertation_role.count_by_dissertation(memory)
-        count_reader = dissertation_role.count_reader_by_dissertation(memory)
-        count_proposition_role = proposition_role.count_by_dissertation(memory)
-        proposition_roles = proposition_role.search_by_dissertation(memory)
+        count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
+        count_reader = dissertation_role.count_reader_by_dissertation(dissert)
+        count_proposition_role = proposition_role.count_by_dissertation(dissert)
+        proposition_roles = proposition_role.search_by_dissertation(dissert)
         jury_visibility = offer_pro.start_jury_visibility <= timezone.now().date() <= offer_pro.end_jury_visibility
         check_edit = offer_pro.start_edit_title <= timezone.now().date() <= offer_pro.end_edit_title
 
         if count_dissertation_role == 0:
             if count_proposition_role == 0:
-                dissertation_role.add('PROMOTEUR', memory.proposition_dissertation.author, memory)
+                dissertation_role.add('PROMOTEUR', dissert.proposition_dissertation.author, dissert)
             else:
                 for role in proposition_roles:
-                    dissertation_role.add(role.status, role.adviser, memory)
+                    dissertation_role.add(role.status, role.adviser, dissert)
 
-        dissertation_roles = dissertation_role.search_by_dissertation(memory)
+        dissertation_roles = dissertation_role.search_by_dissertation(dissert)
         return layout.render(request, 'dissertation_detail.html',
                              {'check_edit': check_edit,
                               'count': count,
                               'count_reader': count_reader,
                               'count_dissertation_role': count_dissertation_role,
-                              'dissertation': memory,
+                              'dissertation': dissert,
                               'dissertation_roles': dissertation_roles,
                               'jury_visibility': jury_visibility,
                               'manage_readers': offer_pro.student_can_manage_readers,
@@ -210,10 +211,13 @@ def dissertation_new(request):
         enrollment_state__in=[
             offer_enrollment_state.SUBSCRIBED,
             offer_enrollment_state.PROVISORY
-        ]).select_related('education_group_year').select_related('education_group')
-    offer_propositions = OfferProposition.objects.get(education_group__in=offer_enrollements.education_group_year.education_group)
+        ]).select_related('education_group_year','education_group_year__education_group')
+    offer_propositions = OfferProposition.objects.filter(
+        education_group__in=[
+            offer_enrollment.education_group_year.education_group for offer_enrollment in offer_enrollements
+        ]
+    )
     date_now = timezone.now().date()
-
     if any(o.start_visibility_dissertation <= date_now <= o.end_visibility_dissertation for o in offer_propositions):
         if request.method == "POST":
             form = DissertationForm(request.POST)
@@ -223,14 +227,17 @@ def dissertation_new(request):
                 return redirect('dissertation_detail', pk=memory.pk)
         else:
             form = DissertationForm(initial={'active': True, 'author': student})
-
-        all_offer_propositions_offers = offer_proposition.get_all_offers()
-        form.fields["offer_year_start"].queryset = \
-            offer_year.find_by_student_and_offers(student, all_offer_propositions_offers)
-        form.fields["education_group_year_start"].queryset = offer_enrollements.education_group_year
+        form.fields["education_group_year_start"].queryset = EducationGroupYear.objects.filter(
+            offerenrollment__student=student,
+            education_group__in=[offer_prop.education_group for offer_prop in offer_propositions]
+        ).order_by(
+            "academic_year__year", "acronym"
+        )
 
         form.fields["proposition_dissertation"].queryset = \
-            proposition_dissertation.find_by_education_groups(offer_enrollements.education_group_year.education_group)
+            proposition_dissertation.find_by_education_groups(
+                [offer_enroll.education_group_year.education_group for offer_enroll in offer_enrollements]
+            )
         return layout.render(request, 'dissertation_form.html',
                              {'form': form,
                               'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES})

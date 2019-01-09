@@ -51,16 +51,17 @@
                 <input class="form-control" id="txt_title"  name="title" style="margin:-6px;" value="{{ form.title.value | default_if_none:'' }}">
             </div>
             <div class="row">
-                <div class="col-md-6" {% if form.offer_year_start.errors %} style="color:red;" {% endif %}>
+                <div class="col-md-6" {% if form.education_group_year.errors %} style="color:red;" {% endif %}>
+
                     <div class="panel-group">
-                        <label for="txt_offer_year_start" style="margin-left:-6px;">
+                        <label for="txt_education_group_year_start" style="margin-left:-6px;">
                             {% trans 'Offers' %}
-                            {% for error in form.offer_year_start.errors %}
+                            {% for error in form.education_group_year.errors %}
                                 <br>{{ error|escape }}
                             {% endfor %}
                         </label>
-                        <select class="form-control" id="txt_offer_year_start"  name="offer_year_start" style="margin:-6px;">
-                            <option value={{ form.offer_year_start }}
+                        <select class="form-control" id="txt_education_group_year_start"  name="education_group_year_start" style="margin:-6px;">
+                            <option value={{ form.education_group_year_start }}
                         </select>
                     </div>
                 </div>

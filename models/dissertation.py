@@ -23,14 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
+
+from base import models as mdl
 from base.models import student, offer_year, academic_year
 from dissertation.models import dissertation_location, proposition_dissertation
 from dissertation.utils import emails_dissert
-from base import models as mdl
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class DissertationAdmin(SerializableModelAdmin):
@@ -129,6 +130,15 @@ class Dissertation(SerializableModel):
 def count_submit_by_user(user, offer):
     return Dissertation.objects.filter(author=user)\
         .filter(offer_year_start__offer=offer) \
+        .exclude(status='DIR_KO') \
+        .exclude(status='DRAFT')\
+        .filter(active=True)\
+        .count()
+
+
+def count_disser_submit_by_user_in_educ_group(user, educ_group):
+    return Dissertation.objects.filter(author=user)\
+        .filter(education_group_year_start__education_group=educ_group) \
         .exclude(status='DIR_KO') \
         .exclude(status='DRAFT')\
         .filter(active=True)\

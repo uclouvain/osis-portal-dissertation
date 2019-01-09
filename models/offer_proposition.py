@@ -23,11 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from dissertation.models.offer_proposition_group import OfferPropositionGroup
 from django.db import models
 from django.utils import timezone
+
 from base.models import offer
+from dissertation.models.offer_proposition_group import OfferPropositionGroup
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class OfferPropositionAdmin(SerializableModelAdmin):
@@ -77,6 +78,8 @@ def get_all_offers():
 def search_by_offer(off):
     return OfferProposition.objects.get(offer=off)
 
+def search_by_education_group(educ_group):
+    return OfferProposition.objects.get(education_group=educ_group)
 
 def search_by_offers(offers):
     return OfferProposition.objects.filter(offer__in=offers)
