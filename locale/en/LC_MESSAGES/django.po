@@ -349,11 +349,6 @@ msgstr ""
 msgid "Subject informations"
 msgstr ""
 
-#: templates/dissertation_detail.html:281
-#: templates/dissertation_detail.html:284
-msgid "Submit"
-msgstr ""
-
 #: models/dissertation.py:50
 msgid "Submitted to commission"
 msgstr ""
@@ -363,7 +358,7 @@ msgid "Submitted to first year evaluation"
 msgstr ""
 
 #: models/dissertation.py:47
-msgid "Submitted to promoter"
+msgid "Submit this dissertation project to promoter"
 msgstr ""
 
 #: templates/proposition_dissertation_detail.html:114

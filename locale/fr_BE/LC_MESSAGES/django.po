@@ -351,8 +351,6 @@ msgstr "Informations du sujet de mémoire"
 
 #: templates/dissertation_detail.html:281
 #: templates/dissertation_detail.html:284
-msgid "Submit"
-msgstr "Soumettre au professeur"
 
 #: models/dissertation.py:50
 msgid "Submitted to commission"
@@ -363,8 +361,8 @@ msgid "Submitted to first year evaluation"
 msgstr "Soumis à l'évaluation de première année"
 
 #: models/dissertation.py:47
-msgid "Submitted to promoter"
-msgstr "Soumis au promoteur"
+msgid "Submit this dissertation project to promoter"
+msgstr "Soumettre le projet au promoteur"
 
 #: templates/proposition_dissertation_detail.html:114
 msgid "Taken places"

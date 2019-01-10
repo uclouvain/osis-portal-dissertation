@@ -278,10 +278,10 @@
                     {% if count == 0 %}
                         <a href="{% url 'dissertation_to_dir_submit' pk=dissertation.pk %}"
                            id="dissertation_to_dir_submit" class="btn btn-default btn-primary pull-right"
-                           role="button" title="{% trans 'Submit'%}"
+                           role="button" title="{% trans 'Submit this dissertation project to promoter'%}"
                            onclick="return confirm('{% trans 'Warning : you will submit the draft memorandum to the promotor. Are you sure you want to continue ?' %}')">
                             <span class="glyphicon glyphicon-circle-arrow-right"
-                                  aria-hidden="true"></span> {% trans 'Submit'%}</a>
+                                  aria-hidden="true"></span> {% trans 'Submit this dissertation project to promoter'%}</a>
                     {% endif %}
                 {% elif dissertation.status == 'DIR_SUBMIT' %}
                     <a href="{% url 'dissertation_back_to_draft' pk=dissertation.pk %}"
