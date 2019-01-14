@@ -436,7 +436,7 @@ msgstr ""
 msgid "other"
 msgstr ""
 
-msgid "original title
+msgid "original title"
 msgstr ""
 
 #: templates/proposition_dissertation_detail.html:181
