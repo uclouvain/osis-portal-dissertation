@@ -127,15 +127,6 @@ class Dissertation(SerializableModel):
         return logged_student == self.author
 
 
-def count_submit_by_student_in_offer(student, offer):
-    return Dissertation.objects.filter(author=student)\
-        .filter(offer_year_start__offer=offer) \
-        .exclude(status='DIR_KO') \
-        .exclude(status='DRAFT')\
-        .filter(active=True)\
-        .count()
-
-
 def count_disser_submit_by_student_in_educ_group(student, educ_group):
     return Dissertation.objects.filter(author=student)\
         .filter(education_group_year_start__education_group=educ_group) \

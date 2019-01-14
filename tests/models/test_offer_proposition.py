@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2018 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2018-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -26,26 +26,22 @@
 from django.test import TestCase
 
 from base.tests.factories.education_group import EducationGroupFactory
-from dissertation.models import proposition_dissertation
+from dissertation.models.offer_proposition import get_by_education_group, search_by_education_groups
 from dissertation.tests.factories.offer_proposition import OfferPropositionFactory
-from dissertation.tests.factories.proposition_dissertation import PropositionDissertationFactory
-from dissertation.tests.factories.proposition_offer import PropositionOfferFactory
 
 
-class PropositionDissertationModelTestCase(TestCase):
+class OfferPropositionModelTestCase(TestCase):
     def setUp(self):
+        self.education_group1 = EducationGroupFactory()
         self.education_group2 = EducationGroupFactory()
+        self.offer_prop1 = OfferPropositionFactory(education_group=self.education_group1)
         self.offer_prop2 = OfferPropositionFactory(education_group=self.education_group2)
-        self.proposition_dissert_2 = PropositionDissertationFactory()
-        self.prop_offer2 = PropositionOfferFactory(
-            proposition_dissertation=self.proposition_dissert_2,
-            offer_proposition=self.offer_prop2
-        )
-        self.prop_offer3 = PropositionOfferFactory(
-            proposition_dissertation=self.proposition_dissert_2,
-            offer_proposition=self.offer_prop2
-        )
 
-    def test_find_by_education_groups(self):
-        query_set_proposition_dissertation = proposition_dissertation.find_by_education_groups([self.education_group2,])
-        self.assertEqual(self.proposition_dissert_2, query_set_proposition_dissertation[0])
+    def test_get_by_education_group(self):
+        self.assertEqual(get_by_education_group(self.education_group1), self.offer_prop1)
+        self.assertEqual(get_by_education_group(self.education_group2), self.offer_prop2)
+
+    def search_by_education_groups(self):
+        self.assertCountEqual(
+            search_by_education_groups([self.education_group1, self.education_group2]),
+            [self.offer_prop1, self.offer_prop2])

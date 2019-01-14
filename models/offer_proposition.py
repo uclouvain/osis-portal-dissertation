@@ -70,18 +70,10 @@ class OfferProposition(SerializableModel):
         return self.recent_acronym_education_group
 
 
-def get_all_offers():
-    offer_propositions = list(OfferProposition.objects.all().select_related('offer'))
-    return [obj.offer for obj in offer_propositions]
-
-
-def search_by_offer(off):
-    return OfferProposition.objects.get(offer=off)
-
-
 def get_by_education_group(educ_group):
     return OfferProposition.objects.get(education_group=educ_group)
 
 
-def search_by_offers(offers):
-    return OfferProposition.objects.filter(offer__in=offers)
+def search_by_education_groups(education_groups):
+    return OfferProposition.objects.filter(education_group__in=education_groups)
+
