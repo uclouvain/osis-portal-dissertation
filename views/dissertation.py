@@ -46,8 +46,8 @@ from dissertation.models.offer_proposition import OfferProposition
 def dissertations(request):
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
-    offers = mdl.offer.find_by_student(student)
-    offer_propositions = offer_proposition.search_by_offers(offers)
+    education_groups = education_group.find_by_student_enrollment_ok(student)
+    offer_propositions = offer_proposition.search_by_education_groups(education_groups)
     memories = dissertation.find_by_user(student)
     date_now = timezone.now().date()
     visibility = False
@@ -124,7 +124,7 @@ def dissertation_edit(request, pk):
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
     if dissert.author_is_logged_student(request):
-        education_groups = education_group.find_by_student(student)
+        education_groups = education_group.find_by_student_enrollment_ok(student)
         offer_pro = offer_proposition.get_by_education_group(dissert.education_group_year_start.education_group)
         if dissert.status == 'DRAFT' or dissert.status == 'DIR_KO':
             if request.method == "POST":
@@ -152,13 +152,12 @@ def dissertation_edit(request, pk):
                         dissertation_update.add(request,
                                                 dissert,
                                                 dissert.status,
-                                                justification="student_edit_title;" +
-                                                              _("original title")+
+                                                justification="student_edit_title: " +
+                                                              str(_("original title"))+
                                                               " : "+
                                                               titre_original +
-                                                              ", "+
-                                                              _("new title")+
-                                                              ":"+
+                                                              ", " +
+                                                              str(_("new title")) + ":" +
                                                               dissert.title
                                                 )
                     return redirect('dissertation_detail', pk=dissert.pk)
@@ -189,7 +188,7 @@ def dissertation_jury_new(request, pk):
     if dissert.author_is_logged_student(request):
         count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
         count_reader = dissertation_role.count_reader_by_dissertation(dissert)
-        offer_pro = offer_proposition.search_by_offer(dissert.offer_year_start.offer)
+        offer_pro = offer_proposition.get_by_education_group(dissert.education_group_year_start.education_group)
         if offer_pro.student_can_manage_readers and count_dissertation_role < 5 and count_reader < 3:
             if request.method == "POST":
                 form = DissertationRoleForm(request.POST)
@@ -262,14 +261,14 @@ def dissertation_new(request):
 @login_required
 def dissertation_reader_delete(request, pk):
     role = get_object_or_404(dissertation_role.DissertationRole, pk=pk)
-    memory = role.dissertation
-    if memory.author_is_logged_student(request):
-        offer_pro = offer_proposition.search_by_offer(memory.offer_year_start.offer)
-        if offer_pro.student_can_manage_readers and memory.status == 'DRAFT':
+    dissert = role.dissertation
+    if dissert.author_is_logged_student(request):
+        offer_pro = offer_proposition.get_by_education_group(dissert.education_group_year_start.education_group)
+        if offer_pro.student_can_manage_readers and dissert.status == 'DRAFT':
             justification = "%s %s" % ("student_delete_reader", str(role))
-            dissertation_update.add(request, memory, memory.status, justification=justification)
+            dissertation_update.add(request, dissert, dissert.status, justification=justification)
             role.delete()
-        return redirect('dissertation_detail', pk=memory.pk)
+        return redirect('dissertation_detail', pk=dissert.pk)
     else:
         return redirect('dissertations')
 
