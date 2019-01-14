@@ -78,8 +78,10 @@ def get_all_offers():
 def search_by_offer(off):
     return OfferProposition.objects.get(offer=off)
 
-def search_by_education_group(educ_group):
+
+def get_by_education_group(educ_group):
     return OfferProposition.objects.get(education_group=educ_group)
+
 
 def search_by_offers(offers):
     return OfferProposition.objects.filter(offer__in=offers)

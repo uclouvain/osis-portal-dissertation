@@ -434,6 +434,9 @@ msgstr "e-mail"
 msgid "mobile"
 msgstr ""
 
+msgid "new title"
+msgstr "nouveau titre"
+
 #: templates/proposition_dissertation_detail.html:117
 #: templates/proposition_dissertations_list.html:69
 msgid "of"
@@ -442,6 +445,9 @@ msgstr "sur"
 #: models/proposition_dissertation.py:47
 msgid "other"
 msgstr "autre"
+
+msgid "original title
+msgstr "titre original"
 
 #: templates/proposition_dissertation_detail.html:181
 msgid "phone"

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2018-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,9 +27,10 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 from base import models as mdl
-from base.models import offer_year, academic_year
+from base.models import academic_year, education_group, education_group_year
 from base.models.education_group_year import EducationGroupYear
 from base.models.enums import offer_enrollment_state
 from base.models.offer_enrollment import OfferEnrollment
@@ -77,9 +78,9 @@ def dissertation_detail(request, pk):
 
     if dissert.author_is_logged_student(request):
         educ_group = dissert.education_group_year_start.education_group
-        offer_pro = offer_proposition.search_by_education_group(educ_group)
+        offer_pro = offer_proposition.get_by_education_group(educ_group)
         offer_propositions = proposition_offer.search_by_proposition_dissertation(dissert.proposition_dissertation)
-        count = dissertation.count_disser_submit_by_user_in_educ_group(student, educ_group)
+        count = dissertation.count_disser_submit_by_student_in_educ_group(student, educ_group)
 
         files = dissertation_document_file.find_by_dissertation(dissert)
         filename = ""
@@ -118,44 +119,54 @@ def dissertation_detail(request, pk):
 
 @login_required
 def dissertation_edit(request, pk):
-    memory = get_object_or_404(dissertation.Dissertation, pk=pk)
+    dissert = get_object_or_404(dissertation.Dissertation, pk=pk)
+    titre_original=dissert.title
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
-
-    if memory.author_is_logged_student(request):
-        offers = mdl.offer.find_by_student(student)
-        offer_pro = offer_proposition.search_by_offer(memory.offer_year_start.offer)
-
-        if memory.status == 'DRAFT' or memory.status == 'DIR_KO':
+    if dissert.author_is_logged_student(request):
+        education_groups = education_group.find_by_student(student)
+        offer_pro = offer_proposition.get_by_education_group(dissert.education_group_year_start.education_group)
+        if dissert.status == 'DRAFT' or dissert.status == 'DIR_KO':
             if request.method == "POST":
-                form = DissertationEditForm(request.POST, instance=memory)
+                form = DissertationEditForm(request.POST, instance=dissert)
                 if form.is_valid():
-                    memory = form.save()
-                    dissertation_update.add(request, memory, memory.status, justification="student_edit_dissertation")
-                    return redirect('dissertation_detail', pk=memory.pk)
+                    dissert = form.save()
+                    dissertation_update.add(request, dissert, dissert.status, justification="student_edit_dissertation")
+                    return redirect('dissertation_detail', pk=dissert.pk)
                 else:
-                    form.fields["offer_year_start"].queryset = offer_year.find_by_offer(offers)
-                    form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offers(offers)
+                    form.fields["education_group_year_start"].queryset = education_group_year.find_by_education_groups(education_groups)
+                    form.fields["proposition_dissertation"].queryset = proposition_dissertation.find_by_education_groups(education_groups)
             else:
-                form = DissertationEditForm(instance=memory)
-                form.fields["offer_year_start"].queryset = offer_year.find_by_offer(offers)
-                form.fields["proposition_dissertation"].queryset = proposition_dissertation.search_by_offers(offers)
+                form = DissertationEditForm(instance=dissert)
+                form.fields["education_group_year_start"].queryset = education_group_year.find_by_education_groups(education_groups)
+                form.fields["proposition_dissertation"].queryset = proposition_dissertation.find_by_education_groups(education_groups)
             return layout.render(request, 'dissertation_edit_form.html',
                                  {'form': form,
                                   'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES})
         else:
             if offer_pro.start_edit_title <= timezone.now().date() <= offer_pro.end_edit_title:
                 if request.method == "POST":
-                    form = DissertationTitleForm(request.POST, instance=memory)
-                    if form.is_valid():
-                        memory = form.save()
-                        dissertation_update.add(request, memory, memory.status, justification="student_edit_title")
-                        return redirect('dissertation_detail', pk=memory.pk)
+                    form = DissertationTitleForm(request.POST, instance=dissert)
+                    if form.is_valid() and titre_original != form.cleaned_data['title']:
+                        dissert = form.save()
+                        dissertation_update.add(request,
+                                                dissert,
+                                                dissert.status,
+                                                justification="student_edit_title;" +
+                                                              _("original title")+
+                                                              " : "+
+                                                              titre_original +
+                                                              ", "+
+                                                              _("new title")+
+                                                              ":"+
+                                                              dissert.title
+                                                )
+                    return redirect('dissertation_detail', pk=dissert.pk)
                 else:
-                    form = DissertationTitleForm(instance=memory)
+                    form = DissertationTitleForm(instance=dissert)
                 return layout.render(request, 'dissertation_title_form.html', {'form': form})
             else:
-                return redirect('dissertation_detail', pk=memory.pk)
+                return redirect('dissertation_detail', pk=dissert.pk)
     else:
         return redirect('dissertations')
 
@@ -223,7 +234,10 @@ def dissertation_new(request):
             form = DissertationForm(request.POST)
             if form.is_valid():
                 memory = form.save()
-                dissertation_update.add(request, memory, memory.status, justification="student_creation_dissertation")
+                dissertation_update.add(request, memory,
+                                        memory.status,
+                                        justification="student_creation_dissertation, title:"+memory.title
+                                        )
                 return redirect('dissertation_detail', pk=memory.pk)
         else:
             form = DissertationForm(initial={'active': True, 'author': student})
@@ -275,7 +289,7 @@ def dissertation_to_dir_submit(request, pk):
     dissert = get_object_or_404(dissertation.Dissertation, pk=pk)
     person = request.user.person
     student = person.student_set.first()
-    submitted_memories_count = dissertation.count_submit_by_user(student, dissert.offer_year_start.offer)
+    submitted_memories_count = dissertation.count_disser_submit_by_student_in_educ_group(student, dissert.education_group_year_start.education_group)
     if dissert.author_is_logged_student(request) and submitted_memories_count == 0:
         new_status = dissertation.get_next_status(dissert, "go_forward")
         status_dict = dict(dissertation.STATUS_CHOICES)

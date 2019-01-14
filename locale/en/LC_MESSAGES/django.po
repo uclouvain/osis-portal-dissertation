@@ -424,6 +424,9 @@ msgstr ""
 msgid "mobile"
 msgstr ""
 
+msgid "new title"
+msgstr ""
+
 #: templates/proposition_dissertation_detail.html:117
 #: templates/proposition_dissertations_list.html:69
 msgid "of"
@@ -431,6 +434,9 @@ msgstr ""
 
 #: models/proposition_dissertation.py:47
 msgid "other"
+msgstr ""
+
+msgid "original title
 msgstr ""
 
 #: templates/proposition_dissertation_detail.html:181

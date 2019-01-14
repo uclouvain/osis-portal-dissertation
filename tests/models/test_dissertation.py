@@ -26,6 +26,7 @@
 
 from django.test import TestCase
 
+from base.models.enums import offer_enrollment_state
 from base.tests.factories.academic_year import AcademicYearFactory, create_current_academic_year
 from base.tests.factories.education_group import EducationGroupFactory
 from base.tests.factories.education_group_year import EducationGroupYearFactory
@@ -35,6 +36,7 @@ from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from dissertation.models import dissertation
+from dissertation.models.enums import status_types
 from dissertation.tests.factories.adviser import AdviserManagerFactory, AdviserTeacherFactory
 from dissertation.tests.factories.dissertation import DissertationFactory
 from dissertation.tests.factories.proposition_dissertation import PropositionDissertationFactory
@@ -44,34 +46,55 @@ class DissertationModelTestCase(TestCase):
     def setUp(self):
         self.manager = AdviserManagerFactory()
         a_person_teacher = PersonFactory(first_name='Pierre',
-                                                last_name='Dupont')
+                                         last_name='Dupont')
         self.teacher = AdviserTeacherFactory(person=a_person_teacher)
         a_person_student1 = PersonFactory(last_name="Durant",
-                                                user=None)
+                                          user=None)
         self.student1 = StudentFactory(person=a_person_student1)
         a_person_student2 = PersonFactory(last_name="Robert",
-                                                user=None)
+                                          user=None)
         self.student2 = StudentFactory(person=a_person_student2)
-        self.offer1 = OfferFactory(title="test_offer1")
+        self.offer1 = OfferFactory()
+        self.education_group1 = EducationGroupFactory()
         self.current_academic_year = create_current_academic_year()
         self.current_offer_year = OfferYearFactory(
-            acronym="test_offer1", offer=self.offer1,
+            acronym="test_offer1",
+            offer=self.offer1,
             academic_year=self.current_academic_year
         )
-        self.education_group = EducationGroupFactory()
         self.current_education_group_year = EducationGroupYearFactory(
+            education_group=self.education_group1,
             acronym="test_offer1",
-            education_group =self.education_group,
+            academic_year=self.current_academic_year
+        )
+        self.education_group2 = EducationGroupFactory()
+        self.education_group_year = EducationGroupYearFactory(
+            education_group=self.education_group2,
             academic_year=self.current_academic_year
         )
         self.academic_year2015 = AcademicYearFactory(year=2015)
-        self.offer_year_start2015 = OfferYearFactory(acronym="test_offer1", offer=self.offer1,
-                                                  academic_year=self.academic_year2015)
-
-        self.offer_enrollment2017 = OfferEnrollmentFactory(offer_year= self.current_offer_year,
-                                                           student= self.student1)
-        self.offer_enrollment2015 = OfferEnrollmentFactory(offer_year=self.offer_year_start2015,
-                                                           student=self.student2)
+        self.offer_year_start2015 = OfferYearFactory(
+            acronym="test_offer1",
+            offer=self.offer1,
+            academic_year=self.academic_year2015
+        )
+        self.education_group_year_2015 = EducationGroupYearFactory(
+            acronym="test_offer1",
+            education_group=self.education_group1,
+            academic_year=self.academic_year2015
+        )
+        self.offer_enrollment_curent_year = OfferEnrollmentFactory(
+            offer_year=self.current_offer_year,
+            student=self.student1,
+            education_group_year = self.current_education_group_year,
+            enrollment_state=offer_enrollment_state.SUBSCRIBED
+        )
+        self.offer_enrollment2015 = OfferEnrollmentFactory(
+            offer_year=self.offer_year_start2015,
+            student=self.student2,
+            education_group_year = self.education_group_year_2015,
+            enrollment_state=offer_enrollment_state.SUBSCRIBED
+        )
         self.proposition_dissertation = PropositionDissertationFactory(author=self.teacher,
                                                                        creator=a_person_teacher,
                                                                        title='Proposition de memoire'
@@ -79,36 +102,43 @@ class DissertationModelTestCase(TestCase):
         self.dissertation_to_put_back_to_draft = DissertationFactory(
             author=self.student1,
             offer_year_start=self.current_offer_year,
+            education_group_year_start=self.current_education_group_year,
             proposition_dissertation=self.proposition_dissertation,
             status='DIR_SUBMIT',
             active=True,
             dissertation_role__adviser=self.teacher,
-            dissertation_role__status='PROMOTEUR'
+            dissertation_role__status=status_types.PROMOTEUR
         )
         self.dissertation_test_count2015 = DissertationFactory(
             author=self.student1,
             offer_year_start=self.offer_year_start2015,
+            education_group_year_start=self.education_group_year_2015,
             proposition_dissertation=self.proposition_dissertation,
             status='COM_SUBMIT',
             active=True,
             dissertation_role__adviser=self.teacher,
-            dissertation_role__status='PROMOTEUR'
+            dissertation_role__status=status_types.PROMOTEUR
         )
 
         self.dissertation_test_count2017 = DissertationFactory(
             author=self.student2,
             offer_year_start=self.current_offer_year,
+            education_group_year_start=self.current_education_group_year,
             proposition_dissertation=self.proposition_dissertation,
             status='COM_SUBMIT',
             active=True,
             dissertation_role__adviser=self.teacher,
-            dissertation_role__status='PROMOTEUR'
+            dissertation_role__status=status_types.PROMOTEUR
         )
 
-
     def test_count_by_proposition(self):
-        self.client.force_login(self.manager.person.user)
         self.assertEqual(dissertation.count_by_proposition(self.proposition_dissertation), 2)
+
+    def test_count_disser_submit_by_student_in_educ_group(self):
+        self.assertEqual(dissertation.count_disser_submit_by_student_in_educ_group(
+            self.student1,
+            self.education_group_year_2015.education_group), 2
+        )
 
     def test_go_back(self):
         self.client.force_login(self.manager.person.user)
