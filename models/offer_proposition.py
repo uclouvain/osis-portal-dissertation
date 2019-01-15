@@ -67,7 +67,7 @@ class OfferProposition(SerializableModel):
         return None
 
     def __str__(self):
-        return self.recent_acronym_education_group
+        return str(self.recent_acronym_education_group)cd
 
 
 def get_by_education_group(educ_group):
