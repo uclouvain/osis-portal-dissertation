@@ -46,7 +46,8 @@ from dissertation.models.offer_proposition import OfferProposition
 def dissertations(request):
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
-    education_groups = education_group.find_by_student_enrollment_ok(student)
+    education_groups = education_group.find_by_student_and_enrollment_states(
+        student, [offer_enrollment_state.SUBSCRIBED, offer_enrollment_state.PROVISORY])
     offer_propositions = offer_proposition.search_by_education_groups(education_groups)
     memories = dissertation.find_by_user(student)
     date_now = timezone.now().date()
@@ -124,7 +125,8 @@ def dissertation_edit(request, pk):
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
     if dissert.author_is_logged_student(request):
-        education_groups = education_group.find_by_student_enrollment_ok(student)
+        education_groups = education_group.find_by_student_and_enrollment_states(
+            student, [offer_enrollment_state.SUBSCRIBED, offer_enrollment_state.PROVISORY])
         offer_pro = offer_proposition.get_by_education_group(dissert.education_group_year_start.education_group)
         if dissert.status == 'DRAFT' or dissert.status == 'DIR_KO':
             if request.method == "POST":

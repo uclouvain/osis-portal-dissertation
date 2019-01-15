@@ -28,6 +28,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from base import models as mdl
 from base.models import education_group
+from base.models.enums import offer_enrollment_state
 from base.views import layout
 from dissertation.models import dissertation, proposition_dissertation, proposition_document_file, proposition_role,\
     proposition_offer
@@ -38,7 +39,8 @@ from django.utils import timezone
 def proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
-    education_groups = education_group.find_by_student_enrollment_ok(student)
+    education_groups = education_group.find_by_student_and_enrollment_states(
+        student, [offer_enrollment_state.SUBSCRIBED, offer_enrollment_state.PROVISORY])
     proposition_offers = proposition_offer.find_by_education_group_ordered_by_proposition_dissert(education_groups).\
         prefetch_related('proposition_dissertation', 'offer_proposition')
     proposition_offers = [_append_dissertations_count(prop_offer) for prop_offer in proposition_offers]
@@ -87,7 +89,9 @@ def proposition_dissertation_detail(request, pk):
 def proposition_dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
-    education_groups = education_group.find_by_student_enrollment_ok(student)
+    education_groups = education_group.find_by_student_and_enrollment_states(
+        student,
+        [offer_enrollment_state.SUBSCRIBED, offer_enrollment_state.PROVISORY])
     proposition_offers = proposition_offer.search(
         education_groups=education_groups,
         terms=request.GET['search'],
