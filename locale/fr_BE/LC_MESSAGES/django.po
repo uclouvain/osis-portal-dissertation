@@ -45,7 +45,7 @@ msgstr "Ajouter un lecteur"
 msgid "Add justification"
 msgstr "Ajouter une justification"
 
-msgid "Are you sure you want to put the dissertation back to draft ? Your promoter will receive an information e-mail."
+msgid "Are you sure you want to put the dissertation back to draft ? Your promotor will receive an information e-mail."
 msgstr "Êtes-vous sûr de vouloir remettre votre mémoire en brouillon? Votre promoteur recevra un e-mail d’information."
 
 #: templates/dissertation_add_justification.html:54
@@ -54,7 +54,7 @@ msgstr "Êtes-vous sûr de vouloir remettre votre mémoire en brouillon? Votre p
 msgid "Author"
 msgstr "Auteur"
 
-msgid "back to draft"
+msgid "Back to draft"
 msgstr "Retour au brouillon"
 
 msgid "Case study"

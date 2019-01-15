@@ -69,14 +69,14 @@ msgstr ""
 msgid "Course manager"
 msgstr ""
 
-msgid "Are you sure you want to put the dissertation back to draft ? Your promoter will receive an information e-mail."
+msgid "Are you sure you want to put the dissertation back to draft ? Your promotor will receive an information e-mail."
 msgstr ""
 
 #: templates/dissertations_list.html:55
 msgid "Create"
 msgstr ""
 
-msgid "back to draft"
+msgid "Back to draft"
 msgstr ""
 
 msgid "Case Study"
