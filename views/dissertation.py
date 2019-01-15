@@ -29,6 +29,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
+import dissertation.models.enums.dissertation_status
 from base import models as mdl
 from base.models import academic_year, education_group, education_group_year
 from base.models.education_group_year import EducationGroupYear
@@ -39,6 +40,7 @@ from dissertation.forms import DissertationForm, DissertationEditForm, Dissertat
     DissertationTitleForm, DissertationUpdateForm
 from dissertation.models import dissertation, dissertation_document_file, dissertation_role, dissertation_update, \
     offer_proposition, proposition_dissertation, proposition_offer, proposition_role
+from dissertation.models.enums import dissertation_status
 from dissertation.models.offer_proposition import OfferProposition
 
 
@@ -293,8 +295,8 @@ def dissertation_to_dir_submit(request, pk):
     submitted_memories_count = dissertation.count_disser_submit_by_student_in_educ_group(student, dissert.education_group_year_start.education_group)
     if dissert.author_is_logged_student(request) and submitted_memories_count == 0:
         new_status = dissertation.get_next_status(dissert, "go_forward")
-        status_dict = dict(dissertation.STATUS_CHOICES)
-        new_status_display = status_dict.get(new_status, "DIR_SUBMIT")
+        status_dict = dict(dissertation_status.DISSERTATION_STATUS)
+        new_status_display = status_dict.get(new_status, dissertation_status.DIR_SUBMIT)
 
         form = DissertationUpdateForm(
             request.POST or None,
@@ -316,8 +318,8 @@ def dissertation_back_to_draft(request, pk):
     dissert = get_object_or_404(dissertation.Dissertation, pk=pk)
     person = request.user.person
     new_status = dissertation.get_next_status(dissert, "go_back")
-    status_dict = dict(dissertation.STATUS_CHOICES)
-    new_status_display = status_dict.get(new_status, "DRAFT")
+    status_dict = dict(dissertation_status.DISSERTATION_STATUS)
+    new_status_display = status_dict.get(new_status, dissertation_status.DRAFT)
     form = DissertationUpdateForm(
         request.POST or None,
         dissertation=dissert,

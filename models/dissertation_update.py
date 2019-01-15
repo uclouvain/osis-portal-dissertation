@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import dissertation.models.enums.dissertation_status
+from dissertation.models.enums import dissertation_status
 from osis_common.decorators.deprecated import deprecated
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
@@ -50,8 +52,8 @@ class DissertationUpdateAdmin(SerializableModelAdmin):
 
 
 class DissertationUpdate(SerializableModel):
-    status_from = models.CharField(max_length=12, choices=dissertation.STATUS_CHOICES, default='DRAFT')
-    status_to = models.CharField(max_length=12, choices=dissertation.STATUS_CHOICES, default='DRAFT')
+    status_from = models.CharField(max_length=12, choices=dissertation_status.DISSERTATION_STATUS, default='DRAFT')
+    status_to = models.CharField(max_length=12, choices=dissertation_status.DISSERTATION_STATUS, default='DRAFT')
     created = models.DateTimeField(auto_now_add=True)
     justification = models.TextField(blank=True)
     person = models.ForeignKey('base.Person')

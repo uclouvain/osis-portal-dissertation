@@ -25,7 +25,7 @@
 ##############################################################################
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
-from .enums import status_types
+from .enums import dissertation_role_status
 
 
 class PropositionRoleAdmin(SerializableModelAdmin):
@@ -39,7 +39,10 @@ class PropositionRoleAdmin(SerializableModelAdmin):
 
 
 class PropositionRole(SerializableModel):
-    status = models.CharField(max_length=12, choices=status_types.STATUS_CHOICES, default=status_types.PROMOTEUR)
+    status = models.CharField(max_length=12,
+                              choices=dissertation_role_status.STATUS_CHOICES,
+                              default=dissertation_role_status.PROMOTEUR
+                              )
     adviser = models.ForeignKey('Adviser')
     proposition_dissertation = models.ForeignKey('PropositionDissertation')
 

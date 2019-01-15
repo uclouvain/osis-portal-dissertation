@@ -23,13 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from dissertation.models import proposition_offer
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
+from dissertation.models.enums import proposition_dissertation_levels
+from dissertation.models.enums.proposition_dissertation_collaboration import COLLABORATION_CHOICES
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+from dissertation.models import proposition_offer
+from dissertation.models.enums.proposition_dissertation_types import PROPOSITION_DISSERTATION_TYPES
 
 class PropositionDissertationAdmin(SerializableModelAdmin):
     list_display = ('title', 'author', 'visibility', 'active', 'creator')
@@ -38,31 +41,20 @@ class PropositionDissertationAdmin(SerializableModelAdmin):
 
 
 class PropositionDissertation(SerializableModel):
-    TYPES_CHOICES = (
-        ('RDL', _('litterature_review')),
-        ('EMP', _('empirical_research')),
-        ('THE', _('theoretical_analysis')),
-        ('PRO', _('project_dissertation')),
-        ('DEV', _('My dissertations projects')),
-        ('OTH', _('other')))
 
     LEVELS_CHOICES = (
         ('SPECIFIC', _('specific_subject')),
         ('THEME', _('large_theme')))
 
-    COLLABORATION_CHOICES = (
-        ('POSSIBLE', _('possible')),
-        ('REQUIRED', _('required')),
-        ('FORBIDDEN', _('forbidden')))
 
     author = models.ForeignKey('Adviser')
     creator = models.ForeignKey('base.Person', blank=True, null=True)
     collaboration = models.CharField(max_length=12, choices=COLLABORATION_CHOICES, default='FORBIDDEN')
     description = models.TextField(blank=True, null=True)
-    level = models.CharField(max_length=12, choices=LEVELS_CHOICES, default='DOMAIN')
+    level = models.CharField(max_length=12, choices=proposition_dissertation_levels.LEVELS, default='DOMAIN')
     max_number_student = models.IntegerField()
     title = models.CharField(max_length=200)
-    type = models.CharField(max_length=12, choices=TYPES_CHOICES, default='RDL')
+    type = models.CharField(max_length=12, choices=PROPOSITION_DISSERTATION_TYPES, default='RDL')
     visibility = models.BooleanField(default=True)
     active = models.BooleanField(default=True)
     created_date = models.DateTimeField(default=timezone.now)

@@ -36,7 +36,8 @@ from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from dissertation.models import dissertation
-from dissertation.models.enums import status_types
+from dissertation.models.enums import dissertation_role_status
+from dissertation.models.enums.dissertation_role_status import PROMOTEUR
 from dissertation.tests.factories.adviser import AdviserManagerFactory, AdviserTeacherFactory
 from dissertation.tests.factories.dissertation import DissertationFactory
 from dissertation.tests.factories.proposition_dissertation import PropositionDissertationFactory
@@ -107,7 +108,7 @@ class DissertationModelTestCase(TestCase):
             status='DIR_SUBMIT',
             active=True,
             dissertation_role__adviser=self.teacher,
-            dissertation_role__status=status_types.PROMOTEUR
+            dissertation_role__status=dissertation_role_status.PROMOTEUR
         )
         self.dissertation_test_count2015 = DissertationFactory(
             author=self.student1,
@@ -117,7 +118,7 @@ class DissertationModelTestCase(TestCase):
             status='COM_SUBMIT',
             active=True,
             dissertation_role__adviser=self.teacher,
-            dissertation_role__status=status_types.PROMOTEUR
+            dissertation_role__status=dissertation_role_status.PROMOTEUR
         )
 
         self.dissertation_test_count2017 = DissertationFactory(
@@ -128,7 +129,7 @@ class DissertationModelTestCase(TestCase):
             status='COM_SUBMIT',
             active=True,
             dissertation_role__adviser=self.teacher,
-            dissertation_role__status=status_types.PROMOTEUR
+            dissertation_role__status=dissertation_role_status.PROMOTEUR
         )
 
     def test_count_by_proposition(self):

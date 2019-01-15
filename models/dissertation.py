@@ -30,6 +30,7 @@ from django.utils.translation import ugettext_lazy as _
 from base import models as mdl
 from base.models import student, offer_year, academic_year
 from dissertation.models import dissertation_location, proposition_dissertation
+from dissertation.models.enums.dissertation_status import DISSERTATION_STATUS
 from dissertation.utils import emails_dissert
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
@@ -43,25 +44,6 @@ class DissertationAdmin(SerializableModelAdmin):
                      'proposition_dissertation__author__person__first_name', 'education_group_year_start__id')
 
 
-STATUS_CHOICES = (
-    ('DRAFT', _('Draft')),
-    ('DIR_SUBMIT', _('Submitted to promoter')),
-    ('DIR_OK', _('Accepted by promoter')),
-    ('DIR_KO', _('Refused by promoter')),
-    ('COM_SUBMIT', _('Submitted to commission')),
-    ('COM_OK', _('Accepted by commission')),
-    ('COM_KO', _('Refused by commission')),
-    ('EVA_SUBMIT', _('Submitted to first year evaluation')),
-    ('EVA_OK', _('Accepted by first year evaluation')),
-    ('EVA_KO', _('Refused by first year evaluation')),
-    ('TO_RECEIVE', _('To be received')),
-    ('TO_DEFEND', _('To be received defended')),
-    ('DEFENDED', _('Defended')),
-    ('ENDED', _('End')),
-    ('ENDED_WIN', _('Win')),
-    ('ENDED_LOS', _('Reported')),
-)
-
 DEFEND_PERIODE_CHOICES = (
     ('UNDEFINED', _('undefined')),
     ('JANUARY', _('January')),
@@ -73,7 +55,7 @@ DEFEND_PERIODE_CHOICES = (
 class Dissertation(SerializableModel):
     title = models.CharField(max_length=500)
     author = models.ForeignKey(student.Student)
-    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
+    status = models.CharField(max_length=12, choices=DISSERTATION_STATUS, default='DRAFT')
     defend_periode = models.CharField(max_length=12, choices=DEFEND_PERIODE_CHOICES, default='UNDEFINED', null=True)
     defend_year = models.IntegerField(blank=True, null=True)
     offer_year_start = models.ForeignKey(offer_year.OfferYear, null=True, blank=True)

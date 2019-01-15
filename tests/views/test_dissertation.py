@@ -35,6 +35,7 @@ from base.tests.factories.person import PersonFactory
 from base.tests.factories.offer import OfferFactory
 from base.tests.factories.student import StudentFactory
 from dissertation.forms import DissertationUpdateForm
+from dissertation.models.enums import dissertation_role_status
 from dissertation.tests.factories.adviser import AdviserManagerFactory, AdviserTeacherFactory
 from dissertation.tests.factories.dissertation import DissertationFactory
 from dissertation.tests.factories.offer_proposition import OfferPropositionFactory
@@ -81,14 +82,14 @@ class DissertationViewTestCase(TestCase):
             status='DIR_SUBMIT',
             active=True,
             dissertation_role__adviser=self.teacher,
-            dissertation_role__status='PROMOTEUR'
+            dissertation_role__status=dissertation_role_status.PROMOTEUR
         )
         self.dissertation_to_dir_submit = DissertationFactory(
             author=self.student_with_1_dissertation,
             status='DRAFT',
             active=True,
             dissertation_role__adviser=self.teacher,
-            dissertation_role__status='PROMOTEUR'
+            dissertation_role__status=dissertation_role_status.PROMOTEUR
         )
 
 
@@ -101,7 +102,7 @@ class DissertationViewTestCase(TestCase):
             status='DRAFT',
             active=True,
             dissertation_role__adviser=self.teacher,
-            dissertation_role__status='PROMOTEUR'
+            dissertation_role__status=dissertation_role_status.PROMOTEUR
         )
         self.client.force_login(self.manager.person.user)
         count_messages_before_status_change = len(message_history.find_my_messages(self.teacher.person.id))
