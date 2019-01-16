@@ -48,6 +48,6 @@ class PropositionOfferModelTestCase(TestCase):
             offer_proposition=self.offer_prop1
         )
 
-    def test_find_by_education_groups(self):
-        query_set_proposition_offer = proposition_offer.find_by_education_groups([self.education_group1, ])
+    def test_find_visible_by_education_groups(self):
+        query_set_proposition_offer = proposition_offer.find_visible_by_education_groups([self.education_group1, ])
         self.assertCountEqual([self.prop_offer1,self.prop_offer3], query_set_proposition_offer)

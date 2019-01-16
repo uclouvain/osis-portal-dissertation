@@ -23,10 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
-from django.utils import timezone
 from django.db.models import Q
+from django.utils import timezone
+
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class PropositionOfferAdmin(SerializableModelAdmin):
@@ -45,16 +46,8 @@ class PropositionOffer(SerializableModel):
         return str(self.offer_proposition)
 
 
-def find_by_offers(offers):
-    return PropositionOffer.objects.filter(proposition_dissertation__active=True,
-                                           proposition_dissertation__visibility=True,
-                                           offer_proposition__offer__in=offers,
-                                           offer_proposition__start_visibility_proposition__lte=timezone.now(),
-                                           offer_proposition__end_visibility_proposition__gte=timezone.now()
-                                           )
 
-
-def find_by_education_groups(education_groups):
+def find_visible_by_education_groups(education_groups):
     now = timezone.now()
     return PropositionOffer.objects.filter(
         proposition_dissertation__active=True,
@@ -66,7 +59,7 @@ def find_by_education_groups(education_groups):
 
 
 def find_by_education_group_ordered_by_proposition_dissert(education_groups):
-    return find_by_education_groups(education_groups).order_by('proposition_dissertation')
+    return find_visible_by_education_groups(education_groups).order_by('proposition_dissertation')
 
 
 def search_by_proposition_dissertation(proposition_dissertation):

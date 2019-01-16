@@ -26,13 +26,13 @@
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
 
+from dissertation.models import proposition_offer
 from dissertation.models.enums import proposition_dissertation_levels
 from dissertation.models.enums.proposition_dissertation_collaboration import COLLABORATION_CHOICES
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from dissertation.models import proposition_offer
 from dissertation.models.enums.proposition_dissertation_types import PROPOSITION_DISSERTATION_TYPES
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
+
 
 class PropositionDissertationAdmin(SerializableModelAdmin):
     list_display = ('title', 'author', 'visibility', 'active', 'creator')
@@ -94,5 +94,5 @@ def find_by_id(proposition_id):
 
 
 def find_by_education_groups(education_groups):
-    proposition_ids = proposition_offer.find_by_education_groups(education_groups).values('proposition_dissertation_id')
+    proposition_ids = proposition_offer.find_visible_by_education_groups(education_groups).values('proposition_dissertation_id')
     return PropositionDissertation.objects.filter(pk__in=proposition_ids, active=True, visibility=True)

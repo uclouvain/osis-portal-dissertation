@@ -156,13 +156,7 @@ def dissertation_edit(request, pk):
                         dissertation_update.add(request,
                                                 dissert,
                                                 dissert.status,
-                                                justification="student_edit_title: " +
-                                                              str(_("original title"))+
-                                                              " : "+
-                                                              titre_original +
-                                                              ", " +
-                                                              str(_("new title")) + ":" +
-                                                              dissert.title
+                                                justification=build_justification_with_title(dissert, titre_original)
                                                 )
                     return redirect('dissertation_detail', pk=dissert.pk)
                 else:
@@ -172,6 +166,16 @@ def dissertation_edit(request, pk):
                 return redirect('dissertation_detail', pk=dissert.pk)
     else:
         return redirect('dissertations')
+
+
+def build_justification_with_title(dissert, titre_original):
+    return "student_edit_title: {} : {}, {} : {}".format(
+        _("original title"),
+        titre_original,
+        _("new title"),
+        dissert.title
+    )
+
 
 
 @login_required
@@ -292,7 +296,9 @@ def dissertation_to_dir_submit(request, pk):
     dissert = get_object_or_404(dissertation.Dissertation, pk=pk)
     person = request.user.person
     student = person.student_set.first()
-    submitted_memories_count = dissertation.count_disser_submit_by_student_in_educ_group(student, dissert.education_group_year_start.education_group)
+    submitted_memories_count = dissertation.count_disser_submit_by_student_in_educ_group(
+        student,
+        dissert.education_group_year_start.education_group)
     if dissert.author_is_logged_student(request) and submitted_memories_count == 0:
         new_status = dissertation.get_next_status(dissert, "go_forward")
         status_dict = dict(dissertation_status.DISSERTATION_STATUS)
