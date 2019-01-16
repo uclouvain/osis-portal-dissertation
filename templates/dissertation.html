@@ -28,7 +28,7 @@
 
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'application_dissertation' %}</h2>
+    <h2>{% trans 'Dissertation management' %}</h2>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
@@ -40,10 +40,10 @@
             <div class="col-md-5">
                 <h4 class="media-heading" style="margin-top: 10px;">
                     <a href="{% url 'proposition_dissertations' %}" id="lnk_proposition_dissertations" >
-                        {% trans 'subjects_list' %}
+                        {% trans 'Dissertation subjects' %}
                     </a>
                 </h4>
-                <p>{% trans 'desc_lnk_propositions_dissertations' %}</p>
+                <p>{% trans 'Dissertation subjects submitted by teachers' %}</p>
             </div>
             <div class="col-md-1">
                 <a href="{% url 'dissertations' %}" id="lnk_icon_dissertations" >
@@ -52,10 +52,10 @@
             <div class="col-md-5">
                 <h4 class="media-heading" style="margin-top: 10px;">
                     <a href="{% url 'dissertations' %}" id="lnk_dissertations" >
-                        {% trans 'memories_list' %}
+                        {% trans 'Dissertations' %}
                     </a>
                 </h4>
-                <p>{% trans 'desc_lnk_dissertations' %}</p>
+                <p>{% trans 'My dissertations projects' %}</p>
             </div>
         </div>
     </div>

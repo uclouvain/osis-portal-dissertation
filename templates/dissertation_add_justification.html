@@ -29,21 +29,21 @@
 {% block content %}
 <ol class="breadcrumb">
     <li><a href="{% url 'dissertation' %}" id="lnk_home_osis"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-    <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'memories_list' %}</a></li>
+    <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
     <li><a href="{% url 'dissertation_detail' pk=dissertation.pk %}" id="lnk_dissertation_detail">{{ dissertation.title }}</a></li>
-    <li class="active">{% trans 'add_justification' %}</li>
+    <li class="active">{% trans 'Add justification' %}</li>
 </ol>
 <div class="panel panel-default">
     <div class="panel-body">
       <form method="POST" class="post-form">
         {% csrf_token %}
         <div>
-            {% trans 'justification_instructions' %}
+            {% trans 'The status update is nearly done. This update is detailed just after. Please add your explanation for this update.' %}
         </div>
         <br>
         <div class="row">
             <div class="col-md-4">
-                {% trans 'dissertation' %} :
+                {% trans 'Dissertation' %} :
             </div>
             <div class="col-md-8">
                 {{ dissertation.title }}
@@ -51,7 +51,7 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                {% trans 'author' %} :
+                {% trans 'Author' %} :
             </div>
             <div class="col-md-8">
                 {{ dissertation.author }}
@@ -60,23 +60,23 @@
         <br>
         <div class="row" style="margin:10px;">
             <div class="col-md-5 well">
-                {% trans 'current_status' %} : {{ dissertation.get_status_display }}
+                {% trans 'Current status' %} : {{ dissertation.get_status_display }}
             </div>
             <div class="col-md-2" style="text-align: center; padding: 1em;">
                 <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
             </div>
             <div class="col-md-5 well">
-                {% trans 'next_status' %} : {{ new_status_display }}
+                {% trans 'Next status' %} : {{ new_status_display }}
             </div>
         </div>
         <br>
         <div>
             <div class="form-group">
-                <label>{% trans 'justification' %}</label>
+                <label>{% trans 'Add justification' %}</label>
                 <textarea class="form-control" id="txt_justification"  name="justification" style=""></textarea>
             </div>
             <button type="submit" class="save btn btn-primary">
-                {% trans 'save' %}
+                {% trans 'Save' %}
             </button>
         </div>
 

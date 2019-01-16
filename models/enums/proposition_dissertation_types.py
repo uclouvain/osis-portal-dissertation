@@ -1,12 +1,12 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2018 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,15 +23,13 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
-from dissertation.models.enums import dissertation_role_status
-from dissertation.tests.factories.adviser import AdviserTeacherFactory
+from django.utils.translation import ugettext_lazy as _
 
+PROPOSITION_DISSERTATION_TYPES = (
+        ('RDL', _('litterature review')),
+        ('EMP', _('empirical research')),
+        ('THE', _('theoretical analysis')),
+        ('PRO', _('project dissertation')),
+        ('DEV', _('Development dissertation')),
+        ('OTH', _('other')))
 
-class DissertationRoleFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = 'dissertation.DissertationRole'
-
-    status = factory.Iterator(dissertation_role_status.STATUS_CHOICES, getter=lambda c: c[0])
-    adviser = factory.SubFactory(AdviserTeacherFactory)
-    dissertation = None

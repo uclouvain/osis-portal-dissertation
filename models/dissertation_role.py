@@ -25,7 +25,7 @@
 ##############################################################################
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
-from .enums import status_types
+from dissertation.models.enums import dissertation_role_status
 
 
 class DissertationRoleAdmin(SerializableModelAdmin):
@@ -36,7 +36,7 @@ class DissertationRoleAdmin(SerializableModelAdmin):
 
 
 class DissertationRole(SerializableModel):
-    status = models.CharField(max_length=12, choices=status_types.STATUS_CHOICES)
+    status = models.CharField(max_length=12, choices=dissertation_role_status.STATUS_CHOICES)
     adviser = models.ForeignKey('Adviser')
     dissertation = models.ForeignKey('Dissertation')
 

@@ -23,10 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
-from django.utils import timezone
 from django.db.models import Q
+from django.utils import timezone
+
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class PropositionOfferAdmin(SerializableModelAdmin):
@@ -45,27 +46,30 @@ class PropositionOffer(SerializableModel):
         return str(self.offer_proposition)
 
 
-def find_by_offers(offers):
-    return PropositionOffer.objects.filter(proposition_dissertation__active=True,
-                                           proposition_dissertation__visibility=True,
-                                           offer_proposition__offer__in=offers,
-                                           offer_proposition__start_visibility_proposition__lte=timezone.now(),
-                                           offer_proposition__end_visibility_proposition__gte=timezone.now()
-                                           )
+
+def find_visible_by_education_groups(education_groups):
+    now = timezone.now()
+    return PropositionOffer.objects.filter(
+        proposition_dissertation__active=True,
+        proposition_dissertation__visibility=True,
+        offer_proposition__education_group__in=education_groups,
+        offer_proposition__start_visibility_proposition__lte=now,
+        offer_proposition__end_visibility_proposition__gte=now
+    )
 
 
-def find_by_offers_ordered_by_proposition_dissertation(offers):
-    return find_by_offers(offers).order_by('proposition_dissertation')
+def find_by_education_group_ordered_by_proposition_dissert(education_groups):
+    return find_visible_by_education_groups(education_groups).order_by('proposition_dissertation')
 
 
 def search_by_proposition_dissertation(proposition_dissertation):
     return PropositionOffer.objects.filter(proposition_dissertation=proposition_dissertation)
 
 
-def search(offers, terms, active=None, visibility=None):
+def search(education_groups, terms, active=None, visibility=None):
     queryset = PropositionOffer.objects.filter(proposition_dissertation__active=True,
                                                proposition_dissertation__visibility=True,
-                                               offer_proposition__offer__in=offers,
+                                               offer_proposition__education_group__in=education_groups,
                                                offer_proposition__start_visibility_proposition__lte=timezone.now())\
         .distinct()
     if terms:
@@ -75,7 +79,7 @@ def search(offers, terms, active=None, visibility=None):
             Q(proposition_dissertation__author__person__first_name__icontains=terms) |
             Q(proposition_dissertation__author__person__middle_name__icontains=terms) |
             Q(proposition_dissertation__author__person__last_name__icontains=terms) |
-            Q(offer_proposition__acronym__icontains=terms)
+            Q(offer_proposition__education_group__educationgroupyear__acronym__icontains=terms)
         )
     if active:
         queryset = queryset.filter(proposition_dissertation__active=active)

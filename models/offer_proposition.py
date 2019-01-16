@@ -23,11 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from dissertation.models.offer_proposition_group import OfferPropositionGroup
 from django.db import models
 from django.utils import timezone
+
 from base.models import offer
+from dissertation.models.offer_proposition_group import OfferPropositionGroup
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class OfferPropositionAdmin(SerializableModelAdmin):
@@ -59,24 +60,20 @@ class OfferProposition(SerializableModel):
     offer_proposition_group = models.ForeignKey(OfferPropositionGroup, null=True, blank=True)
     global_email_to_commission = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.acronym
-
     @property
     def recent_acronym_education_group(self):
         if self.education_group:
             return self.education_group.most_recent_acronym
         return None
 
-
-def get_all_offers():
-    offer_propositions = list(OfferProposition.objects.all().select_related('offer'))
-    return [obj.offer for obj in offer_propositions]
+    def __str__(self):
+        return str(self.recent_acronym_education_group)
 
 
-def search_by_offer(off):
-    return OfferProposition.objects.get(offer=off)
+def get_by_education_group(educ_group):
+    return OfferProposition.objects.get(education_group=educ_group)
 
 
-def search_by_offers(offers):
-    return OfferProposition.objects.filter(offer__in=offers)
+def search_by_education_groups(education_groups):
+    return OfferProposition.objects.filter(education_group__in=education_groups)
+

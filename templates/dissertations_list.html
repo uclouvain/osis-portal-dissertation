@@ -29,30 +29,30 @@
 {% block content %}
 <ol class="breadcrumb">
     <li><a href="{% url 'dissertation' %}" id="lnk_home_osis"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-    <li class="active">{% trans 'memories_list' %}</li>
+    <li class="active">{% trans 'Dissertations' %}</li>
 </ol>
 <div class="page-header">
-    <h2>{% trans 'memories_list' %}</h2>
+    <h2>{% trans 'Dissertations' %}</h2>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
         <form method="get" action="{% url 'dissertations_search'%}">
             <div class="row">
                 <div class="col-md-10">
-                    <input class="form-control" id="txt_submit_search" placeholder="{% trans 'search' %}" name="search"
+                    <input class="form-control" id="txt_submit_search" placeholder="{% trans 'Search' %}" name="search"
                            value="{{ request.GET.search }}">
                 </div>
                 <div class="col-md-1">
                     <div class="row">
                         <div class="col-md-6">
                             <button type="submit" id="bt_submit_search" class="btn btn-primary" role="button"
-                                    title="{% trans 'search' %}"><span class="glyphicon glyphicon-search"
+                                    title="{% trans 'Search' %}"><span class="glyphicon glyphicon-search"
                                     aria-hidden="true"></span></button>
                         </div>
                         {% if visibility == True %}
                             <div class="col-md-6">
                                 <a href="{% url 'dissertation_new' %}" id="lnk_dissertation_new" class="btn btn-default"
-                                   role="button" title="{% trans 'create'%}"><span class="glyphicon glyphicon-plus"
+                                   role="button" title="{% trans 'Create'%}"><span class="glyphicon glyphicon-plus"
                                    aria-hidden="true"></span></a>
                             </div>
                         {% endif %}
@@ -63,15 +63,15 @@
     </div>
     {% if dissertations|length == 0 %}
         <br>
-        <label class="alert alert-info" style="margin-left:10%;width:80%;text-align:center;">{% trans 'no_result' %}</label>
+        <label class="alert alert-info" style="margin-left:10%;width:80%;text-align:center;">{% trans 'No result' %}</label>
     {% else %}
         <table class="table table-hover">
             <tr>
-              <th>{% trans 'title_dissertation'%}</th>
-              <th>{% trans 'author'%}</th>
-              <th>{% trans 'status'%}</th>
-              <th>{% trans 'offer_year_start'%}</th>
-              <th>{% trans 'proposition_dissertation'%}</th>
+              <th>{% trans 'Dissertation'%}</th>
+              <th>{% trans 'Author'%}</th>
+              <th>{% trans 'Status'%}</th>
+              <th>{% trans 'Offer year start'%}</th>
+              <th>{% trans 'Dissertation subject'%}</th>
             </tr>
             {% for dissertation in dissertations %}
               <tr>
@@ -114,7 +114,7 @@
                         {{ dissertation.get_status_display }}
                     </span>
                 </td>
-                <td>{{ dissertation.offer_year_start }}</td>
+                <td>{{ dissertation.education_group_year_start }}</td>
                 <td>{{ dissertation.proposition_dissertation }}</td>
               </tr>
             {% endfor %}

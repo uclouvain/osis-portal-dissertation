@@ -27,6 +27,8 @@ import factory
 import factory.fuzzy
 from django.utils import timezone
 from base.tests.factories.person import PersonFactory
+from dissertation.models.enums import proposition_dissertation_types, proposition_dissertation_levels
+from dissertation.models.enums.proposition_dissertation_collaboration import COLLABORATION_CHOICES
 from dissertation.tests.factories.adviser import AdviserTeacherFactory
 from dissertation.models.proposition_dissertation import PropositionDissertation
 
@@ -37,12 +39,12 @@ class PropositionDissertationFactory(factory.DjangoModelFactory):
 
     author = factory.SubFactory(AdviserTeacherFactory)
     creator = factory.SubFactory(PersonFactory)
-    collaboration = factory.Iterator(PropositionDissertation.COLLABORATION_CHOICES, getter=lambda c: c[0])
+    collaboration = factory.Iterator(COLLABORATION_CHOICES, getter=lambda c: c[0])
     description = factory.Faker('text', max_nb_chars=500)
-    level = factory.Iterator(PropositionDissertation.LEVELS_CHOICES, getter=lambda c: c[0])
+    level = factory.Iterator(proposition_dissertation_levels.LEVELS, getter=lambda c: c[0])
     max_number_student = factory.fuzzy.FuzzyInteger(1, 50)
     title = factory.Faker('text', max_nb_chars=150)
-    type = factory.Iterator(PropositionDissertation.TYPES_CHOICES, getter=lambda c: c[0])
+    type = factory.Iterator(proposition_dissertation_types.PROPOSITION_DISSERTATION_TYPES, getter=lambda c: c[0])
     visibility = True
     active = True
     created_date = factory.Faker('date_time_this_year', before_now=True, after_now=False,

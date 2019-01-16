@@ -23,14 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
+
+from base import models as mdl
 from base.models import student, offer_year, academic_year
 from dissertation.models import dissertation_location, proposition_dissertation
+from dissertation.models.enums.dissertation_status import DISSERTATION_STATUS
 from dissertation.utils import emails_dissert
-from base import models as mdl
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class DissertationAdmin(SerializableModelAdmin):
@@ -42,40 +44,21 @@ class DissertationAdmin(SerializableModelAdmin):
                      'proposition_dissertation__author__person__first_name', 'education_group_year_start__id')
 
 
-STATUS_CHOICES = (
-    ('DRAFT', _('draft')),
-    ('DIR_SUBMIT', _('submitted_to_director')),
-    ('DIR_OK', _('accepted_by_director')),
-    ('DIR_KO', _('refused_by_director')),
-    ('COM_SUBMIT', _('submitted_to_commission')),
-    ('COM_OK', _('accepted_by_commission')),
-    ('COM_KO', _('refused_by_commission')),
-    ('EVA_SUBMIT', _('submitted_to_first_year_evaluation')),
-    ('EVA_OK', _('accepted_by_first_year_evaluation')),
-    ('EVA_KO', _('refused_by_first_year_evaluation')),
-    ('TO_RECEIVE', _('to_be_received')),
-    ('TO_DEFEND', _('to_be_defended')),
-    ('DEFENDED', _('defended')),
-    ('ENDED', _('ended')),
-    ('ENDED_WIN', _('ended_win')),
-    ('ENDED_LOS', _('ended_los')),
-)
-
 DEFEND_PERIODE_CHOICES = (
     ('UNDEFINED', _('undefined')),
-    ('JANUARY', _('january')),
-    ('JUNE', _('june')),
-    ('SEPTEMBER', _('september')),
+    ('JANUARY', _('January')),
+    ('JUNE', _('June')),
+    ('SEPTEMBER', _('September')),
 )
 
 
 class Dissertation(SerializableModel):
     title = models.CharField(max_length=500)
     author = models.ForeignKey(student.Student)
-    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='DRAFT')
+    status = models.CharField(max_length=12, choices=DISSERTATION_STATUS, default='DRAFT')
     defend_periode = models.CharField(max_length=12, choices=DEFEND_PERIODE_CHOICES, default='UNDEFINED', null=True)
     defend_year = models.IntegerField(blank=True, null=True)
-    offer_year_start = models.ForeignKey(offer_year.OfferYear)
+    offer_year_start = models.ForeignKey(offer_year.OfferYear, null=True, blank=True)
     education_group_year_start = models.ForeignKey('base.EducationGroupYear',
                                                    null=True,
                                                    blank=True,
@@ -126,9 +109,9 @@ class Dissertation(SerializableModel):
         return logged_student == self.author
 
 
-def count_submit_by_user(user, offer):
-    return Dissertation.objects.filter(author=user)\
-        .filter(offer_year_start__offer=offer) \
+def count_disser_submit_by_student_in_educ_group(student, educ_group):
+    return Dissertation.objects.filter(author=student)\
+        .filter(education_group_year_start__education_group=educ_group) \
         .exclude(status='DIR_KO') \
         .exclude(status='DRAFT')\
         .filter(active=True)\

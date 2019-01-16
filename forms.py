@@ -26,27 +26,27 @@
 
 from django import forms
 from django.forms import ModelForm
+
 from dissertation.models.dissertation import Dissertation
-from dissertation.models.dissertation_update import DissertationUpdate, JUSTIFICATION_LINK
 from dissertation.models.dissertation_role import DissertationRole
-from dissertation.utils import emails_dissert
+from dissertation.models.dissertation_update import DissertationUpdate, JUSTIFICATION_LINK
 
 
 class DissertationForm(ModelForm):
     class Meta:
         model = Dissertation
-        fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description', 'defend_year',
-                  'defend_periode', 'location')
+        fields = ('title', 'author', 'proposition_dissertation', 'description', 'defend_year',
+                  'defend_periode', 'location', 'education_group_year_start')
         widgets = {'author': forms.HiddenInput()}
 
 
 class DissertationEditForm(ModelForm):
     class Meta:
         model = Dissertation
-        fields = ('title', 'author', 'offer_year_start', 'proposition_dissertation', 'description', 'defend_year',
-                  'defend_periode', 'location')
+        fields = ('title', 'author', 'education_group_year_start', 'proposition_dissertation', 'description',
+                  'defend_year', 'defend_periode', 'location')
         widgets = {'author': forms.HiddenInput(),
-                   'offer_year_start': forms.HiddenInput(),
+                   'education_group_year_start': forms.HiddenInput(),
                    'proposition_dissertation': forms.HiddenInput()}
 
 

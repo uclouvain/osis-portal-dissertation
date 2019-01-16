@@ -27,6 +27,8 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from base import models as mdl
+from base.models import education_group
+from base.models.enums import offer_enrollment_state
 from base.views import layout
 from dissertation.models import dissertation, proposition_dissertation, proposition_document_file, proposition_role,\
     proposition_offer
@@ -37,8 +39,10 @@ from django.utils import timezone
 def proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
-    offers = mdl.offer.find_by_student(student)
-    proposition_offers = proposition_offer.find_by_offers_ordered_by_proposition_dissertation(offers)
+    education_groups = education_group.find_by_student_and_enrollment_states(
+        student, [offer_enrollment_state.SUBSCRIBED, offer_enrollment_state.PROVISORY])
+    proposition_offers = proposition_offer.find_by_education_group_ordered_by_proposition_dissert(education_groups).\
+        prefetch_related('proposition_dissertation', 'offer_proposition')
     proposition_offers = [_append_dissertations_count(prop_offer) for prop_offer in proposition_offers]
     date_now = timezone.now().date()
     return layout.render(request, 'proposition_dissertations_list.html',
@@ -57,7 +61,8 @@ def _append_dissertations_count(prop_offer):
 def proposition_dissertation_detail(request, pk):
     proposition = proposition_dissertation.find_by_id(pk)
     subject = get_object_or_404(proposition_dissertation.PropositionDissertation, pk=pk)
-    offer_propositions = proposition_offer.search_by_proposition_dissertation(subject)
+    offer_propositions = proposition_offer.search_by_proposition_dissertation(subject).\
+        prefetch_related('proposition_dissertation', 'offer_proposition')
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
     using = dissertation.count_by_proposition(proposition)
@@ -84,8 +89,14 @@ def proposition_dissertation_detail(request, pk):
 def proposition_dissertations_search(request):
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
-    offers = mdl.offer.find_by_student(student)
-    proposition_offers = proposition_offer.search(offers=offers, terms=request.GET['search'], active=True, visibility=True)
+    education_groups = education_group.find_by_student_and_enrollment_states(
+        student,
+        [offer_enrollment_state.SUBSCRIBED, offer_enrollment_state.PROVISORY])
+    proposition_offers = proposition_offer.search(
+        education_groups=education_groups,
+        terms=request.GET['search'],
+        active=True, visibility=True
+    )
     date_now = timezone.now().date()
     return layout.render(request, 'proposition_dissertations_list.html',
                          {'date_now': date_now,

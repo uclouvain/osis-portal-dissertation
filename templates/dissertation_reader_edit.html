@@ -29,8 +29,8 @@
 {% block content %}
 <ol class="breadcrumb">
     <li><a href="{% url 'dissertation' %}" id="lnk_home_osis"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-    <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'memories_list' %}</a></li>
-    <li class="active">{% trans 'create_dissertation' %}</li>
+    <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
+    <li class="active">{% trans 'Dissertation title' %}</li>
 </ol>
 <div class="panel panel-default">
     <div class="panel-body">
@@ -48,7 +48,7 @@
             </div>
             <div class="row">
                 <div class="col-md-3 col-lg-offset-1" style="text-align:right">
-                    <label for="txt_reader" {% if form.adviser.errors %} style="color:red;" {% endif %}>{% trans 'reader' %}</label>
+                    <label for="txt_reader" {% if form.adviser.errors %} style="color:red;" {% endif %}>{% trans 'Reader' %}</label>
                 </div>
                 <div class="col-md-5">
                     <select class="form-control" id="txt_reader"  name="adviser" style="text-align: center;margin:-6px;">
@@ -57,7 +57,7 @@
                 </div>
             </div>
             <div style="text-align:right">
-                <button type="submit" class="save btn btn-primary">{% trans 'save' %}</button>
+                <button type="submit" class="save btn btn-primary">{% trans 'Save' %}</button>
             </div>
         </form>
     </div>
