@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-02 14:45+0100\n"
+"POT-Creation-Date: 2019-01-16 09:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,15 +22,15 @@ msgstr ""
 msgid "%%"
 msgstr ""
 
-#: models/dissertation.py:51
+#: models/enums/dissertation_status.py:51
 msgid "Accepted by commission"
 msgstr "Accepté par la commission"
 
-#: models/dissertation.py:54
+#: models/enums/dissertation_status.py:54
 msgid "Accepted by first year evaluation"
 msgstr "Validation de première année validée"
 
-#: models/dissertation.py:48
+#: models/enums/dissertation_status.py:48
 msgid "Accepted by promoter"
 msgstr "Accepté par le promoteur"
 
@@ -45,8 +45,13 @@ msgstr "Ajouter un lecteur"
 msgid "Add justification"
 msgstr "Ajouter une justification"
 
-msgid "Are you sure you want to put the dissertation back to draft ? Your promotor will receive an information e-mail."
-msgstr "Êtes-vous sûr de vouloir remettre votre mémoire en brouillon? Votre promoteur recevra un e-mail d’information."
+#: templates/dissertation_detail.html:290
+msgid ""
+"Are you sure you want to put the dissertation back to draft ? Your promotor "
+"will receive an information e-mail."
+msgstr ""
+"Êtes-vous sûr de vouloir remettre votre mémoire en brouillon? Votre "
+"promoteur recevra un e-mail d’information."
 
 #: templates/dissertation_add_justification.html:54
 #: templates/dissertation_detail.html:72 templates/dissertations_list.html:71
@@ -54,11 +59,10 @@ msgstr "Êtes-vous sûr de vouloir remettre votre mémoire en brouillon? Votre p
 msgid "Author"
 msgstr "Auteur"
 
+#: templates/dissertation_detail.html:289
+#: templates/dissertation_detail.html:292
 msgid "Back to draft"
 msgstr "Retour au brouillon"
-
-msgid "Case study"
-msgstr "Cas d'étude"
 
 #: templates/dissertation_history.html:47
 msgid "Change"
@@ -70,7 +74,7 @@ msgstr "Collaboration"
 
 #: templates/dissertation_detail.html:45
 #: templates/dissertation_edit_form.html:97
-#: templates/dissertation_form.html:125
+#: templates/dissertation_form.html:126
 msgid "Confirm dissertation"
 msgstr "Confirmer le mémoire"
 
@@ -92,28 +96,32 @@ msgid "Date"
 msgstr ""
 
 #: templates/dissertation_detail.html:150
-#: templates/dissertation_edit_form.html:57 templates/dissertation_form.html:85
+#: templates/dissertation_edit_form.html:57 templates/dissertation_form.html:86
 msgid "Defend period"
 msgstr "Période de défense"
 
 #: templates/dissertation_detail.html:46 templates/dissertation_detail.html:158
 #: templates/dissertation_detail.html:191
 #: templates/dissertation_edit_form.html:72
-#: templates/dissertation_form.html:100
+#: templates/dissertation_form.html:101
 msgid "Defend year"
 msgstr "Année de défense"
 
-#: models/dissertation.py:58
+#: models/enums/dissertation_status.py:58
 msgid "Defended"
 msgstr "Défendu"
 
 #: templates/dissertation_detail.html:142
 #: templates/dissertation_detail.html:267
 #: templates/dissertation_edit_form.html:93
-#: templates/dissertation_form.html:121
+#: templates/dissertation_form.html:122
 #: templates/proposition_dissertation_detail.html:74
 msgid "Description"
 msgstr "Description"
+
+#: models/enums/proposition_dissertation_types.py:33
+msgid "Development dissertation"
+msgstr "Mémoire-développement"
 
 #: templates/dissertation_add_justification.html:46
 #: templates/dissertation_detail.html:80
@@ -146,7 +154,7 @@ msgstr "Jury du mémoire"
 
 #: templates/dissertation_detail.html:166
 #: templates/dissertation_edit_form.html:83
-#: templates/dissertation_form.html:111
+#: templates/dissertation_form.html:112
 msgid "Dissertation location"
 msgstr "Site de rattachement"
 
@@ -154,8 +162,7 @@ msgstr "Site de rattachement"
 msgid "Dissertation management"
 msgstr "Gestion des mémoires"
 
-#: models/proposition_dissertation.py:45 templates/dissertation_form.html:70
-#: templates/dissertations_list.html:74
+#: templates/dissertation_form.html:71 templates/dissertations_list.html:74
 #: templates/proposition_dissertations_list.html:47
 msgid "Dissertation subject"
 msgstr "Sujet de mémoire"
@@ -195,7 +202,7 @@ msgstr "Mises-à-jour du mémoire"
 msgid "Dissertations"
 msgstr "Mémoires"
 
-#: models/dissertation.py:46
+#: models/enums/dissertation_status.py:46
 msgid "Draft"
 msgstr "Brouillon"
 
@@ -203,11 +210,7 @@ msgstr "Brouillon"
 msgid "Edit"
 msgstr "Editer"
 
-#: models/proposition_dissertation.py:43
-msgid "Empirical research"
-msgstr ""
-
-#: models/dissertation.py:59
+#: models/enums/dissertation_status.py:59
 msgid "End"
 msgstr "Terminé"
 
@@ -215,10 +218,6 @@ msgstr "Terminé"
 #: templates/proposition_dissertation_detail.html:65
 msgid "File"
 msgstr "Fichier"
-
-#: models/proposition_dissertation.py:56
-msgid "Forbidden"
-msgstr "Interdite"
 
 #: templates/dissertation_history.html:44
 msgid "History"
@@ -228,11 +227,11 @@ msgstr "Historique"
 msgid "Information"
 msgstr "Information"
 
-#: models/dissertation.py:66
+#: models/dissertation.py:49
 msgid "January"
 msgstr "Janvier"
 
-#: models/dissertation.py:67
+#: models/dissertation.py:50
 msgid "June"
 msgstr "Juin"
 
@@ -246,10 +245,6 @@ msgstr "Niveau de développment du sujet"
 msgid "Link"
 msgstr "Lien"
 
-#: models/proposition_dissertation.py:42
-msgid "Litterature Review"
-msgstr "Revue Littéraire"
-
 #: templates/dissertation_detail.html:36
 msgid "Main"
 msgstr "Principal"
@@ -259,7 +254,8 @@ msgstr "Principal"
 msgid "Maximum number of student"
 msgstr "Nombre indicatif de places pour ce sujet"
 
-#: models/proposition_dissertation.py:46 templates/dissertation.html:58
+#: models/enums/proposition_dissertation_types.py:33
+#: templates/dissertation.html:58
 msgid "My dissertations projects"
 msgstr "Mes projets de mémoires"
 
@@ -276,7 +272,7 @@ msgstr "Aucun résultat trouvé"
 msgid "Offer year start"
 msgstr "Programme de cours de départ du mémoire"
 
-#: templates/dissertation_detail.html:241 templates/dissertation_form.html:57
+#: templates/dissertation_detail.html:241 templates/dissertation_form.html:58
 #: templates/proposition_dissertation_detail.html:122
 #: templates/proposition_dissertations_list.html:61
 msgid "Offers"
@@ -285,10 +281,6 @@ msgstr "Programmes"
 #: templates/dissertation_history.html:48
 msgid "Person"
 msgstr "Personne"
-
-#: models/proposition_dissertation.py:54
-msgid "Possible"
-msgstr "Possible"
 
 #: models/adviser.py:39
 msgid "Professor"
@@ -304,29 +296,25 @@ msgstr "Promoteur"
 msgid "Reader"
 msgstr "Lecteur"
 
-#: models/dissertation.py:52
+#: models/enums/dissertation_status.py:52
 msgid "Refused by commission"
 msgstr "Refusé par la commission"
 
-#: models/dissertation.py:55
+#: models/enums/dissertation_status.py:55
 msgid "Refused by first year evaluation"
 msgstr "Validation de première année ratée"
 
-#: models/dissertation.py:49
+#: models/enums/dissertation_status.py:49
 msgid "Refused by promoter"
 msgstr "Refusé par le promoteur"
 
-#: models/dissertation.py:61
+#: models/enums/dissertation_status.py:61
 msgid "Reported"
 msgstr "Reporté"
 
-#: models/proposition_dissertation.py:55
-msgid "Required"
-msgstr "Requis"
-
 #: templates/dissertation_add_justification.html:79
 #: templates/dissertation_edit_form.html:97
-#: templates/dissertation_form.html:125
+#: templates/dissertation_form.html:126
 #: templates/dissertation_reader_edit.html:60 templates/new_document.html:49
 msgid "Save"
 msgstr "Sauvegarder"
@@ -336,7 +324,7 @@ msgstr "Sauvegarder"
 msgid "Search"
 msgstr "Rechercher"
 
-#: models/dissertation.py:68
+#: models/dissertation.py:51
 msgid "September"
 msgstr "Septembre"
 
@@ -351,18 +339,20 @@ msgstr "Informations du sujet de mémoire"
 
 #: templates/dissertation_detail.html:281
 #: templates/dissertation_detail.html:284
+msgid "Submit this dissertation project to promoter"
+msgstr "Soumettre le projet au promoteur"
 
-#: models/dissertation.py:50
+#: models/enums/dissertation_status.py:50
 msgid "Submitted to commission"
 msgstr "Soumis à la commission"
 
-#: models/dissertation.py:53
+#: models/enums/dissertation_status.py:53
 msgid "Submitted to first year evaluation"
 msgstr "Soumis à l'évaluation de première année"
 
-#: models/dissertation.py:47
-msgid "Submit this dissertation project to promoter"
-msgstr "Soumettre le projet au promoteur"
+#: models/enums/dissertation_status.py:47
+msgid "Submitted to promoter"
+msgstr "Soumis au promoteur"
 
 #: templates/proposition_dissertation_detail.html:114
 msgid "Taken places"
@@ -377,20 +367,16 @@ msgstr ""
 "changement d'état qui sera appliqué est renseigné ci-dessous. Veuillez "
 "indiquer un message d'explication."
 
-#: models/proposition_dissertation.py:51
-msgid "Theme"
-msgstr "Theme"
-
 #: templates/dissertation_detail.html:233
 #: templates/dissertation_title_form.html:46
 msgid "Title"
 msgstr "titre"
 
-#: models/dissertation.py:56
+#: models/enums/dissertation_status.py:56
 msgid "To be received"
 msgstr "En attente de réception"
 
-#: models/dissertation.py:57
+#: models/enums/dissertation_status.py:57
 msgid "To be received defended"
 msgstr "En attente de défense"
 
@@ -407,7 +393,7 @@ msgstr ""
 "Attention : vous allez soumettre ce projet de mémoire au promoteur. Êtes-"
 "vous certain de vouloir continuer ?"
 
-#: models/dissertation.py:60
+#: models/enums/dissertation_status.py:60
 msgid "Win"
 msgstr "Réussi"
 
@@ -426,6 +412,23 @@ msgstr "Annuler"
 msgid "comment"
 msgstr "Commentaire"
 
+#: models/enums/proposition_dissertation_types.py:30
+msgid "empirical research"
+msgstr "Recherche empirique"
+
+#: models/enums/proposition_dissertation_collaboration.py:35
+msgid "forbidden"
+msgstr "Interdite"
+
+#: models/enums/proposition_dissertation_levels.py:32
+#: models/proposition_dissertation.py:47
+msgid "large theme"
+msgstr "thématique large"
+
+#: models/enums/proposition_dissertation_types.py:29
+msgid "litterature review"
+msgstr "Revue de littérature"
+
 #: templates/proposition_dissertation_detail.html:164
 msgid "mail"
 msgstr "e-mail"
@@ -434,6 +437,7 @@ msgstr "e-mail"
 msgid "mobile"
 msgstr ""
 
+#: views/dissertation.py:164
 msgid "new title"
 msgstr "nouveau titre"
 
@@ -442,30 +446,50 @@ msgstr "nouveau titre"
 msgid "of"
 msgstr "sur"
 
-#: models/proposition_dissertation.py:47
-msgid "other"
-msgstr "autre"
-
+#: views/dissertation.py:160
 msgid "original title"
 msgstr "titre original"
+
+#: models/enums/proposition_dissertation_types.py:34
+msgid "other"
+msgstr "Autre"
 
 #: templates/proposition_dissertation_detail.html:181
 msgid "phone"
 msgstr "Téléphone"
 
-#: models/proposition_dissertation.py:50
-msgid "specific_subject"
-msgstr ""
+#: models/enums/proposition_dissertation_collaboration.py:33
+msgid "possible"
+msgstr "Possible"
 
-#: models/proposition_dissertation.py:44
-msgid "theoretical_analysis"
-msgstr ""
+#: models/enums/proposition_dissertation_types.py:32
+msgid "project dissertation"
+msgstr "Mémoire-projet"
 
-#: models/dissertation.py:65 templates/dissertation_detail.html:153
+#: models/enums/proposition_dissertation_collaboration.py:34
+msgid "required"
+msgstr "Requis"
+
+#: models/enums/proposition_dissertation_levels.py:31
+#: models/proposition_dissertation.py:46
+msgid "specific subject"
+msgstr "Sujet précis"
+
+#: models/enums/proposition_dissertation_types.py:31
+msgid "theoretical analysis"
+msgstr "Analyse théorique"
+
+#: models/dissertation.py:48 templates/dissertation_detail.html:153
 #: templates/dissertation_detail.html:161
 #: templates/dissertation_detail.html:169
 msgid "undefined"
 msgstr ""
+
+#~ msgid "Case study"
+#~ msgstr "Cas d'étude"
+
+#~ msgid "Theme"
+#~ msgstr "Theme"
 
 #~ msgid "Delete"
 #~ msgstr "Supprimer"
@@ -484,9 +508,6 @@ msgstr ""
 
 #~ msgid "copromotor"
 #~ msgstr "Co-promoteur"
-
-#~ msgid "dissertations"
-#~ msgstr "Mémoires"
 
 #~ msgid "domain"
 #~ msgstr "Domaine"

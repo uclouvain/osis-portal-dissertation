@@ -26,10 +26,10 @@
 from django.utils.translation import ugettext_lazy as _
 
 PROPOSITION_DISSERTATION_TYPES = (
-        ('RDL', _('litterature_review')),
-        ('EMP', _('empirical_research')),
-        ('THE', _('theoretical_analysis')),
-        ('PRO', _('project_dissertation')),
-        ('DEV', _('My dissertations projects')),
+        ('RDL', _('litterature review')),
+        ('EMP', _('empirical research')),
+        ('THE', _('theoretical analysis')),
+        ('PRO', _('project dissertation')),
+        ('DEV', _('Development dissertation')),
         ('OTH', _('other')))
 

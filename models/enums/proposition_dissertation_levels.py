@@ -28,5 +28,5 @@ from django.utils.translation import ugettext_lazy as _
 SPECIFIC = 'SPECIFIC'
 THEME = 'THEME'
 LEVELS = (
-    (SPECIFIC, _('specific_subject')),
-    (THEME, _('large_theme')))
+    (SPECIFIC, _('specific subject')),
+    (THEME, _('large theme')))

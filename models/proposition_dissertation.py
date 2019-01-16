@@ -42,11 +42,6 @@ class PropositionDissertationAdmin(SerializableModelAdmin):
 
 class PropositionDissertation(SerializableModel):
 
-    LEVELS_CHOICES = (
-        ('SPECIFIC', _('specific_subject')),
-        ('THEME', _('large_theme')))
-
-
     author = models.ForeignKey('Adviser')
     creator = models.ForeignKey('base.Person', blank=True, null=True)
     collaboration = models.CharField(max_length=12, choices=COLLABORATION_CHOICES, default='FORBIDDEN')
