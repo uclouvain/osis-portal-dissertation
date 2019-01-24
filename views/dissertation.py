@@ -246,8 +246,6 @@ def dissertation_new(request, pk):
             prop_diss = get_object_or_404(PropositionDissertation, pk=pk)
             initial['proposition_dissertation'] = prop_diss.pk
         form = DissertationForm(request.POST or None, initial=initial)
-        print(form.fields['proposition_dissertation'])
-        print(form.errors)
         if form.is_valid():
             memory = form.save()
             dissertation_update.add(request, memory,
