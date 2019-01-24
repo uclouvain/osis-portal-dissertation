@@ -39,6 +39,18 @@ class DissertationForm(ModelForm):
                   'defend_periode', 'location', 'education_group_year_start')
         widgets = {'author': forms.HiddenInput()}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if "proposition_dissertation" in self.initial:
+            print(self.initial["proposition_dissertation"])
+            self.fields['proposition_dissertation'].disabled = True
+            self.fields['proposition_dissertation'].required = False
+
+    def clean(self):
+
+        c = super().clean()
+        return c
+
 
 class DissertationEditForm(ModelForm):
     class Meta:
