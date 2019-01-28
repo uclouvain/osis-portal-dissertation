@@ -45,11 +45,6 @@ class DissertationForm(ModelForm):
             self.fields['proposition_dissertation'].disabled = True
             self.fields['proposition_dissertation'].required = False
 
-    def clean(self):
-
-        c = super().clean()
-        return c
-
 
 class DissertationEditForm(ModelForm):
     class Meta:
