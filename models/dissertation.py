@@ -53,23 +53,23 @@ DEFEND_PERIODE_CHOICES = (
 
 
 class Dissertation(SerializableModel):
-    title = models.CharField(max_length=500)
+    title = models.CharField(_('Dissertation'), max_length=500)
     author = models.ForeignKey(student.Student)
     status = models.CharField(max_length=12, choices=DISSERTATION_STATUS, default='DRAFT')
-    defend_periode = models.CharField(max_length=12, choices=DEFEND_PERIODE_CHOICES, default='UNDEFINED', null=True)
-    defend_year = models.IntegerField(blank=True, null=True)
+    defend_periode = models.CharField(_('Defend period'), max_length=12, choices=DEFEND_PERIODE_CHOICES, default='UNDEFINED', null=True)
+    defend_year = models.IntegerField(_('Defend year'), blank=True, null=True)
     offer_year_start = models.ForeignKey(offer_year.OfferYear, null=True, blank=True)
     education_group_year_start = models.ForeignKey('base.EducationGroupYear',
                                                    null=True,
                                                    blank=True,
                                                    on_delete=models.PROTECT,
-                                                   related_name='dissertations')
-    proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation)
-    description = models.TextField(blank=True, null=True)
+                                                   related_name='dissertations', verbose_name=_('Offers'))
+    proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation, verbose_name=_('Dissertation subject'))
+    description = models.TextField(_('Description'), blank=True, null=True)
     active = models.BooleanField(default=True)
     creation_date = models.DateTimeField(auto_now_add=True, editable=False)
     modification_date = models.DateTimeField(auto_now=True)
-    location = models.ForeignKey(dissertation_location.DissertationLocation, blank=True, null=True)
+    location = models.ForeignKey(dissertation_location.DissertationLocation, blank=True, null=True, verbose_name=_('Dissertation location'))
 
     def __str__(self):
         return self.title

@@ -25,7 +25,7 @@
 ##############################################################################
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
@@ -42,6 +42,7 @@ from dissertation.models import dissertation, dissertation_document_file, disser
     offer_proposition, proposition_dissertation, proposition_offer, proposition_role
 from dissertation.models.enums import dissertation_status
 from dissertation.models.offer_proposition import OfferProposition
+from dissertation.models.proposition_dissertation import PropositionDissertation
 
 
 @login_required
@@ -219,7 +220,7 @@ def dissertation_jury_new(request, pk):
 
 
 @login_required
-def dissertation_new(request):
+def dissertation_new(request, pk):
     person = request.user.person
     student = person.student_set.first()
     this_academic_year = academic_year.starting_academic_year()
@@ -237,17 +238,22 @@ def dissertation_new(request):
     )
     date_now = timezone.now().date()
     if any(o.start_visibility_dissertation <= date_now <= o.end_visibility_dissertation for o in offer_propositions):
-        if request.method == "POST":
-            form = DissertationForm(request.POST)
-            if form.is_valid():
-                memory = form.save()
-                dissertation_update.add(request, memory,
-                                        memory.status,
-                                        justification="student_creation_dissertation, title:"+memory.title
-                                        )
-                return redirect('dissertation_detail', pk=memory.pk)
-        else:
-            form = DissertationForm(initial={'active': True, 'author': student})
+        initial = {
+            'active': True,
+            'author': student
+        }
+        if pk:
+            prop_diss = get_object_or_404(PropositionDissertation, pk=pk)
+            initial['proposition_dissertation'] = prop_diss.pk
+        form = DissertationForm(request.POST or None, initial=initial)
+        if form.is_valid():
+            memory = form.save()
+            dissertation_update.add(request, memory,
+                                    memory.status,
+                                    justification="student_creation_dissertation, title:"+memory.title
+                                    )
+            return redirect('dissertation_detail', pk=memory.pk)
+
         form.fields["education_group_year_start"].queryset = EducationGroupYear.objects.filter(
             offerenrollment__student=student,
             education_group__in=[offer_prop.education_group for offer_prop in offer_propositions]
@@ -259,7 +265,7 @@ def dissertation_new(request):
             proposition_dissertation.find_by_education_groups(
                 [offer_enroll.education_group_year.education_group for offer_enroll in offer_enrollements]
             )
-        return layout.render(request, 'dissertation_form.html',
+        return render(request, 'dissertation_form.html',
                              {'form': form,
                               'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES})
     else:

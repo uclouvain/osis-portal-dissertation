@@ -217,9 +217,15 @@
                     <div class="col-md-9">
                         {{ proposition_dissertation.author.comment|linebreaks }}
                     </div>
+
                 </div>
             </div>
         </div>
+        <a href="{% url 'dissertation_new' pk=proposition_dissertation.pk %}"
+             id="" class="btn btn-default btn-primary pull-right"
+             role="button" title="{% trans 'Create dissertation' %}">
+             <span class="glyphicon glyphicon-circle-arrow-right"
+                  aria-hidden="true"></span> {% trans 'Create dissertation with this subject'%}</a>
     </div>
 </div>
 {% endblock %}
