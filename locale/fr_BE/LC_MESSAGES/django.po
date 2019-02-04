@@ -86,6 +86,10 @@ msgstr "Gestionnaire de cours"
 msgid "Create"
 msgstr "Créer"
 
+#: templates/proposition_dissertation_detail.html:228
+msgid "Create dissertation with this subject"
+msgstr "Créer un mémoire à partir de ce sujet"
+
 #: templates/dissertation_add_justification.html:63
 #: templates/dissertation_history.html:42
 msgid "Current status"
