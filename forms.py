@@ -23,10 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
+from dal import autocomplete
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 
+from dissertation.models import dissertation_role
 from dissertation.models.dissertation import Dissertation
 from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models.dissertation_update import DissertationUpdate, JUSTIFICATION_LINK
@@ -57,11 +59,21 @@ class DissertationEditForm(ModelForm):
 
 
 class DissertationRoleForm(ModelForm):
+
+    def clean(self):
+        data = self.cleaned_data
+        if dissertation_role.count_by_status_student_dissertation(data['status'],
+                                                                  data['adviser'],
+                                                                  data['dissertation']):
+            raise ValidationError('Error number of readers reached')
+        return super().clean()
+
     class Meta:
         model = DissertationRole
         fields = ('dissertation', 'status', 'adviser')
         widgets = {'dissertation': forms.HiddenInput(),
-                   'status': forms.HiddenInput()}
+                   'status': forms.HiddenInput(),
+                   'adviser': autocomplete.ModelSelect2(url='adviser-autocomplete', attrs={'width': '650px'})}
 
 
 class DissertationTitleForm(ModelForm):

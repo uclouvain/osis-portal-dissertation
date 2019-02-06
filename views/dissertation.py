@@ -23,11 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
+from dal import autocomplete
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.views.generic import CreateView
 
 import dissertation.models.enums.dissertation_status
 from base import models as mdl
@@ -36,10 +40,13 @@ from base.models.education_group_year import EducationGroupYear
 from base.models.enums import offer_enrollment_state
 from base.models.offer_enrollment import OfferEnrollment
 from base.views import layout
+from base.views.mixin import AjaxTemplateMixin
 from dissertation.forms import DissertationForm, DissertationEditForm, DissertationRoleForm, \
     DissertationTitleForm, DissertationUpdateForm
 from dissertation.models import dissertation, dissertation_document_file, dissertation_role, dissertation_update, \
     offer_proposition, proposition_dissertation, proposition_offer, proposition_role
+from dissertation.models.adviser import Adviser
+from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models.enums import dissertation_status
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
@@ -124,7 +131,7 @@ def dissertation_detail(request, pk):
 @login_required
 def dissertation_edit(request, pk):
     dissert = get_object_or_404(dissertation.Dissertation, pk=pk)
-    titre_original=dissert.title
+    titre_original = dissert.title
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
     if dissert.author_is_logged_student(request):
@@ -139,12 +146,17 @@ def dissertation_edit(request, pk):
                     dissertation_update.add(request, dissert, dissert.status, justification="student_edit_dissertation")
                     return redirect('dissertation_detail', pk=dissert.pk)
                 else:
-                    form.fields["education_group_year_start"].queryset = education_group_year.find_by_education_groups(education_groups)
-                    form.fields["proposition_dissertation"].queryset = proposition_dissertation.find_by_education_groups(education_groups)
+                    form.fields["education_group_year_start"].queryset = education_group_year.find_by_education_groups(
+                        education_groups)
+                    form.fields[
+                        "proposition_dissertation"].queryset = proposition_dissertation.find_by_education_groups(
+                        education_groups)
             else:
                 form = DissertationEditForm(instance=dissert)
-                form.fields["education_group_year_start"].queryset = education_group_year.find_by_education_groups(education_groups)
-                form.fields["proposition_dissertation"].queryset = proposition_dissertation.find_by_education_groups(education_groups)
+                form.fields["education_group_year_start"].queryset = education_group_year.find_by_education_groups(
+                    education_groups)
+                form.fields["proposition_dissertation"].queryset = proposition_dissertation.find_by_education_groups(
+                    education_groups)
             return layout.render(request, 'dissertation_edit_form.html',
                                  {'form': form,
                                   'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES})
@@ -178,7 +190,6 @@ def build_justification_with_title(dissert, titre_original):
     )
 
 
-
 @login_required
 def dissertation_history(request, pk):
     memory = get_object_or_404(dissertation.Dissertation, pk=pk)
@@ -191,32 +202,57 @@ def dissertation_history(request, pk):
         return redirect('dissertations')
 
 
-@login_required
-def dissertation_jury_new(request, pk):
-    dissert = get_object_or_404(dissertation.Dissertation, pk=pk)
-    if dissert.author_is_logged_student(request):
+class DissertationJuryNewView(AjaxTemplateMixin, UserPassesTestMixin, CreateView):
+    model = DissertationRole
+    template_name = 'dissertation_reader_edit_inner.html'
+    form_class = DissertationRoleForm
+    _dissertation = None
+    raise_exception = True
+
+    def test_func(self):
+        dissert = self.dissertation
         count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
         count_reader = dissertation_role.count_reader_by_dissertation(dissert)
         offer_pro = offer_proposition.get_by_education_group(dissert.education_group_year_start.education_group)
-        if offer_pro.student_can_manage_readers and count_dissertation_role < 5 and count_reader < 3:
-            if request.method == "POST":
-                form = DissertationRoleForm(request.POST)
-                if form.is_valid():
-                    data = form.cleaned_data
-                    if not dissertation_role.count_by_status_student_dissertation(data['status'],
-                                                                                  data['adviser'],
-                                                                                  data['dissertation']):
-                        form.save()
-                        justification = "%s %s" % ("student_add_reader", data['adviser'])
-                        dissertation_update.add(request, dissert, dissert.status, justification=justification)
-                return redirect('dissertation_detail', pk=dissert.pk)
-            else:
-                form = DissertationRoleForm(initial={'status': "READER", 'dissertation': dissert})
-                return layout.render(request, 'dissertation_reader_edit.html', {'form': form})
-        else:
-            return redirect('dissertation_detail', pk=dissert.pk)
-    else:
+        return offer_pro.student_can_manage_readers and count_dissertation_role < 5 and count_reader < 3
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.dissertation.author_is_logged_student(request):
+            return super().dispatch(request, *args, **kwargs)
         return redirect('dissertations')
+
+    @property
+    def dissertation(self):
+        if not self._dissertation:
+            self._dissertation = get_object_or_404(dissertation.Dissertation, pk=self.kwargs['pk'])
+        return self._dissertation
+
+    def get_initial(self):
+        return {'status': "READER", 'dissertation': self.dissertation}
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        justification = "%s %s" % ("student_add_reader", form.cleaned_data['adviser'])
+        dissert = self.dissertation
+        dissertation_update.add(self.request, dissert, dissert.status, justification=justification)
+        return result
+
+    def get_success_url(self):
+        return None
+
+
+class AdviserAutocomplete(autocomplete.Select2QuerySetView):
+    def get_result_label(self, item):
+        return "{} {}, {}".format(item.person.last_name, item.person.first_name, item.person.email)
+
+    def get_queryset(self):
+        qs = Adviser.objects.all().select_related("person").order_by("person")
+        if self.q:
+            qs = qs.filter(Q(person__last_name__icontains=self.q) | Q(person__first_name__icontains=self.q))
+        return qs
 
 
 @login_required
@@ -230,7 +266,7 @@ def dissertation_new(request, pk):
         enrollment_state__in=[
             offer_enrollment_state.SUBSCRIBED,
             offer_enrollment_state.PROVISORY
-        ]).select_related('education_group_year','education_group_year__education_group')
+        ]).select_related('education_group_year', 'education_group_year__education_group')
     offer_propositions = OfferProposition.objects.filter(
         education_group__in=[
             offer_enrollment.education_group_year.education_group for offer_enrollment in offer_enrollements
@@ -250,7 +286,7 @@ def dissertation_new(request, pk):
             memory = form.save()
             dissertation_update.add(request, memory,
                                     memory.status,
-                                    justification="student_creation_dissertation, title:"+memory.title
+                                    justification="student_creation_dissertation, title:" + memory.title
                                     )
             return redirect('dissertation_detail', pk=memory.pk)
 
@@ -266,8 +302,8 @@ def dissertation_new(request, pk):
                 [offer_enroll.education_group_year.education_group for offer_enroll in offer_enrollements]
             )
         return render(request, 'dissertation_form.html',
-                             {'form': form,
-                              'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES})
+                      {'form': form,
+                       'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES})
     else:
         return redirect('dissertations')
 
@@ -313,8 +349,8 @@ def dissertation_to_dir_submit(request, pk):
         form = DissertationUpdateForm(
             request.POST or None,
             dissertation=dissert,
-            person = person,
-            action = "go_forward")
+            person=person,
+            action="go_forward")
         if form.is_valid():
             form.save()
             return redirect('dissertation_detail', pk=pk)
