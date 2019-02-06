@@ -1,24 +1,19 @@
 {% load bootstrap3 i18n %}
 
-
 <div class="modal-body" id="form-modal-body">
-    <form method="POST" class="post-form" action="{{ request.get_full_path }}">
+    <form method="POST" id="form-modal" class="post-form" action="{{ request.get_full_path }}">
         {% csrf_token %}
+        {% bootstrap_field form.status %}
+        {% bootstrap_field form.dissertation %}
         <div class="row">
-            {% bootstrap_field form.status %}
-        </div>
-        <div class="row">
-                {% bootstrap_field form.dissertation %}
-        </div>
-        <div class="row">
-            <div class="col-md-1 col-lg-offset-1" style="text-align:right">
-                <label for="txt_reader" {% if form.adviser.errors %} style="color:red;" {% endif %}>{% trans 'Reader' %}</label>
+            <div class="col-md-12">
+                {% bootstrap_field form.adviser %}
             </div>
-            {% bootstrap_field form.adviser show_label=False field_class="w-50 p-3"%}
-        </div>
-        <div class="modal-footer" style="text-align:right">
-            <button type="submit" class="save btn btn-primary">{% trans 'Save' %}</button>
         </div>
     </form>
     {{ form.media }}
+
+</div>
+<div class="modal-footer" style="text-align:right">
+    <button type="submit" class="save btn btn-primary" onclick="$('#form-modal').submit();">{% trans 'Save' %}</button>
 </div>

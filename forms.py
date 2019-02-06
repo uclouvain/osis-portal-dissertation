@@ -73,7 +73,12 @@ class DissertationRoleForm(ModelForm):
         fields = ('dissertation', 'status', 'adviser')
         widgets = {'dissertation': forms.HiddenInput(),
                    'status': forms.HiddenInput(),
-                   'adviser': autocomplete.ModelSelect2(url='adviser-autocomplete', attrs={'width': '650px'})}
+                   'adviser': autocomplete.ModelSelect2(url='adviser-autocomplete',)}
+
+    class Media:
+        css = {
+            'all': ('css/select2-bootstrap.css',)
+        }
 
 
 class DissertationTitleForm(ModelForm):
