@@ -54,6 +54,8 @@ def proposition_dissertations(request):
 def _append_dissertations_count(prop_offer):
     prop_offer.proposition_dissertation.dissertations_count = \
         dissertation.count_by_proposition(prop_offer.proposition_dissertation)
+    prop_offer.proposition_dissertation.remaining_places = \
+        prop_offer.proposition_dissertation.max_number_student - prop_offer.proposition_dissertation.dissertations_count
     return prop_offer
 
 

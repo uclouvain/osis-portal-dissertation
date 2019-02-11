@@ -272,6 +272,9 @@ msgstr "Nouveau statut"
 msgid "No result"
 msgstr "Aucun résultat trouvé"
 
+msgid "Number of places remaining"
+msgstr "Nombre de places restantes"
+
 #: templates/dissertations_list.html:73
 msgid "Offer year start"
 msgstr "Programme de cours de départ du mémoire"

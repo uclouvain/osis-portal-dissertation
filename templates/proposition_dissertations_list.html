@@ -60,13 +60,15 @@
                 <th>{% trans 'Author'%}</th>
                 <th>{% trans 'Offers'%}</th>
                 <th>{% trans 'Maximum number of student'%}</th>
+                <th>{% trans 'Number of places remaining'%}</th>
             </tr>
               {% for proposition_offer in proposition_offers %}
                 <tr>
                   <td><a href="{% url 'proposition_dissertation_detail' pk=proposition_offer.proposition_dissertation.pk %}">{{ proposition_offer.proposition_dissertation.title }}</a></td>
                   <td>{{ proposition_offer.proposition_dissertation.author }}</td>
                   <td><span class="label label-default">{{ proposition_offer.offer_proposition }}</span></td>
-                  <td>{{ proposition_offer.proposition_dissertation.dissertations_count }} {% trans 'of' %} {{ proposition_offer.proposition_dissertation.max_number_student }}</td>
+                  <td>{{ proposition_offer.proposition_dissertation.max_number_student }}</td>
+                  <td>{{ proposition_offer.proposition_dissertation.remaining_places }}</td>
                 </tr>
               {% endfor %}
             </table>
