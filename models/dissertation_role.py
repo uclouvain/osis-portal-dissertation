@@ -23,9 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
+
 from dissertation.models.enums import dissertation_role_status
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class DissertationRoleAdmin(SerializableModelAdmin):
@@ -37,7 +39,7 @@ class DissertationRoleAdmin(SerializableModelAdmin):
 
 class DissertationRole(SerializableModel):
     status = models.CharField(max_length=12, choices=dissertation_role_status.STATUS_CHOICES)
-    adviser = models.ForeignKey('Adviser')
+    adviser = models.ForeignKey('Adviser', verbose_name=_("Reader"))
     dissertation = models.ForeignKey('Dissertation')
 
     def __str__(self):
