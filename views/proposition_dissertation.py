@@ -25,14 +25,17 @@
 ##############################################################################
 
 from django.contrib.auth.decorators import login_required
+from django.db import models
+from django.db.models import Sum, Case, When, Q, F, ExpressionWrapper
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
+
 from base import models as mdl
-from base.models import education_group
+from base.models import education_group, academic_year
 from base.models.enums import offer_enrollment_state
 from base.views import layout
-from dissertation.models import dissertation, proposition_dissertation, proposition_document_file, proposition_role,\
+from dissertation.models import dissertation, proposition_dissertation, proposition_document_file, proposition_role, \
     proposition_offer
-from django.utils import timezone
 
 
 @login_required
@@ -41,9 +44,30 @@ def proposition_dissertations(request):
     student = mdl.student.find_by_person(person)
     education_groups = education_group.find_by_student_and_enrollment_states(
         student, [offer_enrollment_state.SUBSCRIBED, offer_enrollment_state.PROVISORY])
-    proposition_offers = proposition_offer.find_by_education_group_ordered_by_proposition_dissert(education_groups).\
-        prefetch_related('proposition_dissertation', 'offer_proposition')
-    proposition_offers = [_append_dissertations_count(prop_offer) for prop_offer in proposition_offers]
+
+    current_academic_year = academic_year.starting_academic_year()
+
+    proposition_offers = proposition_offer.find_by_education_group_ordered_by_proposition_dissert(education_groups)
+
+    proposition_offers = proposition_offers.annotate(
+        dissertations_count=Sum(
+            Case(
+                When(
+                    Q(
+                        Q(proposition_dissertation__dissertation__active=True,
+                          education_group_year_start__academic_year=current_academic_year),
+                        ~Q(status__in=('DRAFT', 'DIR_KO'))
+                    ), then=1
+                ), default=0, output_field=models.IntegerField()
+            )
+        )
+    ).annotate(
+        remaining_places=ExpressionWrapper(
+            F('proposition_dissertation__max_number_student') - F('dissertations_count'),
+            output_field=models.PositiveIntegerField()
+        )
+    ).prefetch_related('proposition_dissertation', 'offer_proposition')
+
     date_now = timezone.now().date()
     return layout.render(request, 'proposition_dissertations_list.html',
                          {'date_now': date_now,
@@ -51,21 +75,11 @@ def proposition_dissertations(request):
                           'student': student})
 
 
-def _append_dissertations_count(prop_offer):
-    prop_offer.proposition_dissertation.dissertations_count = \
-        dissertation.count_by_proposition(prop_offer.proposition_dissertation)
-    prop_offer.proposition_dissertation.remaining_places = \
-        prop_offer.proposition_dissertation.max_number_student - prop_offer.proposition_dissertation.dissertations_count
-    if prop_offer.proposition_dissertation.remaining_places < 0:
-        prop_offer.proposition_dissertation.remaining_places = 0
-    return prop_offer
-
-
 @login_required
 def proposition_dissertation_detail(request, pk):
     proposition = proposition_dissertation.find_by_id(pk)
     subject = get_object_or_404(proposition_dissertation.PropositionDissertation, pk=pk)
-    offer_propositions = proposition_offer.search_by_proposition_dissertation(subject).\
+    offer_propositions = proposition_offer.search_by_proposition_dissertation(subject). \
         prefetch_related('proposition_dissertation', 'offer_proposition')
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
