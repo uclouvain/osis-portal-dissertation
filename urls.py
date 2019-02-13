@@ -27,7 +27,7 @@
 from django.conf.urls import url
 from dissertation.views import common, dissertation, proposition_dissertation, \
     upload_dissertation_file, upload_proposition_file
-
+from dissertation.views.dissertation import AdviserAutocomplete
 
 urlpatterns = [
     url(r'^$', common.home, name='dissertation'),
@@ -42,8 +42,10 @@ urlpatterns = [
         name='dissertation_edit'),
     url(r'^dissertation_history/(?P<pk>[0-9]+)$', dissertation.dissertation_history,
         name='dissertation_history'),
-    url(r'^add_reader/(?P<pk>[0-9]+)$', dissertation.dissertation_jury_new,
+    url(r'^add_reader/(?P<pk>[0-9]+)$', dissertation.DissertationJuryNewView.as_view(),
         name='add_reader'),
+    url(r'^adviser-autocomplete/$', AdviserAutocomplete.as_view(),
+        name='adviser-autocomplete'),
     url(r'^dissertation_new/(?:(?P<pk>[0-9]+)/)?$', dissertation.dissertation_new,
         name='dissertation_new'),
     url(r'^dissertation_reader_delete/(?P<pk>[0-9]+)$', dissertation.dissertation_reader_delete,
