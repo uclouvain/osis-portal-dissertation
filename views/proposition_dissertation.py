@@ -49,14 +49,14 @@ def proposition_dissertations(request):
     current_academic_year = academic_year.starting_academic_year()
     student_offer_enrollments = OfferEnrollment.objects.filter(
             student=student,
-            offer_year__academic_year=current_academic_year,
+            education_group_year__academic_year=current_academic_year,
             enrollment_state__in=[
                 offer_enrollment_state.SUBSCRIBED,
                 offer_enrollment_state.PROVISORY
             ]
         )
     student_offer_propositions = OfferProposition.objects.filter(
-        education_group__education_groups_years__offer_enrollments=student_offer_enrollments
+        education_group__educationgroupyear__offerenrollment=student_offer_enrollments
     )
     prefetch_propositions = Prefetch(
         "offer_propositions",
@@ -69,7 +69,7 @@ def proposition_dissertations(request):
     propositions_dissertations = PropositionDissertation.objects.filter(
         active=True,
         visibility=True,
-        offer_propositions__education_group__education_groups_years__offer_enrollments=student_offer_enrollments
+        offer_propositions__education_group__educationgroupyear__offerenrollment=student_offer_enrollments
     ).select_related('author__person', 'creator').prefetch_related(prefetch_propositions).annotate(
         dissertations_count=Sum(
             Case(
