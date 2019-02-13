@@ -26,53 +26,75 @@
 
 from django.contrib.auth.decorators import login_required
 from django.db import models
-from django.db.models import Sum, Case, When, Q, F, ExpressionWrapper
-from django.shortcuts import get_object_or_404
+from django.db.models import Sum, Case, When, Q, F, ExpressionWrapper, OuterRef, Subquery, Prefetch
+from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 
 from base import models as mdl
 from base.models import education_group, academic_year
+from base.models.education_group_year import EducationGroupYear
 from base.models.enums import offer_enrollment_state
+from base.models.offer_enrollment import OfferEnrollment
 from base.views import layout
 from dissertation.models import dissertation, proposition_dissertation, proposition_document_file, proposition_role, \
     proposition_offer
+from dissertation.models.offer_proposition import OfferProposition
+from dissertation.models.proposition_dissertation import PropositionDissertation
 
 
 @login_required
 def proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
-    education_groups = education_group.find_by_student_and_enrollment_states(
-        student, [offer_enrollment_state.SUBSCRIBED, offer_enrollment_state.PROVISORY])
-
     current_academic_year = academic_year.starting_academic_year()
-
-    proposition_offers = proposition_offer.find_by_education_group_ordered_by_proposition_dissert(education_groups)
-
-    proposition_offers = proposition_offers.annotate(
+    student_offer_enrollments = OfferEnrollment.objects.filter(
+            student=student,
+            offer_year__academic_year=current_academic_year,
+            enrollment_state__in=[
+                offer_enrollment_state.SUBSCRIBED,
+                offer_enrollment_state.PROVISORY
+            ]
+        )
+    student_offer_propositions = OfferProposition.objects.filter(
+        education_group__education_groups_years__offer_enrollments=student_offer_enrollments
+    )
+    prefetch_propositions = Prefetch(
+        "offer_propositions",
+        queryset=OfferProposition.objects.annotate(last_acronym=Subquery(
+            EducationGroupYear.objects.filter(
+                education_group__offer_proposition=OuterRef('pk'),
+                academic_year=current_academic_year).values('acronym')[:1]
+        )).distinct()
+    )
+    propositions_dissertations = PropositionDissertation.objects.filter(
+        active=True,
+        visibility=True,
+        offer_propositions__education_group__education_groups_years__offer_enrollments=student_offer_enrollments
+    ).select_related('author__person', 'creator').prefetch_related(prefetch_propositions).annotate(
         dissertations_count=Sum(
             Case(
                 When(
                     Q(
-                        Q(proposition_dissertation__dissertation__active=True,
-                          education_group_year_start__academic_year=current_academic_year),
-                        ~Q(status__in=('DRAFT', 'DIR_KO'))
+                        Q(dissertations__active=True,
+                          dissertations__education_group_year_start__academic_year=
+                          current_academic_year),
+                        ~Q(dissertations__status__in=('DRAFT', 'DIR_KO'))
                     ), then=1
                 ), default=0, output_field=models.IntegerField()
             )
         )
     ).annotate(
         remaining_places=ExpressionWrapper(
-            F('proposition_dissertation__max_number_student') - F('dissertations_count'),
-            output_field=models.PositiveIntegerField()
+            F('max_number_student') - F('dissertations_count'),
+            output_field=models.IntegerField()
         )
-    ).prefetch_related('proposition_dissertation', 'offer_proposition')
-
+    ).prefetch_related('dissertations', 'offer_propositions')
     date_now = timezone.now().date()
-    return layout.render(request, 'proposition_dissertations_list.html',
-                         {'date_now': date_now,
-                          'proposition_offers': proposition_offers,
-                          'student': student})
+    return render(request, 'proposition_dissertations_list.html',
+                  {'date_now': date_now,
+                   'propositions_dissertations': propositions_dissertations,
+                   'student': student,
+                   'student_offer_propositions': student_offer_propositions})
 
 
 @login_required

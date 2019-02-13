@@ -26,11 +26,14 @@
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 from dissertation.models import proposition_offer
 from dissertation.models.enums import proposition_dissertation_levels
 from dissertation.models.enums.proposition_dissertation_collaboration import COLLABORATION_CHOICES
 from dissertation.models.enums.proposition_dissertation_types import PROPOSITION_DISSERTATION_TYPES
+from dissertation.models.offer_proposition import OfferProposition
+from dissertation.models.proposition_offer import PropositionOffer
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
@@ -53,6 +56,12 @@ class PropositionDissertation(SerializableModel):
     visibility = models.BooleanField(default=True)
     active = models.BooleanField(default=True)
     created_date = models.DateTimeField(default=timezone.now)
+    offer_propositions = models.ManyToManyField(
+        OfferProposition,
+        through=PropositionOffer,
+        verbose_name=_('Links to offer_propositions'),
+        related_name='offer_propositions'
+    )
 
     def __str__(self):
         first_name = ""

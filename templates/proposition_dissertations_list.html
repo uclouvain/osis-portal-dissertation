@@ -37,10 +37,6 @@
     <h2>{% trans 'Dissertation subjects' %}</h2>
 </div>
 <div class="panel panel-default">
-    {% if proposition_offers|length == 0 %}
-        <br>
-        <label class="alert alert-info" style="margin-left:10%;width:80%;text-align:center;">{% trans 'No result' %}</label>
-    {% else %}
         <table class="table table-hover" id="tb_memoire">
             <thead>
                 <th>{% trans 'Dissertation'%}</th>
@@ -49,17 +45,30 @@
                 <th>{% trans 'Maximum number of student'%}</th>
                 <th>{% trans 'Number of places remaining'%}</th>
             </thead>
-              {% for proposition_offer in proposition_offers %}
+              {% for proposition_dissertation in propositions_dissertations %}
                 <tr>
-                  <td><a href="{% url 'proposition_dissertation_detail' pk=proposition_offer.proposition_dissertation.pk %}">{{ proposition_offer.proposition_dissertation.title }}</a></td>
-                  <td>{{ proposition_offer.proposition_dissertation.author }}</td>
-                  <td><span class="label label-default">{{ proposition_offer.offer_proposition }}</span></td>
-                  <td>{{ proposition_offer.proposition_dissertation.max_number_student }}</td>
-                  <td>{{ proposition_offer.remaining_places }}</td>
+                  <td><a href="{% url 'proposition_dissertation_detail' pk=proposition_dissertation.pk %}">{{ proposition_dissertation.title }}</a></td>
+                  <td>{{ proposition_dissertation.author }}</td>
+                  <td>
+                    {% for offer_prop in proposition_dissertation.offer_propositions.all %}
+
+                       {% if offer_prop in student_offer_propositions %}
+                         <span class="label label-default" >
+                         {{ offer_prop.last_acronym }}
+                          </span>
+                       {% endif %}
+
+                     {% endfor %}
+                  </td>
+                  <td>{{ proposition_dissertation.max_number_student }}</td>
+                  {% if proposition_dissertation.remaining_places >= 0 %}
+                    <td>{{ proposition_dissertation.remaining_places }}</td>
+                  {% else %}
+                    <td>0</td>
+                  {%  endif %}
                 </tr>
               {% endfor %}
             </table>
-          {% endif %}
     </div>
 {% endblock %}
 {% block script %}
