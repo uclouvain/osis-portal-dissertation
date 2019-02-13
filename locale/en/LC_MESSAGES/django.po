@@ -270,6 +270,9 @@ msgstr ""
 msgid "No result"
 msgstr ""
 
+msgid "Number of places remaining"
+msgstr ""
+
 #: templates/dissertations_list.html:73
 msgid "Offer year start"
 msgstr ""

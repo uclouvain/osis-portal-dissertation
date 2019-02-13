@@ -56,7 +56,8 @@ class Dissertation(SerializableModel):
     title = models.CharField(_('Dissertation'), max_length=500)
     author = models.ForeignKey(student.Student)
     status = models.CharField(max_length=12, choices=DISSERTATION_STATUS, default='DRAFT')
-    defend_periode = models.CharField(_('Defend period'), max_length=12, choices=DEFEND_PERIODE_CHOICES, default='UNDEFINED', null=True)
+    defend_periode = models.CharField(_('Defend period'), max_length=12, choices=DEFEND_PERIODE_CHOICES,
+                                      default='UNDEFINED', null=True)
     defend_year = models.IntegerField(_('Defend year'), blank=True, null=True)
     offer_year_start = models.ForeignKey(offer_year.OfferYear, null=True, blank=True)
     education_group_year_start = models.ForeignKey('base.EducationGroupYear',
@@ -64,12 +65,14 @@ class Dissertation(SerializableModel):
                                                    blank=True,
                                                    on_delete=models.PROTECT,
                                                    related_name='dissertations', verbose_name=_('Offers'))
-    proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation, verbose_name=_('Dissertation subject'))
+    proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation,
+                                                 verbose_name=_('Dissertation subject'), related_name='dissertations')
     description = models.TextField(_('Description'), blank=True, null=True)
     active = models.BooleanField(default=True)
     creation_date = models.DateTimeField(auto_now_add=True, editable=False)
     modification_date = models.DateTimeField(auto_now=True)
-    location = models.ForeignKey(dissertation_location.DissertationLocation, blank=True, null=True, verbose_name=_('Dissertation location'))
+    location = models.ForeignKey(dissertation_location.DissertationLocation, blank=True, null=True,
+                                 verbose_name=_('Dissertation location'))
 
     def __str__(self):
         return self.title
@@ -81,7 +84,6 @@ class Dissertation(SerializableModel):
     def set_status(self, status):
         self.status = status
         self.save()
-
 
     def go_forward(self):
         next_status = get_next_status(self, "go_forward")
@@ -110,11 +112,11 @@ class Dissertation(SerializableModel):
 
 
 def count_disser_submit_by_student_in_educ_group(student, educ_group):
-    return Dissertation.objects.filter(author=student)\
+    return Dissertation.objects.filter(author=student) \
         .filter(education_group_year_start__education_group=educ_group) \
         .exclude(status='DIR_KO') \
-        .exclude(status='DRAFT')\
-        .filter(active=True)\
+        .exclude(status='DRAFT') \
+        .filter(active=True) \
         .count()
 
 
@@ -125,7 +127,7 @@ def get_next_status(memory, operation):
         else:
             return memory.status
     elif operation == "go_back":
-        if memory.status == 'DIR_SUBMIT' :
+        if memory.status == 'DIR_SUBMIT':
             return 'DRAFT'
         else:
             return memory.status
@@ -157,7 +159,7 @@ def count_by_proposition(proposition):
     current_academic_year = academic_year.starting_academic_year()
     return Dissertation.objects.filter(proposition_dissertation=proposition) \
         .filter(active=True) \
-        .filter(offer_year_start__academic_year=current_academic_year) \
+        .filter(education_group_year_start__academic_year=current_academic_year) \
         .exclude(status='DRAFT') \
         .exclude(status='DIR_KO') \
         .count()
