@@ -65,7 +65,7 @@ class DissertationRoleForm(ModelForm):
         if dissertation_role.count_by_status_student_dissertation(data['status'],
                                                                   data['adviser'],
                                                                   data['dissertation']):
-            raise ValidationError('Error number of readers reached')
+            raise ValidationError('This reader has already been added')
         return super().clean()
 
     class Meta:

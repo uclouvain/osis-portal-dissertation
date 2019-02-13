@@ -5,10 +5,8 @@
         {% csrf_token %}
         {% bootstrap_field form.status %}
         {% bootstrap_field form.dissertation %}
-        <div class="row">
-            <div class="col-md-12">
-                {% bootstrap_field form.adviser %}
-            </div>
+        <div>
+            {% bootstrap_field form.adviser %}
         </div>
     </form>
     {{ form.media }}

@@ -131,7 +131,7 @@ def dissertation_detail(request, pk):
 @login_required
 def dissertation_edit(request, pk):
     dissert = get_object_or_404(dissertation.Dissertation, pk=pk)
-    titre_original = dissert.title
+    original_title = dissert.title
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
     if dissert.author_is_logged_student(request):
@@ -164,12 +164,12 @@ def dissertation_edit(request, pk):
             if offer_pro.start_edit_title <= timezone.now().date() <= offer_pro.end_edit_title:
                 if request.method == "POST":
                     form = DissertationTitleForm(request.POST, instance=dissert)
-                    if form.is_valid() and titre_original != form.cleaned_data['title']:
+                    if form.is_valid() and original_title != form.cleaned_data['title']:
                         dissert = form.save()
                         dissertation_update.add(request,
                                                 dissert,
                                                 dissert.status,
-                                                justification=build_justification_with_title(dissert, titre_original)
+                                                justification=build_justification_with_title(dissert, original_title)
                                                 )
                     return redirect('dissertation_detail', pk=dissert.pk)
                 else:
