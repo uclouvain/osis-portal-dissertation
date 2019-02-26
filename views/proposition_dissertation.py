@@ -69,7 +69,7 @@ def proposition_dissertations(request):
     propositions_dissertations = PropositionDissertation.objects.filter(
         active=True,
         visibility=True,
-        offer_propositions__education_group__educationgroupyear__offerenrollment=student_offer_enrollments
+        offer_propositions__education_group__educationgroupyear__offerenrollment__in=student_offer_enrollments
     ).select_related('author__person', 'creator').prefetch_related(prefetch_propositions).annotate(
         dissertations_count=Sum(
             Case(
