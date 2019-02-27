@@ -47,6 +47,7 @@ def proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
     current_academic_year = academic_year.starting_academic_year()
+
     student_offer_enrollments = OfferEnrollment.objects.filter(
             student=student,
             education_group_year__academic_year=current_academic_year,
@@ -54,10 +55,10 @@ def proposition_dissertations(request):
                 offer_enrollment_state.SUBSCRIBED,
                 offer_enrollment_state.PROVISORY
             ]
-        )
-    student_offer_propositions = OfferProposition.objects.filter(
-        education_group__educationgroupyear__offerenrollment=student_offer_enrollments
-    )
+        ).values_list('id', flat=True)
+    student_offer_propositions_id_list = OfferProposition.objects.filter(
+        education_group__educationgroupyear__offerenrollment__id__in=student_offer_enrollments
+    ).values_list('id', flat=True)
     prefetch_propositions = Prefetch(
         "offer_propositions",
         queryset=OfferProposition.objects.annotate(last_acronym=Subquery(
@@ -94,7 +95,7 @@ def proposition_dissertations(request):
                   {'date_now': date_now,
                    'propositions_dissertations': propositions_dissertations,
                    'student': student,
-                   'student_offer_propositions': student_offer_propositions})
+                   'student_offer_propositions_id_list': student_offer_propositions_id_list})
 
 
 @login_required
