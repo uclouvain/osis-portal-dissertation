@@ -28,7 +28,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import CreateView
@@ -46,11 +45,22 @@ from dissertation.forms import DissertationForm, DissertationEditForm, Dissertat
 from dissertation.models import dissertation, dissertation_document_file, dissertation_role, dissertation_update, \
     offer_proposition, proposition_dissertation, proposition_offer, proposition_role
 from dissertation.models.adviser import Adviser
+from dissertation.models.dissertation import Dissertation
 from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models.enums import dissertation_status
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
 
+INVISIBLE_JUSTIFICATION_KEYWORDS = ('auto_add_jury',
+                                    'manager_add_jury',
+                                    'manager_creation_dissertation',
+                                    'manager_delete_jury',
+                                    'manager_edit_dissertation',
+                                    'manager_set_active_false',
+                                    'teacher_add_jury',
+                                    'teacher_delete_jury',
+                                    'teacher_set_active_false'
+                                    )
 
 @login_required
 def dissertations(request):
@@ -192,12 +202,15 @@ def build_justification_with_title(dissert, titre_original):
 
 @login_required
 def dissertation_history(request, pk):
-    memory = get_object_or_404(dissertation.Dissertation, pk=pk)
-    if memory.author_is_logged_student(request):
-        dissertation_updates = dissertation_update.search_by_dissertation(memory)
-        return layout.render(request, 'dissertation_history.html',
-                             {'dissertation': memory,
-                              'dissertation_updates': dissertation_updates})
+    dissert = get_object_or_404(Dissertation.objects.select_related('author', )
+                                .prefetch_related('dissertation_updates', 'dissertation_updates__person'), pk=pk)
+    if dissert.author_is_logged_student(request):
+        dissertation_updates = dissert.dissertation_updates.all().prefetch_related('person')
+        for keyword in INVISIBLE_JUSTIFICATION_KEYWORDS:
+            dissertation_updates = dissertation_updates.exclude(justification__contains=keyword)
+        return render(request, 'dissertation_history.html',
+                      {'dissertation': dissert,
+                       'dissertation_updates': dissertation_updates})
     else:
         return redirect('dissertations')
 

@@ -23,13 +23,14 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db import models
+
 import dissertation.models.enums.dissertation_status
+from base import models as mdl
+from dissertation.models import dissertation
 from dissertation.models.enums import dissertation_status
 from osis_common.decorators.deprecated import deprecated
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from django.db import models
-from base import models as mdl
-from dissertation.models import dissertation
 
 JUSTIFICATION_LINK = "_set_to_"
 INVISIBLE_JUSTIFICATION_KEYWORDS = ('auto_add_jury',
@@ -57,7 +58,7 @@ class DissertationUpdate(SerializableModel):
     created = models.DateTimeField(auto_now_add=True)
     justification = models.TextField(blank=True)
     person = models.ForeignKey('base.Person')
-    dissertation = models.ForeignKey(dissertation.Dissertation)
+    dissertation = models.ForeignKey(dissertation.Dissertation, related_name='dissertation_updates')
 
     @property
     def author(self):
