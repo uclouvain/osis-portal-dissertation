@@ -36,7 +36,7 @@ from base.models.education_group_year import EducationGroupYear
 from base.models.enums import offer_enrollment_state
 from base.models.offer_enrollment import OfferEnrollment
 from base.views import layout
-from dissertation.models import dissertation, proposition_dissertation, proposition_document_file, proposition_role, \
+from dissertation.models import dissertation, proposition_document_file, proposition_role, \
     proposition_offer
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
@@ -100,13 +100,20 @@ def proposition_dissertations(request):
 
 @login_required
 def proposition_dissertation_detail(request, pk):
-    proposition = proposition_dissertation.find_by_id(pk)
-    subject = get_object_or_404(proposition_dissertation.PropositionDissertation, pk=pk)
-    offer_propositions = proposition_offer.search_by_proposition_dissertation(subject). \
-        prefetch_related('proposition_dissertation', 'offer_proposition')
     person = mdl.person.find_by_user(request.user)
+    current_ac_year = academic_year.starting_academic_year()
+    subject = get_object_or_404(PropositionDissertation.objects.select_related('author', 'author__person').
+                                prefetch_related('propositionrole_set',
+                                                 'propositionrole_set__adviser__person',
+                                                 'offer_propositions'), pk=pk)
+    offer_propositions = subject.offer_propositions.all().annotate(last_acronym=Subquery(
+            EducationGroupYear.objects.filter(
+                education_group__offer_proposition=OuterRef('pk'),
+                academic_year=current_ac_year).values('acronym')[:1]
+        ))
+
     student = mdl.student.find_by_person(person)
-    using = dissertation.count_by_proposition(proposition)
+    using = dissertation.count_by_proposition(subject)
     percent = using * 100 / subject.max_number_student if subject.max_number_student else 0
     count_proposition_role = proposition_role.count_by_proposition(subject)
     files = proposition_document_file.find_by_proposition(subject)
@@ -115,15 +122,15 @@ def proposition_dissertation_detail(request, pk):
         filename = file.document_file.file_name
     if count_proposition_role < 1:
         proposition_role.add('PROMOTEUR', subject.author, subject)
-    proposition_roles = proposition_role.search_by_proposition(subject)
-    return layout.render(request, 'proposition_dissertation_detail.html',
-                         {'percent': round(percent, 2),
-                          'proposition_roles': proposition_roles,
-                          'proposition_dissertation': subject,
-                          'offer_propositions': offer_propositions,
-                          'student': student,
-                          'using': using,
-                          'filename': filename})
+    proposition_roles = subject.propositionrole_set.all()
+    return render(request, 'proposition_dissertation_detail.html',
+                  {'percent': round(percent, 2),
+                   'proposition_roles': proposition_roles,
+                   'proposition_dissertation': subject,
+                   'offer_propositions': offer_propositions,
+                   'student': student,
+                   'using': using,
+                   'filename': filename})
 
 
 @login_required

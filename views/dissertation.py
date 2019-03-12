@@ -26,7 +26,7 @@
 from dal import autocomplete
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.db.models import Q
+from django.db.models import Q, Subquery, OuterRef
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -35,6 +35,7 @@ from django.views.generic import CreateView
 import dissertation.models.enums.dissertation_status
 from base import models as mdl
 from base.models import academic_year, education_group, education_group_year
+from base.models.academic_year import current_academic_year
 from base.models.education_group_year import EducationGroupYear
 from base.models.enums import offer_enrollment_state
 from base.models.offer_enrollment import OfferEnrollment
@@ -43,7 +44,7 @@ from base.views.mixin import AjaxTemplateMixin
 from dissertation.forms import DissertationForm, DissertationEditForm, DissertationRoleForm, \
     DissertationTitleForm, DissertationUpdateForm
 from dissertation.models import dissertation, dissertation_document_file, dissertation_role, dissertation_update, \
-    offer_proposition, proposition_dissertation, proposition_offer, proposition_role
+    offer_proposition, proposition_dissertation, proposition_role
 from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation import Dissertation
 from dissertation.models.dissertation_role import DissertationRole
@@ -62,24 +63,31 @@ INVISIBLE_JUSTIFICATION_KEYWORDS = ('auto_add_jury',
                                     'teacher_set_active_false'
                                     )
 
+
 @login_required
 def dissertations(request):
-    person = mdl.person.find_by_user(request.user)
+    person = request.user.person
     student = mdl.student.find_by_person(person)
     education_groups = education_group.find_by_student_and_enrollment_states(
         student, [offer_enrollment_state.SUBSCRIBED, offer_enrollment_state.PROVISORY])
     offer_propositions = offer_proposition.search_by_education_groups(education_groups)
-    memories = dissertation.find_by_user(student)
+    dissert = Dissertation.objects.filter(author=student).exclude(active=False). \
+        select_related('author__person',
+                       'proposition_dissertation',
+                       'proposition_dissertation__author__person',
+                       'author',
+                       'education_group_year_start',
+                       'education_group_year_start__academic_year')
     date_now = timezone.now().date()
     visibility = False
     for offer_pro in offer_propositions:
         if offer_pro.start_visibility_dissertation <= date_now <= offer_pro.end_visibility_dissertation:
             visibility = True
-    return layout.render(request, 'dissertations_list.html',
-                         {'date_now': date_now,
-                          'dissertations': memories,
-                          'student': student,
-                          'visibility': visibility})
+    return render(request, 'dissertations_list.html',
+                  {'date_now': date_now,
+                   'dissertations': dissert,
+                   'student': student,
+                   'visibility': visibility})
 
 
 @login_required
@@ -93,14 +101,32 @@ def dissertation_delete(request, pk):
 
 @login_required
 def dissertation_detail(request, pk):
-    dissert = get_object_or_404(dissertation.Dissertation, pk=pk)
-    person = mdl.person.find_by_user(request.user)
+    person = request.user.person
     student = mdl.student.find_by_person(person)
-
+    current_ac_year = current_academic_year()
+    dissert = get_object_or_404(Dissertation.objects.
+                                select_related('author', 'author__person',
+                                               'proposition_dissertation__author__person', 'location').
+                                prefetch_related('dissertationrole_set', 'dissertationrole_set__adviser__person',
+                                                 'proposition_dissertation__offer_propositions'),
+                                pk=pk)
     if dissert.author_is_logged_student(request):
+        student_offer_enrollments = OfferEnrollment.objects.filter(
+            student=student,
+            education_group_year__academic_year=current_ac_year,
+            enrollment_state__in=[
+                offer_enrollment_state.SUBSCRIBED,
+                offer_enrollment_state.PROVISORY
+            ]
+        ).values_list('id', flat=True)
         educ_group = dissert.education_group_year_start.education_group
         offer_pro = offer_proposition.get_by_education_group(educ_group)
-        offer_propositions = proposition_offer.search_by_proposition_dissertation(dissert.proposition_dissertation)
+        offer_propositions = dissert.proposition_dissertation.offer_propositions.all(). \
+            filter(education_group__educationgroupyear__offerenrollment__id__in=student_offer_enrollments). \
+            annotate(last_acronym=Subquery(EducationGroupYear.objects.filter(
+                education_group__offer_proposition=OuterRef('pk'),
+                academic_year=current_ac_year).values('acronym')[:1]
+                                           ))
         count = dissertation.count_disser_submit_by_student_in_educ_group(student, educ_group)
 
         files = dissertation_document_file.find_by_dissertation(dissert)
@@ -121,26 +147,25 @@ def dissertation_detail(request, pk):
             else:
                 for role in proposition_roles:
                     dissertation_role.add(role.status, role.adviser, dissert)
-
-        dissertation_roles = dissertation_role.search_by_dissertation(dissert)
-        return layout.render(request, 'dissertation_detail.html',
-                             {'check_edit': check_edit,
-                              'count': count,
-                              'count_reader': count_reader,
-                              'count_dissertation_role': count_dissertation_role,
-                              'dissertation': dissert,
-                              'dissertation_roles': dissertation_roles,
-                              'jury_visibility': jury_visibility,
-                              'manage_readers': offer_pro.student_can_manage_readers,
-                              'filename': filename,
-                              'offer_propositions': offer_propositions})
+        dissertation_roles = dissert.dissertationrole_set.all()
+        return render(request, 'dissertation_detail.html',
+                      {'check_edit': check_edit,
+                       'count': count,
+                       'count_reader': count_reader,
+                       'count_dissertation_role': count_dissertation_role,
+                       'dissertation': dissert,
+                       'dissertation_roles': dissertation_roles,
+                       'jury_visibility': jury_visibility,
+                       'manage_readers': offer_pro.student_can_manage_readers,
+                       'filename': filename,
+                       'offer_propositions': offer_propositions})
     else:
         return redirect('dissertations')
 
 
 @login_required
 def dissertation_edit(request, pk):
-    dissert = get_object_or_404(dissertation.Dissertation, pk=pk)
+    dissert = get_object_or_404(Dissertation.objects, pk=pk)
     original_title = dissert.title
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
