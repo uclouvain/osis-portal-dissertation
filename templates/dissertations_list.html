@@ -70,13 +70,16 @@
               <th>{% trans 'Dissertation'%}</th>
               <th>{% trans 'Author'%}</th>
               <th>{% trans 'Status'%}</th>
-              <th>{% trans 'Offer year start'%}</th>
+              <th>{% trans 'year start'%}</th>
+              <th>{% trans 'Offers'%}</th>
               <th>{% trans 'Dissertation subject'%}</th>
             </tr>
             {% for dissertation in dissertations %}
               <tr>
                 <td><a href="{% url 'dissertation_detail' pk=dissertation.pk %}">{{ dissertation.title }}</a></td>
-                <td>{{ dissertation.author }}</td>
+                <td>{{ dissertation.author.person.first_name }} &nbsp;
+                    {{ dissertation.author.person.last_name }} &nbsp;- &nbsp;
+                    {{ dissertation.author.registration_id }}</td>
                 <td>
                     {% if dissertation.status == 'DRAFT' %}
                     <span class="label label-default">
@@ -114,8 +117,11 @@
                         {{ dissertation.get_status_display }}
                     </span>
                 </td>
-                <td>{{ dissertation.education_group_year_start }}</td>
-                <td>{{ dissertation.proposition_dissertation }}</td>
+                <td>{{ dissertation.education_group_year_start.academic_year.year }} -
+                    {{ dissertation.education_group_year_start.academic_year.year |add:"1"}}
+                </td>
+                <td>{{ dissertation.education_group_year_start.acronym }}</td>
+                <td>{{ dissertation.proposition_dissertation.title }} - {{ dissertation.proposition_dissertation.author.person }}</td>
               </tr>
             {% endfor %}
         </table>

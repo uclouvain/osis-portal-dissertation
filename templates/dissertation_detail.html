@@ -184,7 +184,8 @@
                                     <label>{{ dissertation_role.get_status_display }}</label>
                                 </div>
                                 <div class="col-md-2">
-                                    {{ dissertation_role.adviser }}
+                                    {{ dissertation_role.adviser.person.first_name }}&nbsp;
+                                    {{ dissertation_role.adviser.person.last_name }}
                                 </div>
                                 <div class="col-md-1">
                                     <a class="btn btn-warning btn-sm" style="margin-top: -7px;text-align: left" href="{% url 'dissertation_reader_delete' pk=dissertation_role.pk %}"
@@ -196,7 +197,8 @@
                                     <label>{{ dissertation_role.get_status_display }}</label>
                                 </div>
                                 <div class="col-md-2">
-                                    {{ dissertation_role.adviser }}
+                                    {{ dissertation_role.adviser.person.first_name }}&nbsp;
+                                    {{ dissertation_role.adviser.person.last_name }}
                                 </div>
                             {% endif %}
                         </div>
@@ -243,7 +245,7 @@
                     </div>
                     <div class="col-md-8">
                         {% for offer_proposition in offer_propositions %}
-                            <span class="label label-default">{{ offer_proposition }}</span>
+                            <span class="label label-default">{{ offer_proposition.last_acronym }}</span>
                         {% endfor %}
                     </div>
                 </div>

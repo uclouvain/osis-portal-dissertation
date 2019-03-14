@@ -52,15 +52,13 @@
                   <td><a href="{% url 'proposition_dissertation_detail' pk=proposition_dissertation.pk %}">{{ proposition_dissertation.title }}</a></td>
                   <td>{{ proposition_dissertation.author }}</td>
                   <td>
-                    {% for offer_prop in proposition_dissertation.offer_propositions.all %}
-
-                       {% if offer_prop in student_offer_propositions %}
-                         <span class="label label-default" >
-                         {{ offer_prop.last_acronym }}
-                          </span>
-                       {% endif %}
-
-                     {% endfor %}
+                      {% for offer_prop in proposition_dissertation.offer_propositions.all %}
+                        {% if offer_prop.pk in student_offer_propositions_id_list %}
+                            <span class="label label-default" >
+                            {{ offer_prop.last_acronym }}
+                            </span>
+                        {% endif %}
+                      {% endfor %}
                   </td>
                   <td>{{ proposition_dissertation.max_number_student }}</td>
                   {% if proposition_dissertation.remaining_places >= 0 %}

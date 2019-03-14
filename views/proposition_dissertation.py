@@ -35,8 +35,7 @@ from base.models import education_group, academic_year
 from base.models.education_group_year import EducationGroupYear
 from base.models.enums import offer_enrollment_state
 from base.models.offer_enrollment import OfferEnrollment
-from base.views import layout
-from dissertation.models import dissertation, proposition_dissertation, proposition_document_file, proposition_role, \
+from dissertation.models import dissertation, proposition_document_file, proposition_role, \
     proposition_offer
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
@@ -47,6 +46,7 @@ def proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
     current_academic_year = academic_year.starting_academic_year()
+
     student_offer_enrollments = OfferEnrollment.objects.filter(
             student=student,
             education_group_year__academic_year=current_academic_year,
@@ -54,10 +54,10 @@ def proposition_dissertations(request):
                 offer_enrollment_state.SUBSCRIBED,
                 offer_enrollment_state.PROVISORY
             ]
-        )
-    student_offer_propositions = OfferProposition.objects.filter(
-        education_group__educationgroupyear__offerenrollment=student_offer_enrollments
-    )
+        ).values_list('id', flat=True)
+    student_offer_propositions_id_list = OfferProposition.objects.filter(
+        education_group__educationgroupyear__offerenrollment__id__in=student_offer_enrollments
+    ).values_list('id', flat=True)
     prefetch_propositions = Prefetch(
         "offer_propositions",
         queryset=OfferProposition.objects.annotate(last_acronym=Subquery(
@@ -69,7 +69,7 @@ def proposition_dissertations(request):
     propositions_dissertations = PropositionDissertation.objects.filter(
         active=True,
         visibility=True,
-        offer_propositions__education_group__educationgroupyear__offerenrollment=student_offer_enrollments
+        offer_propositions__education_group__educationgroupyear__offerenrollment__in=student_offer_enrollments
     ).select_related('author__person', 'creator').prefetch_related(prefetch_propositions).annotate(
         dissertations_count=Sum(
             Case(
@@ -94,18 +94,25 @@ def proposition_dissertations(request):
                   {'date_now': date_now,
                    'propositions_dissertations': propositions_dissertations,
                    'student': student,
-                   'student_offer_propositions': student_offer_propositions})
+                   'student_offer_propositions_id_list': student_offer_propositions_id_list})
 
 
 @login_required
 def proposition_dissertation_detail(request, pk):
-    proposition = proposition_dissertation.find_by_id(pk)
-    subject = get_object_or_404(proposition_dissertation.PropositionDissertation, pk=pk)
-    offer_propositions = proposition_offer.search_by_proposition_dissertation(subject). \
-        prefetch_related('proposition_dissertation', 'offer_proposition')
     person = mdl.person.find_by_user(request.user)
+    current_ac_year = academic_year.starting_academic_year()
+    subject = get_object_or_404(PropositionDissertation.objects.select_related('author', 'author__person').
+                                prefetch_related('propositionrole_set',
+                                                 'propositionrole_set__adviser__person',
+                                                 'offer_propositions'), pk=pk)
+    offer_propositions = subject.offer_propositions.all().annotate(last_acronym=Subquery(
+            EducationGroupYear.objects.filter(
+                education_group__offer_proposition=OuterRef('pk'),
+                academic_year=current_ac_year).values('acronym')[:1]
+        ))
+
     student = mdl.student.find_by_person(person)
-    using = dissertation.count_by_proposition(proposition)
+    using = dissertation.count_by_proposition(subject)
     percent = using * 100 / subject.max_number_student if subject.max_number_student else 0
     count_proposition_role = proposition_role.count_by_proposition(subject)
     files = proposition_document_file.find_by_proposition(subject)
@@ -114,15 +121,15 @@ def proposition_dissertation_detail(request, pk):
         filename = file.document_file.file_name
     if count_proposition_role < 1:
         proposition_role.add('PROMOTEUR', subject.author, subject)
-    proposition_roles = proposition_role.search_by_proposition(subject)
-    return layout.render(request, 'proposition_dissertation_detail.html',
-                         {'percent': round(percent, 2),
-                          'proposition_roles': proposition_roles,
-                          'proposition_dissertation': subject,
-                          'offer_propositions': offer_propositions,
-                          'student': student,
-                          'using': using,
-                          'filename': filename})
+    proposition_roles = subject.propositionrole_set.all()
+    return render(request, 'proposition_dissertation_detail.html',
+                  {'percent': round(percent, 2),
+                   'proposition_roles': proposition_roles,
+                   'proposition_dissertation': subject,
+                   'offer_propositions': offer_propositions,
+                   'student': student,
+                   'using': using,
+                   'filename': filename})
 
 
 @login_required
@@ -138,7 +145,7 @@ def proposition_dissertations_search(request):
         active=True, visibility=True
     )
     date_now = timezone.now().date()
-    return layout.render(request, 'proposition_dissertations_list.html',
-                         {'date_now': date_now,
-                          'proposition_offers': proposition_offers,
-                          'student': student})
+    return render(request, 'proposition_dissertations_list.html',
+                  {'date_now': date_now,
+                   'proposition_offers': proposition_offers,
+                   'student': student})

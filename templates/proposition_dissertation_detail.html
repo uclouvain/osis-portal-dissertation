@@ -48,7 +48,9 @@
                         <label>{% trans 'Promoter' %}</label>
                     </div>
                     <div class="col-md-8">
-                        {{ proposition_dissertation.author }}
+                        {{ proposition_dissertation.author.person.first_name }}
+                        &nbsp;
+                        {{ proposition_dissertation.author.person.last_name }}
                     </div>
                 </div>
                 <div class="row">
@@ -123,7 +125,7 @@
                     </div>
                     <div class="col-md-8">
                         {% for offer_proposition in offer_propositions %}
-                            <span class="label label-default">{{ offer_proposition }}</span>
+                            <span class="label label-default">{{ offer_proposition.last_acronym }}</span>
                         {% endfor %}
                     </div>
                 </div>
