@@ -35,7 +35,6 @@ from base.models import education_group, academic_year
 from base.models.education_group_year import EducationGroupYear
 from base.models.enums import offer_enrollment_state
 from base.models.offer_enrollment import OfferEnrollment
-from base.views import layout
 from dissertation.models import dissertation, proposition_document_file, proposition_role, \
     proposition_offer
 from dissertation.models.offer_proposition import OfferProposition
@@ -146,7 +145,7 @@ def proposition_dissertations_search(request):
         active=True, visibility=True
     )
     date_now = timezone.now().date()
-    return layout.render(request, 'proposition_dissertations_list.html',
-                         {'date_now': date_now,
-                          'proposition_offers': proposition_offers,
-                          'student': student})
+    return render(request, 'proposition_dissertations_list.html',
+                  {'date_now': date_now,
+                   'proposition_offers': proposition_offers,
+                   'student': student})
