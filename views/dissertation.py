@@ -35,7 +35,6 @@ from django.views.generic import CreateView
 import dissertation.models.enums.dissertation_status
 from base import models as mdl
 from base.models import academic_year, education_group, education_group_year
-from base.models.academic_year import current_academic_year
 from base.models.education_group_year import EducationGroupYear
 from base.models.enums import offer_enrollment_state
 from base.models.offer_enrollment import OfferEnrollment
@@ -103,7 +102,7 @@ def dissertation_delete(request, pk):
 def dissertation_detail(request, pk):
     person = request.user.person
     student = mdl.student.find_by_person(person)
-    current_ac_year = current_academic_year()
+    current_ac_year = academic_year.starting_academic_year()
     dissert = get_object_or_404(Dissertation.objects.
                                 select_related('author', 'author__person',
                                                'proposition_dissertation__author__person', 'location').
