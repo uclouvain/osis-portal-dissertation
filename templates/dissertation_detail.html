@@ -90,11 +90,11 @@
                     {% if filename != "" %}
                         <div class="col-md-5">
                             <a href="{% url 'dissertation_download' pk=dissertation.pk %}" title="{% trans 'Download' %}">
-                                <i class="far fa-file"> {{ filename }}</i>
+                                <i class="fa fa-file"> {{ filename }}</i>
                             </a>
                             <a data-url="{% url 'dissertation_file_delete' dissertation_pk=dissertation.pk %}"
                                class="btn btn-warning btn-xs trigger_modal" role="button">
-                             <span class="fas fa-times">
+                             <span class="fa fa-times">
                              </span>
                             </a>
                         </div>
@@ -102,9 +102,9 @@
                         <div class="col-md-5">
                             <a class="btn btn-default btn-primary btn-xs" data-toggle="modal" data-target="#pnl_upload_documents"
                                id="btn_add_file" title="{% trans 'Add file'%}">
-                                <i class="fas fa-plus"></i>
+                                <i class="fa fa-plus"></i>
                                 {% trans 'Add file'%}
-                                <span class="fas fa-file-upload" aria-hidden="true" id="spn_add_file">
+                                <span class="fa fa-file-upload" aria-hidden="true" id="spn_add_file">
                             </span>
                             </a>
                         </div>
