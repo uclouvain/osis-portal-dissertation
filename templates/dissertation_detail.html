@@ -83,16 +83,33 @@
                         {{ dissertation.title }}
                     </div>
                 </div>
-                {% if filename != "" %}
-                    <div class="row">
-                        <div class="col-md-4" style="text-align: right">
-                            <label>{% trans 'File' %}</label>
-                        </div>
-                        <div class="col-md-8">
-                            <a href="{% url 'dissertation_download' pk=dissertation.pk %}">{% trans 'Link' %}</a>
-                        </div>
+                <div class="row">
+                    <div class="col-md-4" style="text-align:right">
+                        <label>{% trans 'file' %}</label>
                     </div>
-                {% endif %}
+                    {% if filename != "" %}
+                        <div class="col-md-5">
+                            <a href="{% url 'dissertation_download' pk=dissertation.pk %}" title="{% trans 'Download' %}">
+                                <i class="fa fa-file"> {{ filename }}</i>
+                            </a>
+                            <a data-url="{% url 'dissertation_file_delete' dissertation_pk=dissertation.pk %}"
+                               class="btn btn-warning btn-xs trigger_modal" role="button">
+                             <span class="fa fa-times">
+                             </span>
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="col-md-5">
+                            <a class="btn btn-default btn-primary btn-xs" data-toggle="modal" data-target="#pnl_upload_documents"
+                               id="btn_add_file" title="{% trans 'Add file'%}">
+                                <i class="fa fa-plus"></i>
+                                {% trans 'Add file'%}
+                                <span class="fa fa-file-upload" aria-hidden="true" id="spn_add_file">
+                            </span>
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
                 <div class="row">
                     <div class="col-md-4" style="text-align: right">
                         <label>{% trans 'Status' %}</label>
