@@ -28,11 +28,11 @@ msgstr ""
 
 #: templates/proposition_dissertations_list.html:106
 msgid ": activate to sort column ascending"
-msgstr ""
+msgstr "Activer pour trier la colonne par ordre croissant"
 
 #: templates/proposition_dissertations_list.html:107
 msgid ": activate to sort column descending"
-msgstr ""
+msgstr "Activer pour trier la colonne par ordre décroissant"
 
 #: models/enums/dissertation_status.py:51
 msgid "Accepted by commission"
@@ -241,7 +241,7 @@ msgstr "Mémoires"
 
 #: templates/dissertation_detail.html:92
 msgid "Download"
-msgstr ""
+msgstr "Télécharger"
 
 #: models/enums/dissertation_status.py:46
 msgid "Draft"
@@ -262,7 +262,7 @@ msgstr "Fichier"
 
 #: templates/proposition_dissertations_list.html:100
 msgid "First"
-msgstr ""
+msgstr "Premier"
 
 #: templates/dissertation_history.html:44
 msgid "History"
@@ -282,7 +282,7 @@ msgstr "Juin"
 
 #: templates/proposition_dissertations_list.html:103
 msgid "Last"
-msgstr ""
+msgstr "Dernier"
 
 #: templates/dissertation_detail.html:271
 #: templates/proposition_dissertation_detail.html:92
@@ -328,7 +328,7 @@ msgstr "Pas de données à afficher"
 
 #: templates/proposition_dissertations_list.html:97
 msgid "No matching records found"
-msgstr ""
+msgstr "Aucun enregistrements correspondants trouvés"
 
 #: templates/dissertations_list.html:66
 msgid "No result"
@@ -406,11 +406,11 @@ msgstr "Septembre"
 
 #: templates/proposition_dissertations_list.html:93
 msgid "Showing 0 to 0 of 0 entries"
-msgstr ""
+msgstr "Affichage de l'élément 0 à 0 sur 0 élément"
 
 #: templates/proposition_dissertations_list.html:92
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
-msgstr ""
+msgstr "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments"
 
 #: templates/dissertation_detail.html:115 templates/dissertations_list.html:72
 msgid "Status"
