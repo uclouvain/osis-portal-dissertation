@@ -48,9 +48,6 @@
         <a class="btn btn-default btn-primary pull-right " href="{% url 'dissertation_edit' pk=dissertation.pk %}"
            style="margin-right: 5px;" title="{% trans 'Edit'%}">
             <span class="glyphicon glyphicon-edit"></span></a>
-        <a class="btn btn-default btn-primary pull-right" data-toggle="modal" data-target="#pnl_upload_documents"
-           id="btn_add_file" style="margin-right: 5px;" title="{% trans 'File'%}">
-            <span class="glyphicon glyphicon-upload" aria-hidden="true" id="spn_add_file"></span></a>
     {% elif check_edit == True %}
         <a class="btn btn-default btn-primary pull-right"
            href="{% url 'dissertation_edit' pk=dissertation.pk %}"
