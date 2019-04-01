@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-26 15:44+0100\n"
+"POT-Creation-Date: 2019-04-01 13:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,13 +45,13 @@ msgstr "Validation de première année validée"
 msgid "Accepted by promoter"
 msgstr "Accepté par le promoteur"
 
-#: templates/dissertation_detail.html:229
-#: templates/dissertation_detail.html:231
+#: templates/dissertation_detail.html:226
+#: templates/dissertation_detail.html:228
 msgid "Add a reader"
 msgstr "Ajouter un lecteur"
 
-#: templates/dissertation_detail.html:104
-#: templates/dissertation_detail.html:106
+#: templates/dissertation_detail.html:101
+#: templates/dissertation_detail.html:103
 msgid "Add file"
 msgstr "Ajouter un fichier"
 
@@ -66,7 +65,7 @@ msgstr "Ajouter une justification"
 msgid "Are you sure you want to delete this document?"
 msgstr "Êtes-vous sûr de vouloir supprimer ce fichier?"
 
-#: templates/dissertation_detail.html:310
+#: templates/dissertation_detail.html:313
 msgid ""
 "Are you sure you want to put the dissertation back to draft ? Your promotor "
 "will receive an information e-mail."
@@ -75,13 +74,13 @@ msgstr ""
 "promoteur recevra un e-mail d’information."
 
 #: templates/dissertation_add_justification.html:54
-#: templates/dissertation_detail.html:72 templates/dissertations_list.html:71
+#: templates/dissertation_detail.html:69 templates/dissertations_list.html:71
 #: templates/proposition_dissertations_list.html:44
 msgid "Author"
 msgstr "Auteur"
 
-#: templates/dissertation_detail.html:309
 #: templates/dissertation_detail.html:312
+#: templates/dissertation_detail.html:315
 msgid "Back to draft"
 msgstr "Retour au brouillon"
 
@@ -127,14 +126,14 @@ msgstr "Statut actuel"
 msgid "Date"
 msgstr ""
 
-#: models/dissertation.py:59 templates/dissertation_detail.html:167
+#: models/dissertation.py:59 templates/dissertation_detail.html:164
 #: templates/dissertation_edit_form.html:57
 msgid "Defend period"
 msgstr "Période de défense"
 
 #: models/dissertation.py:61 templates/dissertation_detail.html:46
-#: templates/dissertation_detail.html:175
-#: templates/dissertation_detail.html:209
+#: templates/dissertation_detail.html:172
+#: templates/dissertation_detail.html:206
 #: templates/dissertation_edit_form.html:72
 msgid "Defend year"
 msgstr "Année de défense"
@@ -151,8 +150,8 @@ msgstr "Supprimer"
 msgid "Delete file"
 msgstr "Supprimer le fichier"
 
-#: models/dissertation.py:70 templates/dissertation_detail.html:159
-#: templates/dissertation_detail.html:287
+#: models/dissertation.py:70 templates/dissertation_detail.html:156
+#: templates/dissertation_detail.html:284
 #: templates/dissertation_edit_form.html:93
 #: templates/proposition_dissertation_detail.html:76
 msgid "Description"
@@ -163,7 +162,7 @@ msgid "Development dissertation"
 msgstr "Mémoire-développement"
 
 #: models/dissertation.py:56 templates/dissertation_add_justification.html:46
-#: templates/dissertation_detail.html:80
+#: templates/dissertation_detail.html:77
 #: templates/dissertation_edit_form.html:46
 #: templates/dissertation_history.html:37 templates/dissertations_list.html:70
 #: templates/proposition_dissertation_detail.html:58
@@ -183,15 +182,15 @@ msgstr "Modification du mémoire"
 msgid "Dissertation history"
 msgstr "Historique du mémoire"
 
-#: templates/dissertation_detail.html:67
+#: templates/dissertation_detail.html:64
 msgid "Dissertation informations"
 msgstr "Informations du mémoire"
 
-#: templates/dissertation_detail.html:194
+#: templates/dissertation_detail.html:191
 msgid "Dissertation jury"
 msgstr "Jury du mémoire"
 
-#: models/dissertation.py:75 templates/dissertation_detail.html:183
+#: models/dissertation.py:75 templates/dissertation_detail.html:180
 #: templates/dissertation_edit_form.html:83
 msgid "Dissertation location"
 msgstr "Site de rattachement"
@@ -239,7 +238,7 @@ msgstr "Mises-à-jour du mémoire"
 msgid "Dissertations"
 msgstr "Mémoires"
 
-#: templates/dissertation_detail.html:92
+#: templates/dissertation_detail.html:89
 msgid "Download"
 msgstr "Télécharger"
 
@@ -247,7 +246,7 @@ msgstr "Télécharger"
 msgid "Draft"
 msgstr "Brouillon"
 
-#: templates/dissertation_detail.html:49 templates/dissertation_detail.html:58
+#: templates/dissertation_detail.html:49 templates/dissertation_detail.html:55
 msgid "Edit"
 msgstr "Editer"
 
@@ -255,7 +254,6 @@ msgstr "Editer"
 msgid "End"
 msgstr "Terminé"
 
-#: templates/dissertation_detail.html:52
 #: templates/proposition_dissertation_detail.html:67
 msgid "File"
 msgstr "Fichier"
@@ -284,7 +282,7 @@ msgstr "Juin"
 msgid "Last"
 msgstr "Dernier"
 
-#: templates/dissertation_detail.html:271
+#: templates/dissertation_detail.html:268
 #: templates/proposition_dissertation_detail.html:92
 msgid "Level"
 msgstr "Niveau de développment du sujet"
@@ -338,7 +336,7 @@ msgstr "Aucun résultat trouvé"
 msgid "Number of places remaining"
 msgstr "Nombre de places restantes"
 
-#: models/dissertation.py:67 templates/dissertation_detail.html:261
+#: models/dissertation.py:67 templates/dissertation_detail.html:258
 #: templates/dissertations_list.html:74
 #: templates/proposition_dissertation_detail.html:124
 #: templates/proposition_dissertations_list.html:45
@@ -361,7 +359,7 @@ msgstr "En traitement..."
 msgid "Professor"
 msgstr "Professeur"
 
-#: templates/dissertation_detail.html:245
+#: templates/dissertation_detail.html:242
 #: templates/proposition_dissertation_detail.html:48
 #: templates/proposition_dissertation_detail.html:158
 msgid "Promoter"
@@ -412,17 +410,18 @@ msgstr "Affichage de l'élément 0 à 0 sur 0 élément"
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments"
 
-#: templates/dissertation_detail.html:115 templates/dissertations_list.html:72
+#: templates/dissertation_detail.html:112 templates/dissertations_list.html:72
 msgid "Status"
 msgstr "Statut"
 
-#: templates/dissertation_detail.html:240
+#: templates/dissertation_detail.html:237
 #: templates/proposition_dissertation_detail.html:43
 msgid "Subject informations"
 msgstr "Informations du sujet de mémoire"
 
+#: templates/dissertation_detail.html:298
 #: templates/dissertation_detail.html:301
-#: templates/dissertation_detail.html:304
+#: templates/dissertation_detail.html:307
 msgid "Submit this dissertation project to promoter"
 msgstr "Soumettre le projet au promoteur"
 
@@ -451,7 +450,7 @@ msgstr ""
 "changement d'état qui sera appliqué est renseigné ci-dessous. Veuillez "
 "indiquer un message d'explication."
 
-#: templates/dissertation_detail.html:253
+#: templates/dissertation_detail.html:250
 #: templates/dissertation_title_form.html:46
 msgid "Title"
 msgstr "titre"
@@ -464,12 +463,12 @@ msgstr "En attente de réception"
 msgid "To be received defended"
 msgstr "En attente de défense"
 
-#: templates/dissertation_detail.html:279
+#: templates/dissertation_detail.html:276
 #: templates/proposition_dissertation_detail.html:84
 msgid "Type"
 msgstr "Type de sujet"
 
-#: templates/dissertation_detail.html:302
+#: templates/dissertation_detail.html:299
 msgid ""
 "Warning : you will submit the draft memorandum to the promotor. Are you sure "
 "you want to continue ?"
@@ -481,7 +480,11 @@ msgstr ""
 msgid "Win"
 msgstr "Réussi"
 
-#: templates/dissertation_detail.html:209
+#: templates/dissertation_detail.html:305
+msgid "You already have a dissertation submitted to promotor"
+msgstr "Vous avez déjà soumis un mémoire à un promoteur"
+
+#: templates/dissertation_detail.html:206
 msgid ""
 "You are ready to delete this jury member. Are you sure you want to continue ?"
 msgstr ""
@@ -504,7 +507,7 @@ msgstr ""
 msgid "empirical research"
 msgstr "Recherche empirique"
 
-#: templates/dissertation_detail.html:88
+#: templates/dissertation_detail.html:85
 msgid "file"
 msgstr "fichier"
 
@@ -568,9 +571,9 @@ msgstr "Sujet précis"
 msgid "theoretical analysis"
 msgstr "Analyse théorique"
 
-#: models/dissertation.py:48 templates/dissertation_detail.html:170
-#: templates/dissertation_detail.html:178
-#: templates/dissertation_detail.html:186
+#: models/dissertation.py:48 templates/dissertation_detail.html:167
+#: templates/dissertation_detail.html:175
+#: templates/dissertation_detail.html:183
 msgid "undefined"
 msgstr "undéfini"
 
