@@ -107,13 +107,17 @@
                         </div>
                     {% endif %}
                 </div>
+                {% if dissertation.status == 'DRAFT' %}
+                <div class="row alert alert-danger" title="{% trans "Don't forget to submit your dissertation to your promoter" %}">
+                {% else %}
                 <div class="row">
+                {% endif %}
                     <div class="col-md-4" style="text-align: right">
                         <label>{% trans 'Status' %}</label>
                     </div>
                     <div class="col-md-8">
                         {% if dissertation.status == 'DRAFT' %}
-                        <span class="label label-default">
+                        <span class="label label-danger">
                         {% elif dissertation.status == 'DIR_SUBMIT' %}
                         <span class="label label-primary">
                         {% elif dissertation.status == 'DIR_OK' %}
