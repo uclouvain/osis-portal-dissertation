@@ -572,7 +572,7 @@ msgstr "Analyse théorique"
 #: templates/dissertation_detail.html:178
 #: templates/dissertation_detail.html:186
 msgid "undefined"
-msgstr "undéfini"
+msgstr "indéfini"
 
 #: templates/dissertations_list.html:73
 msgid "year start"

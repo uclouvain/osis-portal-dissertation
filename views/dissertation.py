@@ -32,6 +32,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import CreateView
 
+import dissertation.models.enums.defend_periode_choices
 import dissertation.models.enums.dissertation_status
 from base import models as mdl
 from base.models import academic_year, education_group, education_group_year
@@ -47,7 +48,7 @@ from dissertation.models import dissertation, dissertation_document_file, disser
 from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation import Dissertation
 from dissertation.models.dissertation_role import DissertationRole
-from dissertation.models.enums import dissertation_status
+from dissertation.models.enums import dissertation_status, dissertation_role_status
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
 
@@ -142,7 +143,7 @@ def dissertation_detail(request, pk):
 
         if count_dissertation_role == 0:
             if count_proposition_role == 0:
-                dissertation_role.add('PROMOTEUR', dissert.proposition_dissertation.author, dissert)
+                dissertation_role.add(dissertation_role_status.PROMOTEUR, dissert.proposition_dissertation.author, dissert)
             else:
                 for role in proposition_roles:
                     dissertation_role.add(role.status, role.adviser, dissert)
@@ -265,7 +266,7 @@ class DissertationJuryNewView(AjaxTemplateMixin, UserPassesTestMixin, CreateView
         return self._dissertation
 
     def get_initial(self):
-        return {'status': "READER", 'dissertation': self.dissertation}
+        return {'status': dissertation_role_status.READER, 'dissertation': self.dissertation}
 
     def form_invalid(self, form):
         return super().form_invalid(form)
