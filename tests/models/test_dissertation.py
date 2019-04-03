@@ -37,7 +37,6 @@ from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from dissertation.models import dissertation
 from dissertation.models.enums import dissertation_role_status
-from dissertation.models.enums.dissertation_role_status import PROMOTEUR
 from dissertation.tests.factories.adviser import AdviserManagerFactory, AdviserTeacherFactory
 from dissertation.tests.factories.dissertation import DissertationFactory
 from dissertation.tests.factories.proposition_dissertation import PropositionDissertationFactory
