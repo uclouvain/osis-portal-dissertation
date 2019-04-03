@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-02 15:49+0200\n"
+"POT-Creation-Date: 2019-04-03 16:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,6 +44,10 @@ msgstr "Validation de première année validée"
 #: models/enums/dissertation_status.py:48
 msgid "Accepted by promoter"
 msgstr "Accepté par le promoteur"
+
+#: models/enums/dissertation_role_status.py:39
+msgid "Accompanist"
+msgstr "Accompagnateur"
 
 #: templates/dissertation_detail.html:230
 #: templates/dissertation_detail.html:232
@@ -92,6 +96,10 @@ msgstr "Annuler"
 msgid "Change"
 msgstr "Changement"
 
+#: models/enums/dissertation_role_status.py:37
+msgid "Co-Promoter"
+msgstr "Co-Promoteur"
+
 #: templates/proposition_dissertation_detail.html:100
 msgid "Collaboration"
 msgstr "Collaboration"
@@ -126,12 +134,12 @@ msgstr "Statut actuel"
 msgid "Date"
 msgstr ""
 
-#: models/dissertation.py:59 templates/dissertation_detail.html:168
+#: models/dissertation.py:52 templates/dissertation_detail.html:168
 #: templates/dissertation_edit_form.html:57
 msgid "Defend period"
 msgstr "Période de défense"
 
-#: models/dissertation.py:61 templates/dissertation_detail.html:46
+#: models/dissertation.py:54 templates/dissertation_detail.html:46
 #: templates/dissertation_detail.html:176
 #: templates/dissertation_detail.html:210
 #: templates/dissertation_edit_form.html:72
@@ -150,7 +158,7 @@ msgstr "Supprimer"
 msgid "Delete file"
 msgstr "Supprimer le fichier"
 
-#: models/dissertation.py:70 templates/dissertation_detail.html:160
+#: models/dissertation.py:63 templates/dissertation_detail.html:160
 #: templates/dissertation_detail.html:288
 #: templates/dissertation_edit_form.html:93
 #: templates/proposition_dissertation_detail.html:76
@@ -161,7 +169,7 @@ msgstr "Description"
 msgid "Development dissertation"
 msgstr "Mémoire-développement"
 
-#: models/dissertation.py:56 templates/dissertation_add_justification.html:46
+#: models/dissertation.py:49 templates/dissertation_add_justification.html:46
 #: templates/dissertation_detail.html:77
 #: templates/dissertation_edit_form.html:46
 #: templates/dissertation_history.html:37 templates/dissertations_list.html:70
@@ -190,7 +198,7 @@ msgstr "Informations du mémoire"
 msgid "Dissertation jury"
 msgstr "Jury du mémoire"
 
-#: models/dissertation.py:75 templates/dissertation_detail.html:184
+#: models/dissertation.py:68 templates/dissertation_detail.html:184
 #: templates/dissertation_edit_form.html:83
 msgid "Dissertation location"
 msgstr "Site de rattachement"
@@ -199,7 +207,7 @@ msgstr "Site de rattachement"
 msgid "Dissertation management"
 msgstr "Gestion des mémoires"
 
-#: models/dissertation.py:69 templates/dissertations_list.html:75
+#: models/dissertation.py:62 templates/dissertations_list.html:75
 msgid "Dissertation subject"
 msgstr "Sujet de mémoire"
 
@@ -274,11 +282,15 @@ msgstr "Historique"
 msgid "Information"
 msgstr "Information"
 
-#: models/dissertation.py:49
+#: models/enums/dissertation_role_status.py:40
+msgid "Internship"
+msgstr "Maître de stage"
+
+#: models/enums/defend_periode_choices.py:35
 msgid "January"
 msgstr "Janvier"
 
-#: models/dissertation.py:50
+#: models/enums/defend_periode_choices.py:36
 msgid "June"
 msgstr "Juin"
 
@@ -340,7 +352,7 @@ msgstr "Aucun résultat trouvé"
 msgid "Number of places remaining"
 msgstr "Nombre de places restantes"
 
-#: models/dissertation.py:67 templates/dissertation_detail.html:262
+#: models/dissertation.py:60 templates/dissertation_detail.html:262
 #: templates/dissertations_list.html:74
 #: templates/proposition_dissertation_detail.html:124
 #: templates/proposition_dissertations_list.html:45
@@ -350,6 +362,10 @@ msgstr "Programmes"
 #: templates/dissertation_history.html:48
 msgid "Person"
 msgstr "Personne"
+
+#: models/enums/dissertation_role_status.py:41
+msgid "President"
+msgstr "Président"
 
 #: templates/proposition_dissertations_list.html:101
 msgid "Previous"
@@ -363,13 +379,15 @@ msgstr "En traitement..."
 msgid "Professor"
 msgstr "Professeur"
 
+#: models/enums/dissertation_role_status.py:36
 #: templates/dissertation_detail.html:246
 #: templates/proposition_dissertation_detail.html:48
 #: templates/proposition_dissertation_detail.html:158
 msgid "Promoter"
 msgstr "Promoteur"
 
-#: models/dissertation_role.py:42 templates/dissertation_reader_edit.html:51
+#: models/dissertation_role.py:42 models/enums/dissertation_role_status.py:38
+#: templates/dissertation_reader_edit.html:51
 msgid "Reader"
 msgstr "Lecteur"
 
@@ -402,7 +420,7 @@ msgstr "Sauvegarder"
 msgid "Search"
 msgstr "Rechercher"
 
-#: models/dissertation.py:51
+#: models/enums/defend_periode_choices.py:37
 msgid "September"
 msgstr "Septembre"
 
@@ -453,6 +471,14 @@ msgstr ""
 "La mise-à-jour de l'état du mémoire est sur le point d'être effectuée. Le "
 "changement d'état qui sera appliqué est renseigné ci-dessous. Veuillez "
 "indiquer un message d'explication."
+
+#: views/upload_dissertation_file.py:109
+msgid "The student added the file :"
+msgstr "L'étudiant a ajouté le fichier :"
+
+#: views/upload_dissertation_file.py:73
+msgid "The student has deleted the file :"
+msgstr "L'étudiant a supprimé le fichier :"
 
 #: templates/dissertation_detail.html:254
 #: templates/dissertation_title_form.html:46
@@ -535,7 +561,7 @@ msgstr "e-mail"
 msgid "mobile"
 msgstr ""
 
-#: views/dissertation.py:222
+#: views/dissertation.py:224
 msgid "new title"
 msgstr "nouveau titre"
 
@@ -543,7 +569,7 @@ msgstr "nouveau titre"
 msgid "of"
 msgstr "sur"
 
-#: views/dissertation.py:220
+#: views/dissertation.py:222
 msgid "original title"
 msgstr "titre original"
 
@@ -575,7 +601,8 @@ msgstr "Sujet précis"
 msgid "theoretical analysis"
 msgstr "Analyse théorique"
 
-#: models/dissertation.py:48 templates/dissertation_detail.html:171
+#: models/enums/defend_periode_choices.py:34
+#: templates/dissertation_detail.html:171
 #: templates/dissertation_detail.html:179
 #: templates/dissertation_detail.html:187
 msgid "undefined"
@@ -594,9 +621,6 @@ msgstr "Année de début"
 #~ msgid "ACCOMPANIST"
 #~ msgstr "Accompagnateur"
 
-#~ msgid "accompanist"
-#~ msgstr "Accompagnateur"
-
 #~ msgid "case_study"
 #~ msgstr "Cas d'étude"
 
@@ -612,9 +636,6 @@ msgstr "Année de début"
 #~ msgid "INTERNSHIP"
 #~ msgstr "Maître de stage"
 
-#~ msgid "internship_master"
-#~ msgstr "Maître de stage"
-
 #~ msgid "justification_confirmation_message"
 #~ msgstr "Confirmer la justification"
 
@@ -622,9 +643,6 @@ msgstr "Année de début"
 #~ msgstr "Facultatif"
 
 #~ msgid "PRESIDENT"
-#~ msgstr "Président"
-
-#~ msgid "president"
 #~ msgstr "Président"
 
 #~ msgid "PROMOTEUR"

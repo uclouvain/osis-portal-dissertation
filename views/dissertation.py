@@ -95,7 +95,7 @@ def dissertation_delete(request, pk):
     memory = get_object_or_404(dissertation.Dissertation, pk=pk)
     if memory.author_is_logged_student(request):
         memory.deactivate()
-        dissertation_update.add(request, memory, memory.status, justification="student_set_active_false")
+        dissertation_update.add(request, memory, memory.status, justification="Student set dissertation inactive")
     return redirect('dissertations')
 
 
@@ -178,7 +178,8 @@ def dissertation_edit(request, pk):
                 form = DissertationEditForm(request.POST, instance=dissert)
                 if form.is_valid():
                     dissert = form.save()
-                    dissertation_update.add(request, dissert, dissert.status, justification="student_edit_dissertation")
+                    dissertation_update.add(request, dissert, dissert.status,
+                                            justification="student edited the dissertation")
                     return redirect('dissertation_detail', pk=dissert.pk)
                 else:
                     form.fields["education_group_year_start"].queryset = education_group_year.find_by_education_groups(
@@ -273,7 +274,7 @@ class DissertationJuryNewView(AjaxTemplateMixin, UserPassesTestMixin, CreateView
 
     def form_valid(self, form):
         result = super().form_valid(form)
-        justification = "%s %s" % ("student_add_reader", form.cleaned_data['adviser'])
+        justification = "%s %s" % ("Student added reader", form.cleaned_data['adviser'])
         dissert = self.dissertation
         dissertation_update.add(self.request, dissert, dissert.status, justification=justification)
         return result
@@ -324,7 +325,7 @@ def dissertation_new(request, pk):
             memory = form.save()
             dissertation_update.add(request, memory,
                                     memory.status,
-                                    justification="student_creation_dissertation, title:" + memory.title
+                                    justification="Student created the dissertation :" + memory.title
                                     )
             return redirect('dissertation_detail', pk=memory.pk)
 
@@ -353,7 +354,7 @@ def dissertation_reader_delete(request, pk):
     if dissert.author_is_logged_student(request):
         offer_pro = offer_proposition.get_by_education_group(dissert.education_group_year_start.education_group)
         if offer_pro.student_can_manage_readers and dissert.status == 'DRAFT':
-            justification = "%s %s" % ("student_delete_reader", str(role))
+            justification = "%s %s" % ("Student deleted reader", str(role))
             dissertation_update.add(request, dissert, dissert.status, justification=justification)
             role.delete()
         return redirect('dissertation_detail', pk=dissert.pk)

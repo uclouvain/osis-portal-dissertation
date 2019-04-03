@@ -25,15 +25,17 @@
 ##############################################################################
 from django.contrib.auth.decorators import login_required
 from django.http import *
+from django.shortcuts import get_object_or_404, redirect
+from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DeleteView
 
 from base.views.mixin import AjaxTemplateMixin
 from dissertation import models as mdl
+from dissertation.models import dissertation_update
 from dissertation.models.dissertation import Dissertation
 from dissertation.models.dissertation_document_file import DissertationDocumentFile
 from osis_common import models as mdl_osis_common
 from osis_common.models.enum import storage_duration
-from django.shortcuts import get_object_or_404, redirect
 
 
 @login_required
@@ -68,6 +70,11 @@ class DeleteDissertationFileView(AjaxTemplateMixin, DeleteView):
         self.dissertation_documents = self.get_object()
         if self.dissertation_documents and self.dissertation.author_is_logged_student(request):
             for dissertation_document in self.dissertation_documents:
+                justification = "%s %s" % (_("The student has deleted the file :"),
+                                           dissertation_document.document_file.file_name)
+                dissertation_update.add(
+                    request, self.dissertation, self.dissertation.status, justification=justification
+                )
                 dissertation_document.delete()
             return self._ajax_response() or HttpResponseRedirect(self.get_success_url())
         return self._ajax_response() or HttpResponseRedirect(self.get_error_url())
@@ -99,6 +106,10 @@ def save_uploaded_file(request):
                                                                   size=size,
                                                                   update_by=request.user.username)
         new_document.save()
+        justification = "%s %s" % (_("The student added the file :"), new_document.file_name)
+        dissertation_update.add(
+            request, dissertation, dissertation.status, justification=justification
+        )
         dissertation_file = mdl.dissertation_document_file.DissertationDocumentFile()
         dissertation_file.dissertation = dissertation
         dissertation_file.document_file = new_document
