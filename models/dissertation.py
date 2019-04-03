@@ -30,6 +30,7 @@ from django.utils.translation import ugettext_lazy as _
 from base import models as mdl
 from base.models import student, offer_year, academic_year
 from dissertation.models import dissertation_location, proposition_dissertation
+from dissertation.models.enums.defend_periode_choices import DEFEND_PERIODE_CHOICES
 from dissertation.models.enums.dissertation_status import DISSERTATION_STATUS
 from dissertation.utils import emails_dissert
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
@@ -42,14 +43,6 @@ class DissertationAdmin(SerializableModelAdmin):
     search_fields = ('uuid', 'title', 'author__person__last_name', 'author__person__first_name',
                      'proposition_dissertation__title', 'proposition_dissertation__author__person__last_name',
                      'proposition_dissertation__author__person__first_name', 'education_group_year_start__id')
-
-
-DEFEND_PERIODE_CHOICES = (
-    ('UNDEFINED', _('undefined')),
-    ('JANUARY', _('January')),
-    ('JUNE', _('June')),
-    ('SEPTEMBER', _('September')),
-)
 
 
 class Dissertation(SerializableModel):

@@ -164,7 +164,7 @@
                       <label>{% trans 'Defend period' %}</label>
                   </div>
                   <div class="col-md-8">
-                      {{ dissertation.defend_periode|default_if_none:_("undefined") }}
+                      {{ dissertation.get_defend_periode_display|default_if_none:_("undefined") }}
                   </div>
                 </div>
                 <div class="row">

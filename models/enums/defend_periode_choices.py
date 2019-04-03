@@ -25,18 +25,14 @@
 ##############################################################################
 from django.utils.translation import ugettext_lazy as _
 
-PROMOTEUR = 'PROMOTEUR'
-CO_PROMOTEUR = 'CO_PROMOTEUR'
-READER = 'READER'
-ACCOMPANIST = 'ACCOMPANIST'
-INTERNSHIP = 'INTERNSHIP'
-PRESIDENT = 'PRESIDENT'
+UNDEFINED = 'UNDEFINED'
+JANUARY = 'JANUARY'
+JUNE = 'JUNE'
+SEPTEMBER = 'SEPTEMBER'
 
-STATUS_CHOICES = (
-    (PROMOTEUR, _("Promoteur")),
-    (CO_PROMOTEUR, _("Co-Promoteur")),
-    (READER, _("Reader")),
-    (ACCOMPANIST, _("Accompanist")),
-    (INTERNSHIP, _("Internship")),
-    (PRESIDENT, _("President")),
+DEFEND_PERIODE_CHOICES = (
+    (UNDEFINED, _('undefined')),
+    (JANUARY, _('January')),
+    (JUNE, _('June')),
+    (SEPTEMBER, _('September')),
 )
