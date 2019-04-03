@@ -107,13 +107,17 @@
                         </div>
                     {% endif %}
                 </div>
+                {% if dissertation.status == 'DRAFT' %}
+                <div class="row alert alert-danger" title="{% trans "Don't forget to submit your dissertation to your promoter" %}">
+                {% else %}
                 <div class="row">
+                {% endif %}
                     <div class="col-md-4" style="text-align: right">
                         <label>{% trans 'Status' %}</label>
                     </div>
                     <div class="col-md-8">
                         {% if dissertation.status == 'DRAFT' %}
-                        <span class="label label-default">
+                        <span class="label label-danger">
                         {% elif dissertation.status == 'DIR_SUBMIT' %}
                         <span class="label label-primary">
                         {% elif dissertation.status == 'DIR_OK' %}
@@ -297,7 +301,13 @@
                            id="dissertation_to_dir_submit" class="btn btn-default btn-primary pull-right"
                            role="button" title="{% trans 'Submit this dissertation project to promoter'%}"
                            onclick="return confirm('{% trans 'Warning : you will submit the draft memorandum to the promotor. Are you sure you want to continue ?' %}')">
-                            <span class="glyphicon glyphicon-circle-arrow-right"
+                            <span class="fa fa-arrow-circle-right"
+                                  aria-hidden="true"></span> {% trans 'Submit this dissertation project to promoter'%}</a>
+                    {% else %}
+                        <a href="{% url 'dissertation_to_dir_submit' pk=dissertation.pk %}"
+                           id="dissertation_to_dir_submit" class="btn btn-default btn-primary pull-right"
+                           role="button" disabled title="{% trans 'You already have a dissertation submitted to promotor'%}">
+                            <span class="fa fa-arrow-circle-right"
                                   aria-hidden="true"></span> {% trans 'Submit this dissertation project to promoter'%}</a>
                     {% endif %}
                 {% elif dissertation.status == 'DIR_SUBMIT' %}
@@ -305,7 +315,7 @@
                        id="dissertation_back_to_draft" class="btn btn-default btn-primary pull-right"
                        role="button" title="{% trans 'Back to draft' %}"
                        onclick="return confirm('{% trans 'Are you sure you want to put the dissertation back to draft ? Your promotor will receive an information e-mail.' %}')">
-                        <span class="glyphicon glyphicon-circle-arrow-left"
+                        <span class="fa fa-arrow-circle-left"
                               aria-hidden="true"></span> {% trans 'Back to draft'%}</a>
                 {% endif %}
             </div>
