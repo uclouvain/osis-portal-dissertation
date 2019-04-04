@@ -75,14 +75,20 @@
               <th>{% trans 'Dissertation subject'%}</th>
             </tr>
             {% for dissertation in dissertations %}
+
+              {% if dissertation.status == 'DRAFT' %}
+                   <tr class="alert alert-danger" title="{% trans "Don't forget to submit your dissertation to your promoter" %}">
+              {% else %}
               <tr>
+              {% endif %}
+
                 <td><a href="{% url 'dissertation_detail' pk=dissertation.pk %}">{{ dissertation.title }}</a></td>
                 <td>{{ dissertation.author.person.first_name }} &nbsp;
                     {{ dissertation.author.person.last_name }} &nbsp;- &nbsp;
                     {{ dissertation.author.registration_id }}</td>
                 <td>
                     {% if dissertation.status == 'DRAFT' %}
-                    <span class="label label-default">
+                    <span class="label label-danger">
                     {% elif dissertation.status == 'DIR_SUBMIT' %}
                     <span class="label label-primary">
                     {% elif dissertation.status == 'DIR_OK' %}
