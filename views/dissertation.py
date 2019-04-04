@@ -274,7 +274,7 @@ class DissertationJuryNewView(AjaxTemplateMixin, UserPassesTestMixin, CreateView
 
     def form_valid(self, form):
         result = super().form_valid(form)
-        justification = "%s %s" % ("Student added reader", form.cleaned_data['adviser'])
+        justification = "{} {}".format("Student added reader", form.cleaned_data['adviser'])
         dissert = self.dissertation
         dissertation_update.add(self.request, dissert, dissert.status, justification=justification)
         return result
@@ -325,7 +325,7 @@ def dissertation_new(request, pk):
             memory = form.save()
             dissertation_update.add(request, memory,
                                     memory.status,
-                                    justification="Student created the dissertation :" + memory.title
+                                    justification="Student created the dissertation : {}".format(memory.title)
                                     )
             return redirect('dissertation_detail', pk=memory.pk)
 
@@ -354,7 +354,7 @@ def dissertation_reader_delete(request, pk):
     if dissert.author_is_logged_student(request):
         offer_pro = offer_proposition.get_by_education_group(dissert.education_group_year_start.education_group)
         if offer_pro.student_can_manage_readers and dissert.status == 'DRAFT':
-            justification = "%s %s" % ("Student deleted reader", str(role))
+            justification = "Student deleted reader {}".format(role)
             dissertation_update.add(request, dissert, dissert.status, justification=justification)
             role.delete()
         return redirect('dissertation_detail', pk=dissert.pk)

@@ -47,10 +47,8 @@ msgid "Accepted by promoter"
 msgstr ""
 
 #: models/enums/dissertation_role_status.py:39
-#, fuzzy
-#| msgid "accompanist"
 msgid "Accompanist"
-msgstr "Accompanist"
+msgstr ""
 
 #: templates/dissertation_detail.html:230
 #: templates/dissertation_detail.html:232
