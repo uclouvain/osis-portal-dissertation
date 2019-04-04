@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-02 15:49+0200\n"
+"POT-Creation-Date: 2019-04-03 16:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,6 +44,10 @@ msgstr ""
 
 #: models/enums/dissertation_status.py:48
 msgid "Accepted by promoter"
+msgstr ""
+
+#: models/enums/dissertation_role_status.py:39
+msgid "Accompanist"
 msgstr ""
 
 #: templates/dissertation_detail.html:230
@@ -91,6 +95,12 @@ msgstr ""
 msgid "Change"
 msgstr ""
 
+#: models/enums/dissertation_role_status.py:37
+#, fuzzy
+#| msgid "copromotor"
+msgid "Co-Promoter"
+msgstr "Co-promoter"
+
 #: templates/proposition_dissertation_detail.html:100
 msgid "Collaboration"
 msgstr ""
@@ -127,12 +137,12 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: models/dissertation.py:59 templates/dissertation_detail.html:168
+#: models/dissertation.py:52 templates/dissertation_detail.html:168
 #: templates/dissertation_edit_form.html:57
 msgid "Defend period"
 msgstr ""
 
-#: models/dissertation.py:61 templates/dissertation_detail.html:46
+#: models/dissertation.py:54 templates/dissertation_detail.html:46
 #: templates/dissertation_detail.html:176
 #: templates/dissertation_detail.html:210
 #: templates/dissertation_edit_form.html:72
@@ -151,7 +161,7 @@ msgstr ""
 msgid "Delete file"
 msgstr ""
 
-#: models/dissertation.py:70 templates/dissertation_detail.html:160
+#: models/dissertation.py:63 templates/dissertation_detail.html:160
 #: templates/dissertation_detail.html:288
 #: templates/dissertation_edit_form.html:93
 #: templates/proposition_dissertation_detail.html:76
@@ -162,7 +172,7 @@ msgstr ""
 msgid "Development dissertation"
 msgstr ""
 
-#: models/dissertation.py:56 templates/dissertation_add_justification.html:46
+#: models/dissertation.py:49 templates/dissertation_add_justification.html:46
 #: templates/dissertation_detail.html:77
 #: templates/dissertation_edit_form.html:46
 #: templates/dissertation_history.html:37 templates/dissertations_list.html:70
@@ -191,7 +201,7 @@ msgstr ""
 msgid "Dissertation jury"
 msgstr ""
 
-#: models/dissertation.py:75 templates/dissertation_detail.html:184
+#: models/dissertation.py:68 templates/dissertation_detail.html:184
 #: templates/dissertation_edit_form.html:83
 msgid "Dissertation location"
 msgstr ""
@@ -200,7 +210,7 @@ msgstr ""
 msgid "Dissertation management"
 msgstr ""
 
-#: models/dissertation.py:69 templates/dissertations_list.html:75
+#: models/dissertation.py:62 templates/dissertations_list.html:75
 msgid "Dissertation subject"
 msgstr ""
 
@@ -275,11 +285,17 @@ msgstr ""
 msgid "Information"
 msgstr ""
 
-#: models/dissertation.py:49
+#: models/enums/dissertation_role_status.py:40
+#, fuzzy
+#| msgid "internship_master"
+msgid "Internship"
+msgstr "Internship Master"
+
+#: models/enums/defend_periode_choices.py:35
 msgid "January"
 msgstr ""
 
-#: models/dissertation.py:50
+#: models/enums/defend_periode_choices.py:36
 msgid "June"
 msgstr ""
 
@@ -343,7 +359,7 @@ msgstr ""
 msgid "Number of places remaining"
 msgstr ""
 
-#: models/dissertation.py:67 templates/dissertation_detail.html:262
+#: models/dissertation.py:60 templates/dissertation_detail.html:262
 #: templates/dissertations_list.html:74
 #: templates/proposition_dissertation_detail.html:124
 #: templates/proposition_dissertations_list.html:45
@@ -353,6 +369,12 @@ msgstr ""
 #: templates/dissertation_history.html:48
 msgid "Person"
 msgstr ""
+
+#: models/enums/dissertation_role_status.py:41
+#, fuzzy
+#| msgid "president"
+msgid "President"
+msgstr "President"
 
 #: templates/proposition_dissertations_list.html:101
 msgid "Previous"
@@ -366,13 +388,15 @@ msgstr ""
 msgid "Professor"
 msgstr ""
 
+#: models/enums/dissertation_role_status.py:36
 #: templates/dissertation_detail.html:246
 #: templates/proposition_dissertation_detail.html:48
 #: templates/proposition_dissertation_detail.html:158
 msgid "Promoter"
 msgstr ""
 
-#: models/dissertation_role.py:42 templates/dissertation_reader_edit.html:51
+#: models/dissertation_role.py:42 models/enums/dissertation_role_status.py:38
+#: templates/dissertation_reader_edit.html:51
 msgid "Reader"
 msgstr ""
 
@@ -405,7 +429,7 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: models/dissertation.py:51
+#: models/enums/defend_periode_choices.py:37
 msgid "September"
 msgstr ""
 
@@ -452,6 +476,14 @@ msgstr ""
 msgid ""
 "The status update is nearly done. This update is detailed just after. Please "
 "add your explanation for this update."
+msgstr ""
+
+#: views/upload_dissertation_file.py:109
+msgid "The student added the file :"
+msgstr ""
+
+#: views/upload_dissertation_file.py:73
+msgid "The student has deleted the file :"
 msgstr ""
 
 #: templates/dissertation_detail.html:254
@@ -531,7 +563,7 @@ msgstr ""
 msgid "mobile"
 msgstr ""
 
-#: views/dissertation.py:222
+#: views/dissertation.py:224
 msgid "new title"
 msgstr ""
 
@@ -539,7 +571,7 @@ msgstr ""
 msgid "of"
 msgstr ""
 
-#: views/dissertation.py:220
+#: views/dissertation.py:222
 msgid "original title"
 msgstr ""
 
@@ -571,7 +603,8 @@ msgstr ""
 msgid "theoretical analysis"
 msgstr ""
 
-#: models/dissertation.py:48 templates/dissertation_detail.html:171
+#: models/enums/defend_periode_choices.py:34
+#: templates/dissertation_detail.html:171
 #: templates/dissertation_detail.html:179
 #: templates/dissertation_detail.html:187
 msgid "undefined"
@@ -581,10 +614,12 @@ msgstr ""
 msgid "year start"
 msgstr ""
 
-#~ msgid "ACCOMPANIST"
-#~ msgstr "Accompanist"
+#, fuzzy
+#~| msgid "copromotor"
+#~ msgid "Promoteur"
+#~ msgstr "Co-promoter"
 
-#~ msgid "accompanist"
+#~ msgid "ACCOMPANIST"
 #~ msgstr "Accompanist"
 
 #~ msgid "case_study"
@@ -593,16 +628,10 @@ msgstr ""
 #~ msgid "CO_PROMOTEUR"
 #~ msgstr "Co-Promotor"
 
-#~ msgid "copromotor"
-#~ msgstr "Co-promoter"
-
 #~ msgid "domain"
 #~ msgstr "Domain"
 
 #~ msgid "INTERNSHIP"
-#~ msgstr "Internship Master"
-
-#~ msgid "internship_master"
 #~ msgstr "Internship Master"
 
 #~ msgid "justification_confirmation_message"
@@ -612,9 +641,6 @@ msgstr ""
 #~ msgstr "Optional"
 
 #~ msgid "PRESIDENT"
-#~ msgstr "President"
-
-#~ msgid "president"
 #~ msgstr "President"
 
 #~ msgid "PROMOTEUR"
