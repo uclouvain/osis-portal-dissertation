@@ -53,14 +53,22 @@ from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
 
 INVISIBLE_JUSTIFICATION_KEYWORDS = ('auto_add_jury',
+                                    'Auto add jury',
                                     'manager_add_jury',
+                                    'Manager add jury',
+                                    'Le manager a ajouté un membre du jury',
                                     'manager_creation_dissertation',
                                     'manager_delete_jury',
+                                    'Manager deleted jury',
                                     'manager_edit_dissertation',
+                                    'manager has edited the dissertation',
                                     'manager_set_active_false',
                                     'teacher_add_jury',
+                                    'Teacher added jury',
                                     'teacher_delete_jury',
+                                    'Teacher deleted jury',
                                     'teacher_set_active_false'
+
                                     )
 
 
