@@ -39,8 +39,8 @@ class DissertationRoleAdmin(SerializableModelAdmin):
 
 class DissertationRole(SerializableModel):
     status = models.CharField(max_length=12, choices=dissertation_role_status.STATUS_CHOICES)
-    adviser = models.ForeignKey('Adviser', verbose_name=_("Reader"))
-    dissertation = models.ForeignKey('Dissertation')
+    adviser = models.ForeignKey('Adviser', verbose_name=_("Reader"), on_delete=models.CASCADE)
+    dissertation = models.ForeignKey('Dissertation', on_delete=models.CASCADE)
 
     def __str__(self):
         return u"%s %s" % (self.status if self.status else "", self.adviser if self.adviser else "")
