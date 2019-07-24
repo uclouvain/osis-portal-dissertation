@@ -43,7 +43,7 @@ class PropositionRole(SerializableModel):
                               choices=dissertation_role_status.STATUS_CHOICES,
                               default=dissertation_role_status.PROMOTEUR
                               )
-    adviser = models.ForeignKey('Adviser', on_delete=models.CASCADE)
+    adviser = models.ForeignKey('Adviser', on_delete=models.PROTECT)
     proposition_dissertation = models.ForeignKey('PropositionDissertation', on_delete=models.CASCADE)
 
     def __str__(self):

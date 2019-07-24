@@ -60,13 +60,13 @@ class Dissertation(SerializableModel):
                                                    related_name='dissertations', verbose_name=_('Offers'))
     proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation,
                                                  verbose_name=_('Dissertation subject'), related_name='dissertations',
-                                                 on_delete=models.CASCADE)
+                                                 on_delete=models.PROTECT)
     description = models.TextField(_('Description'), blank=True, null=True)
     active = models.BooleanField(default=True)
     creation_date = models.DateTimeField(auto_now_add=True, editable=False)
     modification_date = models.DateTimeField(auto_now=True)
     location = models.ForeignKey(dissertation_location.DissertationLocation, blank=True, null=True,
-                                 verbose_name=_('Dissertation location'), on_delete=models.CASCADE)
+                                 verbose_name=_('Dissertation location'), on_delete=models.PROTECT)
 
     def __str__(self):
         return self.title
