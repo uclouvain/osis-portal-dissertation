@@ -39,8 +39,8 @@ class PropositionOfferAdmin(SerializableModelAdmin):
 
 
 class PropositionOffer(SerializableModel):
-    proposition_dissertation = models.ForeignKey('PropositionDissertation')
-    offer_proposition = models.ForeignKey('OfferProposition')
+    proposition_dissertation = models.ForeignKey('PropositionDissertation', on_delete=models.CASCADE)
+    offer_proposition = models.ForeignKey('OfferProposition', on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.offer_proposition)

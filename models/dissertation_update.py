@@ -57,8 +57,9 @@ class DissertationUpdate(SerializableModel):
     status_to = models.CharField(max_length=12, choices=dissertation_status.DISSERTATION_STATUS, default='DRAFT')
     created = models.DateTimeField(auto_now_add=True)
     justification = models.TextField(blank=True)
-    person = models.ForeignKey('base.Person')
-    dissertation = models.ForeignKey(dissertation.Dissertation, related_name='dissertation_updates')
+    person = models.ForeignKey('base.Person', on_delete=models.PROTECT)
+    dissertation = models.ForeignKey(dissertation.Dissertation, related_name='dissertation_updates',
+                                     on_delete=models.CASCADE)
 
     @property
     def author(self):
