@@ -45,7 +45,7 @@ from dissertation.models.proposition_dissertation import PropositionDissertation
 def proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
-    current_academic_year = academic_year.starting_academic_year()
+    current_academic_year = academic_year.current_academic_year()
 
     student_offer_enrollments = OfferEnrollment.objects.filter(
             student=student,
@@ -100,7 +100,7 @@ def proposition_dissertations(request):
 @login_required
 def proposition_dissertation_detail(request, pk):
     person = mdl.person.find_by_user(request.user)
-    current_ac_year = academic_year.starting_academic_year()
+    current_ac_year = academic_year.current_academic_year()
     subject = get_object_or_404(PropositionDissertation.objects.select_related('author', 'author__person').
                                 prefetch_related('propositionrole_set',
                                                  'propositionrole_set__adviser__person',

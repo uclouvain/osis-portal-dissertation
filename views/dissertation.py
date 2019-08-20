@@ -111,7 +111,7 @@ def dissertation_delete(request, pk):
 def dissertation_detail(request, pk):
     person = request.user.person
     student = mdl.student.find_by_person(person)
-    current_ac_year = academic_year.starting_academic_year()
+    current_ac_year = academic_year.current_academic_year()
     dissert = get_object_or_404(Dissertation.objects.
                                 select_related('author', 'author__person',
                                                'proposition_dissertation__author__person', 'location').
@@ -306,7 +306,7 @@ class AdviserAutocomplete(autocomplete.Select2QuerySetView):
 def dissertation_new(request, pk):
     person = request.user.person
     student = person.student_set.first()
-    this_academic_year = academic_year.starting_academic_year()
+    this_academic_year = academic_year.current_academic_year()
     offer_enrollements = OfferEnrollment.objects.filter(
         student=student,
         education_group_year__academic_year=this_academic_year,
