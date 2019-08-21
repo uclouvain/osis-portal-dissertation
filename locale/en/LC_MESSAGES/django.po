@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-03 16:53+0200\n"
+"POT-Creation-Date: 2019-08-21 15:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,600 +17,414 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: templates/proposition_dissertation_detail.html:119
 #, python-format
 msgid "%%"
 msgstr ""
 
-#: templates/proposition_dissertations_list.html:94
 msgid "(filtered from _MAX_ total entries)"
 msgstr ""
 
-#: templates/proposition_dissertations_list.html:106
 msgid ": activate to sort column ascending"
 msgstr ""
 
-#: templates/proposition_dissertations_list.html:107
 msgid ": activate to sort column descending"
 msgstr ""
 
-#: models/enums/dissertation_status.py:51
 msgid "Accepted by commission"
 msgstr ""
 
-#: models/enums/dissertation_status.py:54
 msgid "Accepted by first year evaluation"
 msgstr ""
 
-#: models/enums/dissertation_status.py:48
 msgid "Accepted by promoter"
 msgstr ""
 
-#: models/enums/dissertation_role_status.py:39
 msgid "Accompanist"
 msgstr ""
 
-#: templates/dissertation_detail.html:230
-#: templates/dissertation_detail.html:232
 msgid "Add a reader"
 msgstr ""
 
-#: templates/dissertation_detail.html:101
-#: templates/dissertation_detail.html:103
 msgid "Add file"
 msgstr ""
 
-#: templates/dissertation_add_justification.html:34
-#: templates/dissertation_add_justification.html:75
-#: templates/dissertation_history.html:50
 msgid "Add justification"
 msgstr ""
 
-#: templates/dissertationdocumentfile_confirm_delete_inner.html:37
 msgid "Are you sure you want to delete this document?"
 msgstr ""
 
-#: templates/dissertation_detail.html:317
 msgid ""
 "Are you sure you want to put the dissertation back to draft ? Your promotor "
 "will receive an information e-mail."
 msgstr ""
 
-#: templates/dissertation_add_justification.html:54
-#: templates/dissertation_detail.html:69 templates/dissertations_list.html:71
-#: templates/proposition_dissertations_list.html:44
 msgid "Author"
 msgstr ""
 
-#: templates/dissertation_detail.html:316
-#: templates/dissertation_detail.html:319
 msgid "Back to draft"
 msgstr ""
 
-#: templates/dissertationdocumentfile_confirm_delete_inner.html:45
 msgid "Cancel"
 msgstr ""
 
-#: templates/dissertation_history.html:47
 msgid "Change"
 msgstr ""
 
-#: models/enums/dissertation_role_status.py:37
 #, fuzzy
 #| msgid "copromotor"
 msgid "Co-Promoter"
 msgstr "Co-promoter"
 
-#: templates/proposition_dissertation_detail.html:100
 msgid "Collaboration"
 msgstr ""
 
-#: templates/dissertation_detail.html:45
-#: templates/dissertation_edit_form.html:97 templates/dissertation_form.html:67
 msgid "Confirm dissertation"
 msgstr ""
 
-#: models/adviser.py:40
 msgid "Course manager"
 msgstr ""
 
-#: templates/dissertations_list.html:55
 msgid "Create"
 msgstr ""
 
-#: templates/proposition_dissertation_detail.html:228
 #, fuzzy
 #| msgid "project dissertation"
 msgid "Create dissertation"
 msgstr "Dissertations"
 
-#: templates/proposition_dissertation_detail.html:230
 msgid "Create dissertation with this subject"
 msgstr ""
 
-#: templates/dissertation_add_justification.html:63
-#: templates/dissertation_history.html:42
 msgid "Current status"
 msgstr ""
 
-#: templates/dissertation_history.html:49
 msgid "Date"
 msgstr ""
 
-#: models/dissertation.py:52 templates/dissertation_detail.html:168
-#: templates/dissertation_edit_form.html:57
 msgid "Defend period"
 msgstr ""
 
-#: models/dissertation.py:54 templates/dissertation_detail.html:46
-#: templates/dissertation_detail.html:176
-#: templates/dissertation_detail.html:210
-#: templates/dissertation_edit_form.html:72
 msgid "Defend year"
 msgstr ""
 
-#: models/enums/dissertation_status.py:58
 msgid "Defended"
 msgstr ""
 
-#: templates/dissertationdocumentfile_confirm_delete_inner.html:46
 msgid "Delete"
 msgstr ""
 
-#: templates/dissertationdocumentfile_confirm_delete_inner.html:29
 msgid "Delete file"
 msgstr ""
 
-#: models/dissertation.py:63 templates/dissertation_detail.html:160
-#: templates/dissertation_detail.html:288
-#: templates/dissertation_edit_form.html:93
-#: templates/proposition_dissertation_detail.html:76
 msgid "Description"
 msgstr ""
 
-#: models/enums/proposition_dissertation_types.py:33
 msgid "Development dissertation"
 msgstr ""
 
-#: models/dissertation.py:49 templates/dissertation_add_justification.html:46
-#: templates/dissertation_detail.html:77
-#: templates/dissertation_edit_form.html:46
-#: templates/dissertation_history.html:37 templates/dissertations_list.html:70
-#: templates/proposition_dissertation_detail.html:58
-#: templates/proposition_dissertations_list.html:43
 msgid "Dissertation"
 msgstr ""
 
-#: templates/dissertation_form.html:33
 msgid "Dissertation creation"
 msgstr ""
 
-#: templates/dissertation_edit_form.html:33
 msgid "Dissertation edit"
 msgstr ""
 
-#: templates/dissertation_history.html:38
 msgid "Dissertation history"
 msgstr ""
 
-#: templates/dissertation_detail.html:64
 msgid "Dissertation informations"
 msgstr ""
 
-#: templates/dissertation_detail.html:195
 msgid "Dissertation jury"
 msgstr ""
 
-#: models/dissertation.py:68 templates/dissertation_detail.html:184
-#: templates/dissertation_edit_form.html:83
 msgid "Dissertation location"
 msgstr ""
 
-#: templates/dissertation.html:31
 msgid "Dissertation management"
 msgstr ""
 
-#: models/dissertation.py:62 templates/dissertations_list.html:75
 msgid "Dissertation subject"
 msgstr ""
 
-#: templates/proposition_dissertation_detail.html:136
 msgid "Dissertation subject jury"
 msgstr ""
 
-#: templates/dissertation.html:43
-#: templates/proposition_dissertation_detail.html:32
-#: templates/proposition_dissertations_list.html:34
-#: templates/proposition_dissertations_list.html:37
 msgid "Dissertation subjects"
 msgstr ""
 
-#: templates/dissertation.html:46
 msgid "Dissertation subjects submitted by teachers"
 msgstr ""
 
-#: templates/dissertation_reader_edit.html:33
-#: templates/dissertation_title_form.html:33
 msgid "Dissertation title"
 msgstr ""
 
-#: templates/dissertation_detail.html:39
 msgid "Dissertation updates"
 msgstr ""
 
-#: templates/dissertation.html:55
-#: templates/dissertation_add_justification.html:32
-#: templates/dissertation_detail.html:32
-#: templates/dissertation_edit_form.html:32 templates/dissertation_form.html:32
-#: templates/dissertation_history.html:33
-#: templates/dissertation_reader_edit.html:32
-#: templates/dissertation_title_form.html:32
-#: templates/dissertations_list.html:32 templates/dissertations_list.html:35
 msgid "Dissertations"
 msgstr ""
 
-#: templates/dissertation_detail.html:111
 msgid "Don't forget to submit your dissertation to your promoter"
 msgstr ""
 
-#: templates/dissertation_detail.html:89
 msgid "Download"
 msgstr ""
 
-#: models/enums/dissertation_status.py:46
 msgid "Draft"
 msgstr ""
 
-#: templates/dissertation_detail.html:49 templates/dissertation_detail.html:55
 msgid "Edit"
 msgstr ""
 
-#: models/enums/dissertation_status.py:59
 msgid "End"
 msgstr ""
 
-#: templates/proposition_dissertation_detail.html:67
 msgid "File"
 msgstr ""
 
-#: templates/proposition_dissertations_list.html:100
 msgid "First"
 msgstr ""
 
-#: templates/dissertation_history.html:44
 msgid "History"
 msgstr ""
 
-#: templates/dissertation_history.html:84
 msgid "Information"
 msgstr ""
 
-#: models/enums/dissertation_role_status.py:40
 #, fuzzy
 #| msgid "internship_master"
 msgid "Internship"
 msgstr "Internship Master"
 
-#: models/enums/defend_periode_choices.py:35
 msgid "January"
 msgstr ""
 
-#: models/enums/defend_periode_choices.py:36
 msgid "June"
 msgstr ""
 
-#: templates/proposition_dissertations_list.html:103
 msgid "Last"
 msgstr ""
 
-#: templates/dissertation_detail.html:272
-#: templates/proposition_dissertation_detail.html:92
 msgid "Level"
 msgstr ""
 
-#: templates/proposition_dissertation_detail.html:70
 msgid "Link"
 msgstr ""
 
-#: models/proposition_dissertation.py:62
 #, fuzzy
 #| msgid "offer_proposition"
 msgid "Links to offer_propositions"
 msgstr "Offer"
 
-#: templates/proposition_dissertations_list.html:96
 msgid "Loading..."
 msgstr ""
 
-#: templates/dissertation_detail.html:36
 msgid "Main"
 msgstr ""
 
-#: templates/proposition_dissertation_detail.html:108
-#: templates/proposition_dissertations_list.html:46
 msgid "Maximum number of student"
 msgstr ""
 
-#: templates/dissertation.html:58
 msgid "My dissertations projects"
 msgstr ""
 
-#: templates/proposition_dissertations_list.html:102
 msgid "Next"
 msgstr ""
 
-#: templates/dissertation_add_justification.html:69
 msgid "Next status"
 msgstr ""
 
-#: templates/proposition_dissertations_list.html:98
 msgid "No data available in table"
 msgstr ""
 
-#: templates/proposition_dissertations_list.html:97
 msgid "No matching records found"
 msgstr ""
 
-#: templates/dissertations_list.html:66
 msgid "No result"
 msgstr ""
 
-#: templates/proposition_dissertations_list.html:47
 msgid "Number of places remaining"
 msgstr ""
 
-#: models/dissertation.py:60 templates/dissertation_detail.html:262
-#: templates/dissertations_list.html:74
-#: templates/proposition_dissertation_detail.html:124
-#: templates/proposition_dissertations_list.html:45
 msgid "Offers"
 msgstr ""
 
-#: templates/dissertation_history.html:48
 msgid "Person"
 msgstr ""
 
-#: models/enums/dissertation_role_status.py:41
 #, fuzzy
 #| msgid "president"
 msgid "President"
 msgstr "President"
 
-#: templates/proposition_dissertations_list.html:101
 msgid "Previous"
 msgstr ""
 
-#: templates/proposition_dissertations_list.html:89
 msgid "Processing..."
 msgstr ""
 
-#: models/adviser.py:39
 msgid "Professor"
 msgstr ""
 
-#: models/enums/dissertation_role_status.py:36
-#: templates/dissertation_detail.html:246
-#: templates/proposition_dissertation_detail.html:48
-#: templates/proposition_dissertation_detail.html:158
 msgid "Promoter"
 msgstr ""
 
-#: models/dissertation_role.py:42 models/enums/dissertation_role_status.py:38
-#: templates/dissertation_reader_edit.html:51
 msgid "Reader"
 msgstr ""
 
-#: models/enums/dissertation_status.py:52
 msgid "Refused by commission"
 msgstr ""
 
-#: models/enums/dissertation_status.py:55
 msgid "Refused by first year evaluation"
 msgstr ""
 
-#: models/enums/dissertation_status.py:49
 msgid "Refused by promoter"
 msgstr ""
 
-#: models/enums/dissertation_status.py:61
 msgid "Reported"
 msgstr ""
 
-#: templates/dissertation_add_justification.html:79
-#: templates/dissertation_edit_form.html:97 templates/dissertation_form.html:67
-#: templates/dissertation_reader_edit.html:60
-#: templates/dissertation_reader_edit_inner.html:16
-#: templates/new_document.html:49
 msgid "Save"
 msgstr ""
 
-#: templates/dissertations_list.html:42 templates/dissertations_list.html:49
-#: templates/proposition_dissertations_list.html:90
 msgid "Search"
 msgstr ""
 
-#: models/enums/defend_periode_choices.py:37
 msgid "September"
 msgstr ""
 
-#: templates/proposition_dissertations_list.html:93
 msgid "Showing 0 to 0 of 0 entries"
 msgstr ""
 
-#: templates/proposition_dissertations_list.html:92
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr ""
 
-#: templates/dissertation_detail.html:116 templates/dissertations_list.html:72
 msgid "Status"
 msgstr ""
 
-#: templates/dissertation_detail.html:241
-#: templates/proposition_dissertation_detail.html:43
 msgid "Subject informations"
 msgstr ""
 
-#: templates/dissertation_detail.html:302
-#: templates/dissertation_detail.html:305
-#: templates/dissertation_detail.html:311
 msgid "Submit this dissertation project to promoter"
 msgstr ""
 
-#: models/enums/dissertation_status.py:50
 msgid "Submitted to commission"
 msgstr ""
 
-#: models/enums/dissertation_status.py:53
 msgid "Submitted to first year evaluation"
 msgstr ""
 
-#: models/enums/dissertation_status.py:47
 msgid "Submitted to promoter"
 msgstr ""
 
-#: templates/proposition_dissertation_detail.html:116
 msgid "Taken places"
 msgstr ""
 
-#: templates/dissertation_add_justification.html:41
 msgid ""
 "The status update is nearly done. This update is detailed just after. Please "
 "add your explanation for this update."
 msgstr ""
 
-#: views/upload_dissertation_file.py:109
 msgid "The student added the file :"
 msgstr ""
 
-#: views/upload_dissertation_file.py:73
 msgid "The student has deleted the file :"
 msgstr ""
 
-#: templates/dissertation_detail.html:254
-#: templates/dissertation_title_form.html:46
 msgid "Title"
 msgstr ""
 
-#: models/enums/dissertation_status.py:56
 msgid "To be received"
 msgstr ""
 
-#: models/enums/dissertation_status.py:57
 msgid "To be received defended"
 msgstr ""
 
-#: templates/dissertation_detail.html:280
-#: templates/proposition_dissertation_detail.html:84
 msgid "Type"
 msgstr ""
 
-#: templates/dissertation_detail.html:303
 msgid ""
 "Warning : you will submit the draft memorandum to the promotor. Are you sure "
 "you want to continue ?"
 msgstr ""
 
-#: models/enums/dissertation_status.py:60
 msgid "Win"
 msgstr ""
 
-#: templates/dissertation_detail.html:309
 msgid "You already have a dissertation submitted to promotor"
 msgstr ""
 
-#: templates/dissertation_detail.html:210
 msgid ""
 "You are ready to delete this jury member. Are you sure you want to continue ?"
 msgstr ""
 
-#: templates/new_document.html:47
 msgid "cancel"
 msgstr ""
 
-#: templates/proposition_dissertation_detail.html:217
 msgid "comment"
 msgstr ""
 
-#: templates/proposition_dissertations_list.html:95
 msgid "datatable_infopostfix"
 msgstr ""
 
-#: models/enums/proposition_dissertation_types.py:30
 msgid "empirical research"
 msgstr ""
 
-#: templates/dissertation_detail.html:85
 msgid "file"
 msgstr ""
 
-#: models/enums/proposition_dissertation_collaboration.py:35
 msgid "forbidden"
 msgstr ""
 
-#: models/enums/proposition_dissertation_levels.py:32
 msgid "large theme"
 msgstr ""
 
-#: models/enums/proposition_dissertation_types.py:29
 msgid "litterature review"
 msgstr ""
 
-#: templates/proposition_dissertation_detail.html:166
 msgid "mail"
 msgstr ""
 
-#: templates/proposition_dissertation_detail.html:200
 msgid "mobile"
 msgstr ""
 
-#: views/dissertation.py:224
 msgid "new title"
 msgstr ""
 
-#: templates/proposition_dissertation_detail.html:119
 msgid "of"
 msgstr ""
 
-#: views/dissertation.py:222
 msgid "original title"
 msgstr ""
 
-#: models/enums/proposition_dissertation_types.py:34
 msgid "other"
 msgstr ""
 
-#: templates/proposition_dissertation_detail.html:183
 msgid "phone"
 msgstr ""
 
-#: models/enums/proposition_dissertation_collaboration.py:33
 msgid "possible"
 msgstr ""
 
-#: models/enums/proposition_dissertation_types.py:32
 msgid "project dissertation"
 msgstr "Dissertations"
 
-#: models/enums/proposition_dissertation_collaboration.py:34
 msgid "required"
 msgstr ""
 
-#: models/enums/proposition_dissertation_levels.py:31
 msgid "specific subject"
 msgstr ""
 
-#: models/enums/proposition_dissertation_types.py:31
 msgid "theoretical analysis"
 msgstr ""
 
-#: models/enums/defend_periode_choices.py:34
-#: templates/dissertation_detail.html:171
-#: templates/dissertation_detail.html:179
-#: templates/dissertation_detail.html:187
 msgid "undefined"
 msgstr ""
 
-#: templates/dissertations_list.html:73
 msgid "year start"
 msgstr ""
 
