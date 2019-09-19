@@ -87,7 +87,7 @@ def dissertations(request):
                        'education_group_year_start',
                        'education_group_year_start__academic_year')
     date_now = timezone.now().date()
-    visibility = False
+    visibility = True
     for offer_pro in offer_propositions:
         if offer_pro.start_visibility_dissertation <= date_now <= offer_pro.end_visibility_dissertation:
             visibility = True
@@ -320,6 +320,7 @@ def dissertation_new(request, pk):
         ]
     )
     date_now = timezone.now().date()
+
     if any(o.start_visibility_dissertation <= date_now <= o.end_visibility_dissertation for o in offer_propositions):
         initial = {
             'active': True,
