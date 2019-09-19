@@ -60,7 +60,6 @@ class Dissertation(SerializableModel):
     education_group_year_start = models.ForeignKey(
         'base.EducationGroupYear',
         null=True,
-        blank=True,
         on_delete=models.PROTECT,
         related_name='dissertations',
         verbose_name=_('Offers')
@@ -79,7 +78,8 @@ class Dissertation(SerializableModel):
         dissertation_location.DissertationLocation,
         blank=True,
         null=True,
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
+        verbose_name=_('Dissertation location')
     )
 
     def __str__(self):
