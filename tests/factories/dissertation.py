@@ -26,7 +26,6 @@
 import factory.fuzzy
 
 from base.tests.factories.education_group_year import EducationGroupYearFactory
-from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.student import StudentFactory
 from dissertation.models.enums import dissertation_status
 from dissertation.models.enums.defend_periode_choices import DEFEND_PERIODE_CHOICES
@@ -44,7 +43,6 @@ class DissertationFactory(factory.DjangoModelFactory):
     status = factory.Iterator(dissertation_status.DISSERTATION_STATUS, getter=lambda c: c[0])
     defend_periode = factory.Iterator(DEFEND_PERIODE_CHOICES, getter=lambda c: c[0])
     defend_year = factory.Faker('year')
-    offer_year_start = factory.SubFactory(OfferYearFactory)
     education_group_year_start = factory.SubFactory(EducationGroupYearFactory)
     proposition_dissertation = factory.SubFactory(PropositionDissertationFactory)
     description = factory.Faker('text', max_nb_chars=500)
