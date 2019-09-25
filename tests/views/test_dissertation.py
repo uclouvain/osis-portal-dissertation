@@ -26,9 +26,9 @@
 import json
 from unittest.mock import patch
 
-from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.test import TestCase
+from django.urls import reverse
 
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.education_group import EducationGroupFactory
@@ -86,7 +86,6 @@ class DissertationViewTestCase(TestCase):
         self.dissertation = DissertationFactory(
             author=self.student,
             title='Dissertation test',
-            offer_year_start=self.offer_year_start1,
             education_group_year_start=self.education_group_year_start1,
             proposition_dissertation=self.proposition_dissertation2,
             status='DIR_SUBMIT',
@@ -106,7 +105,6 @@ class DissertationViewTestCase(TestCase):
         self.dissertation_test_email = DissertationFactory(
             author=self.student,
             title='Dissertation_test_email',
-            offer_year_start=self.offer_year_start1,
             education_group_year_start=self.education_group_year_start1,
             proposition_dissertation=self.proposition_dissertation,
             status='DRAFT',

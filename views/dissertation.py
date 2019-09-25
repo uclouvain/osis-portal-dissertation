@@ -91,11 +91,12 @@ def dissertations(request):
     for offer_pro in offer_propositions:
         if offer_pro.start_visibility_dissertation <= date_now <= offer_pro.end_visibility_dissertation:
             visibility = True
-    return render(request, 'dissertations_list.html',
-                  {'date_now': date_now,
-                   'dissertations': dissert,
-                   'student': student,
-                   'visibility': visibility})
+    return render(request, 'dissertations_list.html', {
+        'date_now': date_now,
+        'dissertations': dissert,
+        'student': student,
+        'visibility': visibility
+    })
 
 
 @login_required

@@ -28,7 +28,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 from base import models as mdl
-from base.models import student, offer_year, academic_year
+from base.models import student, academic_year, offer_year
 from dissertation.models import dissertation_location, proposition_dissertation
 from dissertation.models.enums.defend_periode_choices import DEFEND_PERIODE_CHOICES
 from dissertation.models.enums.dissertation_status import DISSERTATION_STATUS
@@ -49,24 +49,39 @@ class Dissertation(SerializableModel):
     title = models.CharField(_('Dissertation'), max_length=500)
     author = models.ForeignKey(student.Student, on_delete=models.PROTECT)
     status = models.CharField(max_length=12, choices=DISSERTATION_STATUS, default='DRAFT')
-    defend_periode = models.CharField(_('Defend period'), max_length=12, choices=DEFEND_PERIODE_CHOICES,
-                                      default='UNDEFINED', null=True)
+    defend_periode = models.CharField(
+        _('Defend period'),
+        max_length=12,
+        choices=DEFEND_PERIODE_CHOICES,
+        default='UNDEFINED',
+        null=True
+    )
     defend_year = models.IntegerField(_('Defend year'), blank=True, null=True)
     offer_year_start = models.ForeignKey(offer_year.OfferYear, null=True, blank=True, on_delete=models.PROTECT)
-    education_group_year_start = models.ForeignKey('base.EducationGroupYear',
-                                                   null=True,
-                                                   blank=True,
-                                                   on_delete=models.PROTECT,
-                                                   related_name='dissertations', verbose_name=_('Offers'))
-    proposition_dissertation = models.ForeignKey(proposition_dissertation.PropositionDissertation,
-                                                 verbose_name=_('Dissertation subject'), related_name='dissertations',
-                                                 on_delete=models.PROTECT)
+    education_group_year_start = models.ForeignKey(
+        'base.EducationGroupYear',
+        null=True,
+        on_delete=models.PROTECT,
+        related_name='dissertations',
+        verbose_name=_('Offers')
+    )
+    proposition_dissertation = models.ForeignKey(
+        proposition_dissertation.PropositionDissertation,
+        verbose_name=_('Dissertation subject'),
+        related_name='dissertations',
+        on_delete=models.PROTECT
+    )
     description = models.TextField(_('Description'), blank=True, null=True)
     active = models.BooleanField(default=True)
     creation_date = models.DateTimeField(auto_now_add=True, editable=False)
     modification_date = models.DateTimeField(auto_now=True)
-    location = models.ForeignKey(dissertation_location.DissertationLocation, blank=True, null=True,
-                                 verbose_name=_('Dissertation location'), on_delete=models.PROTECT)
+    location = models.ForeignKey(
+        dissertation_location.DissertationLocation,
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT,
+        verbose_name=_('Dissertation location')
+    )
 
     def __str__(self):
         return self.title
