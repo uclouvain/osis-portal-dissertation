@@ -28,7 +28,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 from base import models as mdl
-from base.models import student, academic_year
+from base.models import student, academic_year, offer_year
 from dissertation.models import dissertation_location, proposition_dissertation
 from dissertation.models.enums.defend_periode_choices import DEFEND_PERIODE_CHOICES
 from dissertation.models.enums.dissertation_status import DISSERTATION_STATUS
@@ -57,6 +57,7 @@ class Dissertation(SerializableModel):
         null=True
     )
     defend_year = models.IntegerField(_('Defend year'), blank=True, null=True)
+    offer_year_start = models.ForeignKey(offer_year.OfferYear, null=True, blank=True, on_delete=models.PROTECT)
     education_group_year_start = models.ForeignKey(
         'base.EducationGroupYear',
         null=True,

@@ -13,10 +13,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='dissertation',
-            name='offer_year_start',
-        ),
         migrations.AlterField(
             model_name='dissertation',
             name='education_group_year_start',
