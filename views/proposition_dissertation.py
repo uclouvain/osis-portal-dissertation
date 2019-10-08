@@ -45,11 +45,11 @@ from dissertation.models.proposition_dissertation import PropositionDissertation
 def proposition_dissertations(request):
     person = mdl.person.find_by_user(request.user)
     student = mdl.student.find_by_person(person)
-    current_academic_year = academic_year.current_academic_year()
+    starting_academic_year = academic_year.starting_academic_year()
 
     student_offer_enrollments = OfferEnrollment.objects.filter(
             student=student,
-            education_group_year__academic_year=current_academic_year,
+            education_group_year__academic_year=starting_academic_year,
             enrollment_state__in=[
                 offer_enrollment_state.SUBSCRIBED,
                 offer_enrollment_state.PROVISORY
@@ -63,7 +63,7 @@ def proposition_dissertations(request):
         queryset=OfferProposition.objects.annotate(last_acronym=Subquery(
             EducationGroupYear.objects.filter(
                 education_group__offer_proposition=OuterRef('pk'),
-                academic_year=current_academic_year).values('acronym')[:1]
+                academic_year=starting_academic_year).values('acronym')[:1]
         )).distinct()
     )
     propositions_dissertations = PropositionDissertation.objects.filter(
@@ -77,7 +77,7 @@ def proposition_dissertations(request):
                     Q(
                         Q(dissertations__active=True,
                           dissertations__education_group_year_start__academic_year=
-                          current_academic_year),
+                          starting_academic_year),
                         ~Q(dissertations__status__in=('DRAFT', 'DIR_KO'))
                     ), then=1
                 ), default=0, output_field=models.IntegerField()
@@ -100,7 +100,7 @@ def proposition_dissertations(request):
 @login_required
 def proposition_dissertation_detail(request, pk):
     person = mdl.person.find_by_user(request.user)
-    current_ac_year = academic_year.current_academic_year()
+    starting_academic_year = academic_year.starting_academic_year()
     subject = get_object_or_404(PropositionDissertation.objects.select_related('author', 'author__person').
                                 prefetch_related('propositionrole_set',
                                                  'propositionrole_set__adviser__person',
@@ -108,7 +108,7 @@ def proposition_dissertation_detail(request, pk):
     offer_propositions = subject.offer_propositions.all().annotate(last_acronym=Subquery(
             EducationGroupYear.objects.filter(
                 education_group__offer_proposition=OuterRef('pk'),
-                academic_year=current_ac_year).values('acronym')[:1]
+                academic_year=starting_academic_year).values('acronym')[:1]
         ))
 
     student = mdl.student.find_by_person(person)
