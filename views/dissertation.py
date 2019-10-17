@@ -29,7 +29,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q, Subquery, OuterRef
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView
 
 import dissertation.models.enums.defend_periode_choices
