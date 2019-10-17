@@ -130,12 +130,15 @@ def dissertation_detail(request, pk):
         ).values_list('id', flat=True)
         educ_group = dissert.education_group_year_start.education_group
         offer_pro = offer_proposition.get_by_education_group(educ_group)
-        offer_propositions = dissert.proposition_dissertation.offer_propositions.all(). \
-            filter(education_group__educationgroupyear__offerenrollment__id__in=student_offer_enrollments). \
-            annotate(last_acronym=Subquery(EducationGroupYear.objects.filter(
-            education_group__offer_proposition=OuterRef('pk'),
-            academic_year=current_ac_year).values('acronym')[:1]
-                                           ))
+        offer_propositions = dissert.proposition_dissertation.offer_propositions.filter(
+            education_group__educationgroupyear__offerenrollment__id__in=student_offer_enrollments
+        ).annotate(
+            last_acronym=Subquery(
+                EducationGroupYear.objects.filter(
+                    education_group__offer_proposition=OuterRef('pk'),
+                    academic_year=current_ac_year).values('acronym')[:1]
+            )
+        )
         count = dissertation.count_disser_submit_by_student_in_educ_group(student, educ_group)
 
         files = dissertation_document_file.find_by_dissertation(dissert)
