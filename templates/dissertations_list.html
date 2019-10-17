@@ -3,84 +3,89 @@
 {% load i18n %}
 
 {% comment "License" %}
- * OSIS stands for Open Student Information System. It's an application
- * designed to manage the core business of higher education institutions,
- * such as universities, faculties, institutes and professional schools.
- * The core business involves the administration of students, teachers,
- * courses, programs and so on.
- *
- * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * A copy of this license - GNU General Public License - is available
- * at the root of the source code of this program.  If not,
- * see http://www.gnu.org/licenses/.
+    * OSIS stands for Open Student Information System. It's an application
+    * designed to manage the core business of higher education institutions,
+    * such as universities, faculties, institutes and professional schools.
+    * The core business involves the administration of students, teachers,
+    * courses, programs and so on.
+    *
+    * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+    *
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * A copy of this license - GNU General Public License - is available
+    * at the root of the source code of this program.  If not,
+    * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
 {% block content %}
-<ol class="breadcrumb">
-    <li><a href="{% url 'dissertation' %}" id="lnk_home_osis"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-    <li class="active">{% trans 'Dissertations' %}</li>
-</ol>
-<div class="page-header">
-    <h2>{% trans 'Dissertations' %}</h2>
-</div>
-<div class="panel panel-default">
-    <div class="panel-body">
-        <form method="get" action="{% url 'dissertations_search'%}">
-            <div class="row">
-                <div class="col-md-10">
-                    <input class="form-control" id="txt_submit_search" placeholder="{% trans 'Search' %}" name="search"
-                           value="{{ request.GET.search }}">
-                </div>
-                <div class="col-md-1">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <button type="submit" id="bt_submit_search" class="btn btn-primary" role="button"
-                                    title="{% trans 'Search' %}"><span class="glyphicon glyphicon-search"
-                                    aria-hidden="true"></span></button>
-                        </div>
-                        {% if visibility == True %}
+    <ol class="breadcrumb">
+        <li><a href="{% url 'dissertation' %}" id="lnk_home_osis"><span class="glyphicon glyphicon-home"
+                                                                        aria-hidden="true"></span></a></li>
+        <li class="active">{% trans 'Dissertations' %}</li>
+    </ol>
+    <div class="page-header">
+        <h2>{% trans 'Dissertations' %}</h2>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form method="get" action="{% url 'dissertations_search' %}">
+                <div class="row">
+                    <div class="col-md-10">
+                        <input class="form-control" id="txt_submit_search" placeholder="{% trans 'Search' %}"
+                               name="search"
+                               value="{{ request.GET.search }}">
+                    </div>
+                    <div class="col-md-1">
+                        <div class="row">
                             <div class="col-md-6">
-                                <a href="{% url 'dissertation_new' %}" id="lnk_dissertation_new" class="btn btn-default"
-                                   role="button" title="{% trans 'Create'%}"><span class="glyphicon glyphicon-plus"
-                                   aria-hidden="true"></span></a>
+                                <button type="submit" id="bt_submit_search" class="btn btn-primary" role="button"
+                                        title="{% trans 'Search' %}"><span class="glyphicon glyphicon-search"
+                                                                           aria-hidden="true"></span></button>
                             </div>
-                        {% endif %}
+                            {% if visibility == True %}
+                                <div class="col-md-6">
+                                    <a href="{% url 'dissertation_new' %}" id="lnk_dissertation_new"
+                                       class="btn btn-default"
+                                       role="button" title="{% trans 'Create' %}"><span class="glyphicon glyphicon-plus"
+                                                                                        aria-hidden="true"></span></a>
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </form>
-    </div>
-    {% if dissertations|length == 0 %}
-        <br>
-        <label class="alert alert-info" style="margin-left:10%;width:80%;text-align:center;">{% trans 'No result' %}</label>
-    {% else %}
-        <table class="table table-hover">
-            <tr>
-              <th>{% trans 'Dissertation'%}</th>
-              <th>{% trans 'Author'%}</th>
-              <th>{% trans 'Status'%}</th>
-              <th>{% trans 'year start'%}</th>
-              <th>{% trans 'Offers'%}</th>
-              <th>{% trans 'Dissertation subject'%}</th>
-            </tr>
-            {% for dissertation in dissertations %}
+            </form>
+        </div>
+        {% if dissertations|length == 0 %}
+            <br>
+            <label class="alert alert-info"
+                   style="margin-left:10%;width:80%;text-align:center;">{% trans 'No result' %}</label>
+        {% else %}
+            <table class="table table-hover">
+                <tr>
+                    <th>{% trans 'Dissertation' %}</th>
+                    <th>{% trans 'Author' %}</th>
+                    <th>{% trans 'Status' %}</th>
+                    <th>{% trans 'year start' %}</th>
+                    <th>{% trans 'Offers' %}</th>
+                    <th>{% trans 'Dissertation subject' %}</th>
+                </tr>
+                {% for dissertation in dissertations %}
 
-              {% if dissertation.status == 'DRAFT' %}
-                   <tr class="alert alert-danger" title="{% trans "Don't forget to submit your dissertation to your promoter" %}">
-              {% else %}
-              <tr>
-              {% endif %}
+                    {% if dissertation.status == 'DRAFT' %}
+                        <tr class="alert alert-danger"
+                            title="{% trans "Don't forget to submit your dissertation to your promoter" %}">
+                            {% else %}
+                        <tr>
+                    {% endif %}
 
                 <td><a href="{% url 'dissertation_detail' pk=dissertation.pk %}">{{ dissertation.title }}</a></td>
                 <td>{{ dissertation.author.person.first_name }} &nbsp;
@@ -88,49 +93,50 @@
                     {{ dissertation.author.registration_id }}</td>
                 <td>
                     {% if dissertation.status == 'DRAFT' %}
-                    <span class="label label-danger">
+                        <span class="label label-danger">
                     {% elif dissertation.status == 'DIR_SUBMIT' %}
-                    <span class="label label-primary">
+                        <span class="label label-primary">
                     {% elif dissertation.status == 'DIR_OK' %}
-                    <span class="label label-success">
+                        <span class="label label-success">
                     {% elif dissertation.status == 'DIR_KO' %}
-                    <span class="label label-danger">
+                        <span class="label label-danger">
                     {% elif dissertation.status == 'COM_SUBMIT' %}
-                    <span class="label label-primary">
+                        <span class="label label-primary">
                     {% elif dissertation.status == 'COM_OK' %}
-                    <span class="label label-default">
+                        <span class="label label-default">
                     {% elif dissertation.status == 'COM_KO' %}
-                    <span class="label label-danger">
+                        <span class="label label-danger">
                     {% elif dissertation.status == 'EVA_SUBMIT' %}
-                    <span class="label label-primary">
+                        <span class="label label-primary">
                     {% elif dissertation.status == 'EVA_OK' %}
-                    <span class="label label-default">
+                        <span class="label label-default">
                     {% elif dissertation.status == 'EVA_KO' %}
-                    <span class="label label-danger">
+                        <span class="label label-danger">
                     {% elif dissertation.status == 'TO_RECEIVE' %}
-                    <span class="label label-default">
+                        <span class="label label-default">
                     {% elif dissertation.status == 'TO_DEFEND' %}
-                    <span class="label label-default">
+                        <span class="label label-default">
                     {% elif dissertation.status == 'DEFENDED' %}
-                    <span class="label label-default">
+                        <span class="label label-default">
                     {% elif dissertation.status == 'ENDED' %}
-                    <span class="label label-default">
+                        <span class="label label-default">
                     {% elif dissertation.status == 'ENDED_WIN' %}
-                    <span class="label label-default">
+                        <span class="label label-default">
                     {% elif dissertation.status == 'ENDED_LOS' %}
-                    <span class="label label-danger">
+                        <span class="label label-danger">
                     {% endif %}
-                        {{ dissertation.get_status_display }}
+                    {{ dissertation.get_status_display }}
                     </span>
                 </td>
                 <td>{{ dissertation.education_group_year_start.academic_year.year }} -
                     {{ dissertation.education_group_year_start.academic_year.year |add:"1"}}
                 </td>
                 <td>{{ dissertation.education_group_year_start.acronym }}</td>
-                <td>{{ dissertation.proposition_dissertation.title }} - {{ dissertation.proposition_dissertation.author.person }}</td>
-              </tr>
-            {% endfor %}
-        </table>
-    {% endif %}
-</div>
+                <td>{{ dissertation.proposition_dissertation.title }}
+                    - {{ dissertation.proposition_dissertation.author.person }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
 {% endblock %}

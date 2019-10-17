@@ -45,5 +45,3 @@ class TestDeleteDissertationFileView(TestCase):
             reverse('dissertation_file_delete', args=[self.dissertation.pk])
         )
         self.assertEqual(response.status_code, HttpResponseRedirect.status_code)
-
-

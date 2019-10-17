@@ -47,5 +47,6 @@ class PropositionDissertationModelTestCase(TestCase):
         )
 
     def test_find_by_education_groups(self):
-        query_set_proposition_dissertation = proposition_dissertation.find_by_education_groups([self.education_group2,])
+        query_set_proposition_dissertation = proposition_dissertation.find_by_education_groups(
+            [self.education_group2, ])
         self.assertEqual(self.proposition_dissert_2, query_set_proposition_dissertation[0])

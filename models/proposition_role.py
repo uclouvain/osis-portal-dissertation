@@ -23,8 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
+
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from .enums import dissertation_role_status
 
 
@@ -66,9 +67,9 @@ def count_by_proposition(subject):
 
 
 def count_by_status_adviser_proposition(status, adviser, proposition_dissertation):
-    return PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation)\
-        .filter(status=status)\
-        .filter(adviser=adviser)\
+    return PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation) \
+        .filter(status=status) \
+        .filter(adviser=adviser) \
         .count()
 
 

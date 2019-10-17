@@ -29,5 +29,6 @@ import factory
 class OfferPropositionGroupFactory(factory.DjangoModelFactory):
     class Meta:
         model = 'dissertation.OfferPropositionGroup'
+
     name_short = factory.Faker('text', max_nb_chars=10)
     name_long = factory.Faker('text', max_nb_chars=256)

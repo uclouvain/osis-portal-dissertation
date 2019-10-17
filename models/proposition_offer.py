@@ -46,7 +46,6 @@ class PropositionOffer(SerializableModel):
         return str(self.offer_proposition)
 
 
-
 def find_visible_by_education_groups(education_groups):
     now = timezone.now()
     return PropositionOffer.objects.filter(
@@ -70,7 +69,7 @@ def search(education_groups, terms, active=None, visibility=None):
     queryset = PropositionOffer.objects.filter(proposition_dissertation__active=True,
                                                proposition_dissertation__visibility=True,
                                                offer_proposition__education_group__in=education_groups,
-                                               offer_proposition__start_visibility_proposition__lte=timezone.now())\
+                                               offer_proposition__start_visibility_proposition__lte=timezone.now()) \
         .distinct()
     if terms:
         queryset = queryset.filter(

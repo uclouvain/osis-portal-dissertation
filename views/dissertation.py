@@ -133,8 +133,8 @@ def dissertation_detail(request, pk):
         offer_propositions = dissert.proposition_dissertation.offer_propositions.all(). \
             filter(education_group__educationgroupyear__offerenrollment__id__in=student_offer_enrollments). \
             annotate(last_acronym=Subquery(EducationGroupYear.objects.filter(
-                education_group__offer_proposition=OuterRef('pk'),
-                academic_year=current_ac_year).values('acronym')[:1]
+            education_group__offer_proposition=OuterRef('pk'),
+            academic_year=current_ac_year).values('acronym')[:1]
                                            ))
         count = dissertation.count_disser_submit_by_student_in_educ_group(student, educ_group)
 
@@ -152,22 +152,25 @@ def dissertation_detail(request, pk):
 
         if count_dissertation_role == 0:
             if count_proposition_role == 0:
-                dissertation_role.add(dissertation_role_status.PROMOTEUR, dissert.proposition_dissertation.author, dissert)
+                dissertation_role.add(dissertation_role_status.PROMOTEUR, dissert.proposition_dissertation.author,
+                                      dissert)
             else:
                 for role in proposition_roles:
                     dissertation_role.add(role.status, role.adviser, dissert)
         dissertation_roles = dissert.dissertationrole_set.all()
         return render(request, 'dissertation_detail.html',
-                      {'check_edit': check_edit,
-                       'count': count,
-                       'count_reader': count_reader,
-                       'count_dissertation_role': count_dissertation_role,
-                       'dissertation': dissert,
-                       'dissertation_roles': dissertation_roles,
-                       'jury_visibility': jury_visibility,
-                       'manage_readers': offer_pro.student_can_manage_readers,
-                       'filename': filename,
-                       'offer_propositions': offer_propositions})
+                      {
+                          'check_edit': check_edit,
+                          'count': count,
+                          'count_reader': count_reader,
+                          'count_dissertation_role': count_dissertation_role,
+                          'dissertation': dissert,
+                          'dissertation_roles': dissertation_roles,
+                          'jury_visibility': jury_visibility,
+                          'manage_readers': offer_pro.student_can_manage_readers,
+                          'filename': filename,
+                          'offer_propositions': offer_propositions
+                      })
     else:
         return redirect('dissertations')
 
@@ -183,47 +186,57 @@ def dissertation_edit(request, pk):
             student, [offer_enrollment_state.SUBSCRIBED, offer_enrollment_state.PROVISORY])
         offer_pro = offer_proposition.get_by_education_group(dissert.education_group_year_start.education_group)
         if dissert.status == 'DRAFT' or dissert.status == 'DIR_KO':
-            if request.method == "POST":
-                form = DissertationEditForm(request.POST, instance=dissert)
-                if form.is_valid():
-                    dissert = form.save()
-                    dissertation_update.add(request, dissert, dissert.status,
-                                            justification="student edited the dissertation")
-                    return redirect('dissertation_detail', pk=dissert.pk)
-                else:
-                    form.fields["education_group_year_start"].queryset = education_group_year.find_by_education_groups(
-                        education_groups)
-                    form.fields[
-                        "proposition_dissertation"].queryset = proposition_dissertation.find_by_education_groups(
-                        education_groups)
-            else:
-                form = DissertationEditForm(instance=dissert)
-                form.fields["education_group_year_start"].queryset = education_group_year.find_by_education_groups(
-                    education_groups)
-                form.fields["proposition_dissertation"].queryset = proposition_dissertation.find_by_education_groups(
-                    education_groups)
-            return layout.render(request, 'dissertation_edit_form.html',
-                                 {'form': form,
-                                  'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES})
+            return _manage_draft_or_ko_dissertation_form(dissert, education_groups, request)
         else:
             if offer_pro.start_edit_title <= timezone.now().date() <= offer_pro.end_edit_title:
-                if request.method == "POST":
-                    form = DissertationTitleForm(request.POST, instance=dissert)
-                    if form.is_valid() and original_title != form.cleaned_data['title']:
-                        dissert = form.save()
-                        dissertation_update.add(request,
-                                                dissert,
-                                                dissert.status,
-                                                justification=build_justification_with_title(dissert, original_title)
-                                                )
-                    return redirect('dissertation_detail', pk=dissert.pk)
-                else:
-                    form = DissertationTitleForm(instance=dissert)
-                return layout.render(request, 'dissertation_title_form.html', {'form': form})
+                return _manage_dissertation_form(dissert, original_title, request)
             else:
                 return redirect('dissertation_detail', pk=dissert.pk)
     else:
         return redirect('dissertations')
+
+
+def _manage_dissertation_form(dissert, original_title, request):
+    if request.method == "POST":
+        form = DissertationTitleForm(request.POST, instance=dissert)
+        if form.is_valid() and original_title != form.cleaned_data['title']:
+            dissert = form.save()
+            dissertation_update.add(request,
+                                    dissert,
+                                    dissert.status,
+                                    justification=build_justification_with_title(dissert, original_title)
+                                    )
+        return redirect('dissertation_detail', pk=dissert.pk)
+    else:
+        form = DissertationTitleForm(instance=dissert)
+    return layout.render(request, 'dissertation_title_form.html', {'form': form})
+
+
+def _manage_draft_or_ko_dissertation_form(dissert, education_groups, request):
+    if request.method == "POST":
+        form = DissertationEditForm(request.POST, instance=dissert)
+        if form.is_valid():
+            dissert = form.save()
+            dissertation_update.add(request, dissert, dissert.status,
+                                    justification="student edited the dissertation")
+            return redirect('dissertation_detail', pk=dissert.pk)
+        else:
+            form.fields["education_group_year_start"].queryset = education_group_year.find_by_education_groups(
+                education_groups)
+            form.fields[
+                "proposition_dissertation"].queryset = proposition_dissertation.find_by_education_groups(
+                education_groups)
+    else:
+        form = DissertationEditForm(instance=dissert)
+        form.fields["education_group_year_start"].queryset = education_group_year.find_by_education_groups(
+            education_groups)
+        form.fields["proposition_dissertation"].queryset = proposition_dissertation.find_by_education_groups(
+            education_groups)
+    return layout.render(request, 'dissertation_edit_form.html',
+                         {
+                             'form': form,
+                             'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES
+                         })
 
 
 def build_justification_with_title(dissert, titre_original):
@@ -244,8 +257,10 @@ def dissertation_history(request, pk):
         for keyword in INVISIBLE_JUSTIFICATION_KEYWORDS:
             dissertation_updates = dissertation_updates.exclude(justification__contains=keyword)
         return render(request, 'dissertation_history.html',
-                      {'dissertation': dissert,
-                       'dissertation_updates': dissertation_updates})
+                      {
+                          'dissertation': dissert,
+                          'dissertation_updates': dissertation_updates
+                      })
     else:
         return redirect('dissertations')
 
@@ -350,8 +365,10 @@ def dissertation_new(request, pk):
                 [offer_enroll.education_group_year.education_group for offer_enroll in offer_enrollements]
             )
         return render(request, 'dissertation_form.html',
-                      {'form': form,
-                       'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES})
+                      {
+                          'form': form,
+                          'defend_periode_choices': dissertation.DEFEND_PERIODE_CHOICES
+                      })
     else:
         return redirect('dissertations')
 
@@ -377,8 +394,10 @@ def dissertations_search(request):
     student = mdl.student.find_by_person(person)
     memories = dissertation.search(terms=request.GET['search'], author=student)
     return layout.render(request, "dissertations_list.html",
-                         {'student': student,
-                          'dissertations': memories})
+                         {
+                             'student': student,
+                             'dissertations': memories
+                         })
 
 
 @login_required

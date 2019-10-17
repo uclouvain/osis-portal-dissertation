@@ -53,9 +53,11 @@ class DissertationEditForm(ModelForm):
         model = Dissertation
         fields = ('title', 'author', 'education_group_year_start', 'proposition_dissertation', 'description',
                   'defend_year', 'defend_periode', 'location')
-        widgets = {'author': forms.HiddenInput(),
-                   'education_group_year_start': forms.HiddenInput(),
-                   'proposition_dissertation': forms.HiddenInput()}
+        widgets = {
+            'author': forms.HiddenInput(),
+            'education_group_year_start': forms.HiddenInput(),
+            'proposition_dissertation': forms.HiddenInput()
+        }
 
 
 class DissertationRoleForm(ModelForm):
@@ -71,9 +73,11 @@ class DissertationRoleForm(ModelForm):
     class Meta:
         model = DissertationRole
         fields = ('dissertation', 'status', 'adviser')
-        widgets = {'dissertation': forms.HiddenInput(),
-                   'status': forms.HiddenInput(),
-                   'adviser': autocomplete.ModelSelect2(url='adviser-autocomplete',)}
+        widgets = {
+            'dissertation': forms.HiddenInput(),
+            'status': forms.HiddenInput(),
+            'adviser': autocomplete.ModelSelect2(url='adviser-autocomplete', )
+        }
 
     class Media:
         css = {
@@ -105,11 +109,10 @@ class DissertationUpdateForm(ModelForm):
 
         # getattr action execute go_forward or go_back
         getattr(instance.dissertation, self.action)()
-        instance.status_to=instance.dissertation.status
+        instance.status_to = instance.dissertation.status
 
         if not instance.justification:
             instance.justification = "%s%s%s" % (instance.person, JUSTIFICATION_LINK, instance.dissertation.status)
 
         instance.save()
         return instance
-
