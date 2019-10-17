@@ -53,11 +53,11 @@ class PropositionRole(SerializableModel):
 
 
 def add(status, adviser, proposition_dissertation):
-    count_result = PropositionRole.objects.filter(
+    count_by_status_adviser_proposition = PropositionRole.objects.filter(
         proposition_dissertation=proposition_dissertation,
         status=status,
         adviser=adviser
     ).count()
-    if count_result == 0:
+    if count_by_status_adviser_proposition == 0:
         role = PropositionRole(status=status, adviser=adviser, proposition_dissertation=proposition_dissertation)
         role.save()
