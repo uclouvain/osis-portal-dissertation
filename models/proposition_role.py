@@ -23,8 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
+
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from .enums import dissertation_role_status
 
 
@@ -52,29 +53,11 @@ class PropositionRole(SerializableModel):
 
 
 def add(status, adviser, proposition_dissertation):
-    if count_by_status_adviser_proposition(status, adviser, proposition_dissertation) == 0:
+    count_result = PropositionRole.objects.filter(
+        proposition_dissertation=proposition_dissertation,
+        status=status,
+        adviser=adviser
+    ).count()
+    if count_result == 0:
         role = PropositionRole(status=status, adviser=adviser, proposition_dissertation=proposition_dissertation)
         role.save()
-
-
-def count_by_dissertation(dissertation):
-    return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation).count()
-
-
-def count_by_proposition(subject):
-    return PropositionRole.objects.filter(proposition_dissertation=subject).count()
-
-
-def count_by_status_adviser_proposition(status, adviser, proposition_dissertation):
-    return PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation)\
-        .filter(status=status)\
-        .filter(adviser=adviser)\
-        .count()
-
-
-def search_by_dissertation(dissertation):
-    return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)
-
-
-def search_by_proposition(subject):
-    return PropositionRole.objects.filter(proposition_dissertation=subject)

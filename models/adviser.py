@@ -23,9 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class AdviserAdmin(SerializableModelAdmin):
@@ -58,12 +59,3 @@ class Adviser(SerializableModel):
         if self.person.last_name:
             last_name = self.person.last_name + ","
         return u"%s %s %s" % (last_name.upper(), first_name, middle_name)
-
-    def str_with_email(self):
-        return "{} {}".format(self.__str__(), self.person.email)
-
-
-def search_by_person(a_person):
-    adviser = Adviser.objects.get(person=a_person)
-    return adviser
-

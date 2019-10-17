@@ -25,14 +25,16 @@
 ##############################################################################
 from django.contrib.auth.decorators import login_required
 from django.http import *
+
 from dissertation import models as mdl
+from dissertation.models.proposition_document_file import PropositionDocumentFile
 from osis_common import models as mdl_osis_common
 from osis_common.models.enum import storage_duration
 
 
 @login_required
 def download(request, pk):
-    proposition_document = mdl.proposition_document_file.find_by_id(pk)
+    proposition_document = PropositionDocumentFile.objects.get(proposition__id=pk)
     document = mdl_osis_common.document_file.find_by_id(proposition_document.document_file.id)
     filename = document.file_name
     response = HttpResponse(document.file, content_type=document.content_type)
@@ -52,7 +54,7 @@ def save_uploaded_file(request):
         content_type = file_selected.content_type
         size = file_selected.size
         description = data['description']
-        documents = mdl.proposition_document_file.find_by_proposition(proposition)
+        documents = PropositionDocumentFile.objects.filter(proposition=proposition)
         for document in documents:
             document.delete()
             old_document = mdl_osis_common.document_file.find_by_id(document.document_file.id)

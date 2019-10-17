@@ -106,14 +106,6 @@ class Dissertation(SerializableModel):
             emails_dissert.send_email_to_all_promotors(self, 'dissertation_back_to_draft')
             self.set_status(next_status)
 
-    def accept(self):
-        next_status = get_next_status(self, "accept")
-        self.set_status(next_status)
-
-    def refuse(self):
-        next_status = get_next_status(self, "refuse")
-        self.set_status(next_status)
-
     def author_is_logged_student(self, request):
         logged_person = mdl.person.find_by_user(request.user)
         logged_student = mdl.student.find_by_person(logged_person)
