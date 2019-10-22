@@ -49,10 +49,6 @@ class DissertationRole(SerializableModel):
     def author(self):
         return self.dissertation.author
 
-    @property
-    def dissertation_status(self):
-        return self.dissertation.status
-
 
 def add(status, adviser, dissertation):
     if count_by_status_student_dissertation(status, adviser, dissertation) == 0:

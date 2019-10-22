@@ -53,29 +53,11 @@ class PropositionRole(SerializableModel):
 
 
 def add(status, adviser, proposition_dissertation):
-    if count_by_status_adviser_proposition(status, adviser, proposition_dissertation) == 0:
+    count_by_status_adviser_proposition = PropositionRole.objects.filter(
+        proposition_dissertation=proposition_dissertation,
+        status=status,
+        adviser=adviser
+    ).exists()
+    if not count_by_status_adviser_proposition:
         role = PropositionRole(status=status, adviser=adviser, proposition_dissertation=proposition_dissertation)
         role.save()
-
-
-def count_by_dissertation(dissertation):
-    return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation).count()
-
-
-def count_by_proposition(subject):
-    return PropositionRole.objects.filter(proposition_dissertation=subject).count()
-
-
-def count_by_status_adviser_proposition(status, adviser, proposition_dissertation):
-    return PropositionRole.objects.filter(proposition_dissertation=proposition_dissertation)\
-        .filter(status=status)\
-        .filter(adviser=adviser)\
-        .count()
-
-
-def search_by_dissertation(dissertation):
-    return PropositionRole.objects.filter(proposition_dissertation=dissertation.proposition_dissertation)
-
-
-def search_by_proposition(subject):
-    return PropositionRole.objects.filter(proposition_dissertation=subject)

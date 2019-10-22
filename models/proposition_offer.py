@@ -46,7 +46,6 @@ class PropositionOffer(SerializableModel):
         return str(self.offer_proposition)
 
 
-
 def find_visible_by_education_groups(education_groups):
     now = timezone.now()
     return PropositionOffer.objects.filter(
@@ -56,14 +55,6 @@ def find_visible_by_education_groups(education_groups):
         offer_proposition__start_visibility_proposition__lte=now,
         offer_proposition__end_visibility_proposition__gte=now
     )
-
-
-def find_by_education_group_ordered_by_proposition_dissert(education_groups):
-    return find_visible_by_education_groups(education_groups).order_by('proposition_dissertation')
-
-
-def search_by_proposition_dissertation(proposition_dissertation):
-    return PropositionOffer.objects.filter(proposition_dissertation=proposition_dissertation)
 
 
 def search(education_groups, terms, active=None, visibility=None):
