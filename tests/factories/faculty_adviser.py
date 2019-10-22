@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import factory
+
 from base.tests.factories.offer import OfferFactory
 from dissertation.tests.factories.adviser import AdviserManagerFactory
 
