@@ -57,7 +57,7 @@ def add(status, adviser, proposition_dissertation):
         proposition_dissertation=proposition_dissertation,
         status=status,
         adviser=adviser
-    ).count()
-    if count_by_status_adviser_proposition == 0:
+    ).exists()
+    if not count_by_status_adviser_proposition:
         role = PropositionRole(status=status, adviser=adviser, proposition_dissertation=proposition_dissertation)
         role.save()
