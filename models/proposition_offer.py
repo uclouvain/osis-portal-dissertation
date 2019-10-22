@@ -57,14 +57,6 @@ def find_visible_by_education_groups(education_groups):
     )
 
 
-def find_by_education_group_ordered_by_proposition_dissert(education_groups):
-    return find_visible_by_education_groups(education_groups).order_by('proposition_dissertation')
-
-
-def search_by_proposition_dissertation(proposition_dissertation):
-    return PropositionOffer.objects.filter(proposition_dissertation=proposition_dissertation)
-
-
 def search(education_groups, terms, active=None, visibility=None):
     queryset = PropositionOffer.objects.filter(proposition_dissertation__active=True,
                                                proposition_dissertation__visibility=True,

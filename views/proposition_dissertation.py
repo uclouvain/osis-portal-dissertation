@@ -35,10 +35,12 @@ from base.models import education_group, academic_year
 from base.models.education_group_year import EducationGroupYear
 from base.models.enums import offer_enrollment_state
 from base.models.offer_enrollment import OfferEnrollment
-from dissertation.models import dissertation, proposition_document_file, proposition_role, \
+from dissertation.models import dissertation, proposition_role, \
     proposition_offer
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
+from dissertation.models.proposition_document_file import PropositionDocumentFile
+from dissertation.models.proposition_role import PropositionRole
 
 
 @login_required
@@ -116,8 +118,8 @@ def proposition_dissertation_detail(request, pk):
     student = mdl.student.find_by_person(person)
     using = dissertation.count_by_proposition(subject)
     percent = using * 100 / subject.max_number_student if subject.max_number_student else 0
-    count_proposition_role = proposition_role.count_by_proposition(subject)
-    files = proposition_document_file.find_by_proposition(subject)
+    count_proposition_role = PropositionRole.objects.filter(proposition_dissertation=subject).count()
+    files = PropositionDocumentFile.objects.filter(proposition=subject)
     filename = ""
     for file in files:
         filename = file.document_file.file_name
