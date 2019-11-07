@@ -42,7 +42,7 @@ from osis_common.models.enum import storage_duration
 def download(request, pk):
     memory = get_object_or_404(mdl.dissertation.Dissertation, pk=pk)
     if memory.author_is_logged_student(request):
-        dissertation_document = mdl.dissertation_document_file.find_by_id(pk)
+        dissertation_document = DissertationDocumentFile.objects.get(dissertation__id=pk)
         document = mdl_osis_common.document_file.find_by_id(dissertation_document.document_file.id)
         filename = document.file_name
         response = HttpResponse(document.file, content_type=document.content_type)
@@ -92,7 +92,7 @@ def save_uploaded_file(request):
         content_type = file_selected.content_type
         size = file_selected.size
         description = data['description']
-        documents = mdl.dissertation_document_file.find_by_dissertation(dissertation)
+        documents = DissertationDocumentFile.objects.filter(dissertation=dissertation)
         for document in documents:
             document.delete()
             old_document = mdl_osis_common.document_file.find_by_id(document.document_file.id)

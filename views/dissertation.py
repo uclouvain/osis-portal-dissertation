@@ -43,14 +43,16 @@ from base.views import layout
 from base.views.mixin import AjaxTemplateMixin
 from dissertation.forms import DissertationForm, DissertationEditForm, DissertationRoleForm, \
     DissertationTitleForm, DissertationUpdateForm
-from dissertation.models import dissertation, dissertation_document_file, dissertation_role, dissertation_update, \
-    offer_proposition, proposition_dissertation, proposition_role
+from dissertation.models import dissertation, dissertation_role, dissertation_update, \
+    offer_proposition, proposition_dissertation
 from dissertation.models.adviser import Adviser
 from dissertation.models.dissertation import Dissertation
+from dissertation.models.dissertation_document_file import DissertationDocumentFile
 from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models.enums import dissertation_status, dissertation_role_status
 from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
+from dissertation.models.proposition_role import PropositionRole
 
 INVISIBLE_JUSTIFICATION_KEYWORDS = ('auto_add_jury',
                                     'Auto add jury',
@@ -112,7 +114,7 @@ def dissertation_delete(request, pk):
 def dissertation_detail(request, pk):
     person = request.user.person
     student = mdl.student.find_by_person(person)
-    current_ac_year = academic_year.current_academic_year()
+    current_ac_year = academic_year.starting_academic_year()
     dissert = get_object_or_404(Dissertation.objects.
                                 select_related('author', 'author__person',
                                                'proposition_dissertation__author__person', 'location').
@@ -138,15 +140,17 @@ def dissertation_detail(request, pk):
                                            ))
         count = dissertation.count_disser_submit_by_student_in_educ_group(student, educ_group)
 
-        files = dissertation_document_file.find_by_dissertation(dissert)
+        files = DissertationDocumentFile.objects.filter(dissertation=dissert)
         filename = ""
         for file in files:
             filename = file.document_file.file_name
 
         count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
         count_reader = dissertation_role.count_reader_by_dissertation(dissert)
-        count_proposition_role = proposition_role.count_by_dissertation(dissert)
-        proposition_roles = proposition_role.search_by_dissertation(dissert)
+        count_proposition_role = PropositionRole.objects.filter(
+            proposition_dissertation=dissert.proposition_dissertation
+        ).count()
+        proposition_roles = PropositionRole.objects.filter(proposition_dissertation=dissert.proposition_dissertation)
         jury_visibility = offer_pro.start_jury_visibility <= timezone.now().date() <= offer_pro.end_jury_visibility
         check_edit = offer_pro.start_edit_title <= timezone.now().date() <= offer_pro.end_edit_title
 
@@ -307,7 +311,7 @@ class AdviserAutocomplete(autocomplete.Select2QuerySetView):
 def dissertation_new(request, pk):
     person = request.user.person
     student = person.student_set.first()
-    this_academic_year = academic_year.current_academic_year()
+    this_academic_year = academic_year.starting_academic_year()
     offer_enrollements = OfferEnrollment.objects.filter(
         student=student,
         education_group_year__academic_year=this_academic_year,
