@@ -44,7 +44,6 @@ class PropositionDissertationAdmin(SerializableModelAdmin):
 
 
 class PropositionDissertation(SerializableModel):
-
     author = models.ForeignKey('Adviser', on_delete=models.PROTECT)
     creator = models.ForeignKey('base.Person', blank=True, null=True, on_delete=models.PROTECT)
     collaboration = models.CharField(max_length=12, choices=COLLABORATION_CHOICES, default='FORBIDDEN')
@@ -74,7 +73,7 @@ class PropositionDissertation(SerializableModel):
         if self.author.person.last_name:
             last_name = self.author.person.last_name + ","
         author = u"%s %s %s" % (last_name.upper(), first_name, middle_name)
-        return author+" - "+str(self.title)
+        return author + " - " + str(self.title)
 
     class Meta:
         ordering = ["author__person__last_name", "author__person__middle_name", "author__person__first_name", "title"]
@@ -103,5 +102,6 @@ def find_by_id(proposition_id):
 
 
 def find_by_education_groups(education_groups):
-    proposition_ids = proposition_offer.find_visible_by_education_groups(education_groups).values('proposition_dissertation_id')
+    proposition_ids = proposition_offer.find_visible_by_education_groups(education_groups).values(
+        'proposition_dissertation_id')
     return PropositionDissertation.objects.filter(pk__in=proposition_ids, active=True, visibility=True)

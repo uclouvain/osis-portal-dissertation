@@ -76,6 +76,7 @@ def search_by_dissertation(memory):
         queryset = queryset.exclude(justification__contains=keyword)
     return queryset
 
+
 @deprecated
 def add(request, memory, old_status, justification=None):
     person = mdl.person.find_by_user(request.user)

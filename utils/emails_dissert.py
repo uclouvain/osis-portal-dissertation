@@ -29,11 +29,13 @@ from osis_common.messaging import message_config, send_message as message_servic
 
 
 def get_base_template(dissert):
-    template_base_data = {'author': dissert.author,
-                          'title': dissert.title,
-                          'promoteur': create_string_list_promotors(dissert),
-                          'description': dissert.description,
-                          'dissertation_proposition_titre': dissert.proposition_dissertation.title}
+    template_base_data = {
+        'author': dissert.author,
+        'title': dissert.title,
+        'promoteur': create_string_list_promotors(dissert),
+        'description': dissert.description,
+        'dissertation_proposition_titre': dissert.proposition_dissertation.title
+    }
     return template_base_data
 
 
