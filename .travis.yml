@@ -8,7 +8,7 @@ python: "3.5.5"
 services:
   - postgresql
 addons:
-    postgresql: "9.6"
+  postgresql: "9.6"
 
 install:
   - export PROJECT_DIR=`pwd`
@@ -35,7 +35,7 @@ before_script:
   - ./cc-test-reporter before-build
 
 script:
-  - python3 manage.py compilemessages && coverage run manage.py test --exclude-tag=selenium --no-logs
+  - python3 manage.py compilemessages && coverage run manage.py test dissertation --exclude-tag=selenium --no-logs
 
 after_script:
   - coverage xml

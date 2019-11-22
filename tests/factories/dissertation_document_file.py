@@ -35,4 +35,3 @@ class DissertationDocumentFileFactory(factory.DjangoModelFactory):
 
     dissertation = factory.SubFactory(DissertationFactory)
     document_file = factory.SubFactory(DocumentFileFactory)
-

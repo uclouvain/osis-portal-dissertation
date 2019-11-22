@@ -31,7 +31,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 class AdviserAdmin(SerializableModelAdmin):
     list_display = ('person', 'type')
-    raw_id_fields = ('person', )
+    raw_id_fields = ('person',)
     search_fields = ('uuid', 'person__last_name', 'person__first_name')
 
 

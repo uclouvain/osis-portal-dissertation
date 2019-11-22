@@ -36,7 +36,8 @@ from dissertation.tests.factories.proposition_offer import PropositionOfferFacto
 class PropositionOfferModelTestCase(TestCase):
     def setUp(self):
         self.education_group1 = EducationGroupFactory()
-        self.education_group_year = EducationGroupYearFactory(education_group=self.education_group1,acronym="Offer_test")
+        self.education_group_year = EducationGroupYearFactory(education_group=self.education_group1,
+                                                              acronym="Offer_test")
         self.offer_prop1 = OfferPropositionFactory(education_group=self.education_group1)
         self.proposition_dissert_1 = PropositionDissertationFactory()
         self.prop_offer1 = PropositionOfferFactory(
@@ -50,4 +51,4 @@ class PropositionOfferModelTestCase(TestCase):
 
     def test_find_visible_by_education_groups(self):
         query_set_proposition_offer = proposition_offer.find_visible_by_education_groups([self.education_group1, ])
-        self.assertCountEqual([self.prop_offer1,self.prop_offer3], query_set_proposition_offer)
+        self.assertCountEqual([self.prop_offer1, self.prop_offer3], query_set_proposition_offer)
