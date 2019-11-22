@@ -175,7 +175,7 @@ msgid "Draft"
 msgstr "Brouillon"
 
 msgid "Edit"
-msgstr "Editer"
+msgstr "Modifier"
 
 msgid "End"
 msgstr "Terminé"
