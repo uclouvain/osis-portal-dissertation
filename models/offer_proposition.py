@@ -77,4 +77,3 @@ def get_by_education_group(educ_group):
 
 def search_by_education_groups(education_groups):
     return OfferProposition.objects.filter(education_group__in=education_groups)
-

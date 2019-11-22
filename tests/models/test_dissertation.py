@@ -86,13 +86,13 @@ class DissertationModelTestCase(TestCase):
         self.offer_enrollment_curent_year = OfferEnrollmentFactory(
             offer_year=self.current_offer_year,
             student=self.student1,
-            education_group_year = self.current_education_group_year,
+            education_group_year=self.current_education_group_year,
             enrollment_state=offer_enrollment_state.SUBSCRIBED
         )
         self.offer_enrollment2015 = OfferEnrollmentFactory(
             offer_year=self.offer_year_start2015,
             student=self.student2,
-            education_group_year = self.education_group_year_2015,
+            education_group_year=self.education_group_year_2015,
             enrollment_state=offer_enrollment_state.SUBSCRIBED
         )
         self.proposition_dissertation = PropositionDissertationFactory(author=self.teacher,

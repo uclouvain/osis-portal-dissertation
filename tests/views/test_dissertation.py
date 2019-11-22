@@ -54,7 +54,7 @@ class DissertationViewTestCase(TestCase):
         self.maxDiff = None
         self.manager = AdviserManagerFactory()
         a_person_teacher = PersonFactory(first_name='Pierre',
-                                                last_name='Dupont')
+                                         last_name='Dupont')
         self.teacher = AdviserTeacherFactory(person=a_person_teacher)
         a_person_student = PersonFactory(last_name="Durant")
         another_person_student = PersonFactory(last_name="Paul")
@@ -72,7 +72,7 @@ class DissertationViewTestCase(TestCase):
             education_group=self.education_group1,
             academic_year=self.academic_year1
         )
-        self.offer_proposition1 = OfferPropositionFactory(offer=self.offer1, education_group= self.education_group1)
+        self.offer_proposition1 = OfferPropositionFactory(offer=self.offer1, education_group=self.education_group1)
         self.proposition_dissertation = PropositionDissertationFactory(
             author=self.teacher,
             creator=a_person_teacher,
@@ -147,7 +147,7 @@ class DissertationViewTestCase(TestCase):
         )
         response = self.client.post(
             reverse('dissertation_to_dir_submit', args=[self.dissertation_to_dir_submit.pk]),
-            {"form": form,}
+            {"form": form, }
         )
         self.assertEqual(response.status_code, HttpResponseRedirect.status_code)
 
@@ -161,7 +161,7 @@ class DissertationViewTestCase(TestCase):
         )
         response = self.client.post(
             reverse('dissertation_to_dir_submit', args=[self.dissertation_to_dir_submit.pk]),
-            {"form": form,}
+            {"form": form, }
         )
         self.assertEqual(response.status_code, HttpResponse.status_code)
 
@@ -174,7 +174,7 @@ class DissertationViewTestCase(TestCase):
         )
         response = self.client.post(
             reverse('dissertation_back_to_draft', args=[self.dissertation.pk]),
-            {"form": form,}
+            {"form": form, }
         )
         self.assertEqual(response.status_code, HttpResponseRedirect.status_code)
         self.dissertation.refresh_from_db()
@@ -197,18 +197,22 @@ class DissertationViewTestCase(TestCase):
     def test_dissertation_jury_new_view(self):
         self.client.force_login(self.student.person.user)
         response = self.client.post(
-            reverse('add_reader', args=[self.dissertation.pk]), {"status": "READER",
-                                                                 'adviser': self.teacher.pk,
-                                                                 "dissertation": self.dissertation.pk}
+            reverse('add_reader', args=[self.dissertation.pk]), {
+                "status": "READER",
+                'adviser': self.teacher.pk,
+                "dissertation": self.dissertation.pk
+            }
         )
         self.assertEqual(response.status_code, HttpResponseRedirect.status_code)
 
     def test_dissertation_jury_new_view_without_student_logged(self):
         self.client.force_login(self.manager.person.user)
         response = self.client.post(
-            reverse('add_reader', args=[self.dissertation.pk]), {"status": "READER",
-                                                                 'adviser': self.teacher.pk,
-                                                                 "dissertation": self.dissertation.pk}
+            reverse('add_reader', args=[self.dissertation.pk]), {
+                "status": "READER",
+                'adviser': self.teacher.pk,
+                "dissertation": self.dissertation.pk
+            }
         )
         self.assertEqual(response.status_code, HttpResponseRedirect.status_code)
 

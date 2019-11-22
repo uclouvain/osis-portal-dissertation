@@ -50,13 +50,13 @@ def proposition_dissertations(request):
     starting_academic_year = academic_year.starting_academic_year()
 
     student_offer_enrollments = OfferEnrollment.objects.filter(
-            student=student,
-            education_group_year__academic_year=starting_academic_year,
-            enrollment_state__in=[
-                offer_enrollment_state.SUBSCRIBED,
-                offer_enrollment_state.PROVISORY
-            ]
-        ).values_list('id', flat=True)
+        student=student,
+        education_group_year__academic_year=starting_academic_year,
+        enrollment_state__in=[
+            offer_enrollment_state.SUBSCRIBED,
+            offer_enrollment_state.PROVISORY
+        ]
+    ).values_list('id', flat=True)
     student_offer_propositions_id_list = OfferProposition.objects.filter(
         education_group__educationgroupyear__offerenrollment__id__in=student_offer_enrollments
     ).values_list('id', flat=True)
@@ -93,10 +93,12 @@ def proposition_dissertations(request):
     ).prefetch_related('dissertations', 'offer_propositions')
     date_now = timezone.now().date()
     return render(request, 'proposition_dissertations_list.html',
-                  {'date_now': date_now,
-                   'propositions_dissertations': propositions_dissertations,
-                   'student': student,
-                   'student_offer_propositions_id_list': student_offer_propositions_id_list})
+                  {
+                      'date_now': date_now,
+                      'propositions_dissertations': propositions_dissertations,
+                      'student': student,
+                      'student_offer_propositions_id_list': student_offer_propositions_id_list
+                  })
 
 
 @login_required
@@ -108,10 +110,10 @@ def proposition_dissertation_detail(request, pk):
                                                  'propositionrole_set__adviser__person',
                                                  'offer_propositions'), pk=pk)
     offer_propositions = subject.offer_propositions.all().annotate(last_acronym=Subquery(
-            EducationGroupYear.objects.filter(
-                education_group__offer_proposition=OuterRef('pk'),
-                academic_year=starting_academic_year).values('acronym')[:1]
-        ))
+        EducationGroupYear.objects.filter(
+            education_group__offer_proposition=OuterRef('pk'),
+            academic_year=starting_academic_year).values('acronym')[:1]
+    ))
 
     student = mdl.student.find_by_person(person)
     using = dissertation.count_by_proposition(subject)
@@ -125,13 +127,15 @@ def proposition_dissertation_detail(request, pk):
         proposition_role.add('PROMOTEUR', subject.author, subject)
     proposition_roles = subject.propositionrole_set.all()
     return render(request, 'proposition_dissertation_detail.html',
-                  {'percent': round(percent, 2),
-                   'proposition_roles': proposition_roles,
-                   'proposition_dissertation': subject,
-                   'offer_propositions': offer_propositions,
-                   'student': student,
-                   'using': using,
-                   'filename': filename})
+                  {
+                      'percent': round(percent, 2),
+                      'proposition_roles': proposition_roles,
+                      'proposition_dissertation': subject,
+                      'offer_propositions': offer_propositions,
+                      'student': student,
+                      'using': using,
+                      'filename': filename
+                  })
 
 
 @login_required
@@ -148,6 +152,8 @@ def proposition_dissertations_search(request):
     )
     date_now = timezone.now().date()
     return render(request, 'proposition_dissertations_list.html',
-                  {'date_now': date_now,
-                   'proposition_offers': proposition_offers,
-                   'student': student})
+                  {
+                      'date_now': date_now,
+                      'proposition_offers': proposition_offers,
+                      'student': student
+                  })

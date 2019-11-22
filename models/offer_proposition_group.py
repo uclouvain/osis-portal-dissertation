@@ -30,7 +30,8 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 class OfferPropositionGroupAdmin(SerializableModelAdmin):
     list_display = ('name_short', 'name_long')
-    search_fields=('name_short', 'name_long')
+    search_fields = ('name_short', 'name_long')
+
 
 class OfferPropositionGroup(SerializableModel):
     name_short = models.CharField(max_length=10)

@@ -29,7 +29,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 
 class DissertationLocationAdmin(SerializableModelAdmin):
-    list_display = ('name', )
+    list_display = ('name',)
     search_fields = ('uuid', 'name')
 
 

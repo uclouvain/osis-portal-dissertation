@@ -30,6 +30,6 @@ REQUIRED = 'REQUIRED'
 FORBIDDEN = 'FORBIDDEN'
 
 COLLABORATION_CHOICES = (
-        (POSSIBLE, _('possible')),
-        (REQUIRED, _('required')),
-        (FORBIDDEN, _('forbidden')))
+    (POSSIBLE, _('possible')),
+    (REQUIRED, _('required')),
+    (FORBIDDEN, _('forbidden')))
