@@ -31,24 +31,56 @@ from base import models as mdl
 from base.models import student, academic_year, offer_year
 from dissertation.models import dissertation_location, proposition_dissertation
 from dissertation.models.enums.defend_periode_choices import DEFEND_PERIODE_CHOICES
-from dissertation.models.enums.dissertation_status import DISSERTATION_STATUS
+from dissertation.models.enums import dissertation_status
 from dissertation.utils import emails_dissert
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class DissertationAdmin(SerializableModelAdmin):
-    list_display = ('uuid', 'title', 'author', 'status', 'active', 'proposition_dissertation', 'modification_date',
-                    'education_group_year_start')
-    raw_id_fields = ('author', 'offer_year_start', 'proposition_dissertation', 'location', 'education_group_year_start')
-    search_fields = ('uuid', 'title', 'author__person__last_name', 'author__person__first_name',
-                     'proposition_dissertation__title', 'proposition_dissertation__author__person__last_name',
-                     'proposition_dissertation__author__person__first_name', 'education_group_year_start__id')
+    list_display = (
+        'uuid',
+        'title',
+        'author',
+        'status',
+        'active',
+        'proposition_dissertation',
+        'modification_date',
+        'education_group_year_start'
+    )
+    raw_id_fields = (
+        'author',
+        'offer_year_start',
+        'proposition_dissertation',
+        'location',
+        'education_group_year_start'
+    )
+    search_fields = (
+        'uuid',
+        'title',
+        'author__person__last_name',
+        'author__person__first_name',
+        'proposition_dissertation__title',
+        'proposition_dissertation__author__person__last_name',
+        'proposition_dissertation__author__person__first_name',
+        'education_group_year_start__acronym'
+    )
 
 
 class Dissertation(SerializableModel):
-    title = models.CharField(_('Dissertation'), max_length=500)
-    author = models.ForeignKey(student.Student, on_delete=models.PROTECT)
-    status = models.CharField(max_length=12, choices=DISSERTATION_STATUS, default='DRAFT')
+    title = models.CharField(
+        max_length=500,
+        verbose_name=_('Title')
+    )
+    author = models.ForeignKey(
+        student.Student,
+        verbose_name=_('Author'),
+        on_delete=models.CASCADE
+    )
+    status = models.CharField(
+        max_length=12,
+        choices=dissertation_status.DISSERTATION_STATUS,
+        default=dissertation_status.DRAFT
+    )
     defend_periode = models.CharField(
         _('Defend period'),
         max_length=12,

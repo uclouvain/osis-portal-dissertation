@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-21 15:59+0200\n"
+"POT-Creation-Date: 2019-11-29 14:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -177,11 +177,11 @@ msgstr "Brouillon"
 msgid "Edit"
 msgstr "Modifier"
 
-msgid "End"
-msgstr "Terminé"
-
 msgid "File"
 msgstr "Fichier"
+
+msgid "Finished"
+msgstr "Terminé"
 
 msgid "First"
 msgstr "Premier"
@@ -332,11 +332,11 @@ msgstr "L'étudiant a supprimé le fichier :"
 msgid "Title"
 msgstr "titre"
 
+msgid "To be defended"
+msgstr "En attente de défense"
+
 msgid "To be received"
 msgstr "En attente de réception"
-
-msgid "To be received defended"
-msgstr "En attente de défense"
 
 msgid "Type"
 msgstr "Type de sujet"
@@ -425,51 +425,3 @@ msgstr "indéfini"
 
 msgid "year start"
 msgstr "Année de début"
-
-#~ msgid "Case study"
-#~ msgstr "Cas d'étude"
-
-#~ msgid "Theme"
-#~ msgstr "Theme"
-
-#~ msgid "ACCOMPANIST"
-#~ msgstr "Accompagnateur"
-
-#~ msgid "case_study"
-#~ msgstr "Cas d'étude"
-
-#~ msgid "CO_PROMOTEUR"
-#~ msgstr "Co-Promoteur"
-
-#~ msgid "copromotor"
-#~ msgstr "Co-promoteur"
-
-#~ msgid "domain"
-#~ msgstr "Domaine"
-
-#~ msgid "INTERNSHIP"
-#~ msgstr "Maître de stage"
-
-#~ msgid "justification_confirmation_message"
-#~ msgstr "Confirmer la justification"
-
-#~ msgid "optional"
-#~ msgstr "Facultatif"
-
-#~ msgid "PRESIDENT"
-#~ msgstr "Président"
-
-#~ msgid "PROMOTEUR"
-#~ msgstr "Promoteur"
-
-#~ msgid "question"
-#~ msgstr "Question"
-
-#~ msgid "READER"
-#~ msgstr "Lecteur"
-
-#~ msgid "visibility"
-#~ msgstr "Visibilité"
-
-#~ msgid "work"
-#~ msgstr "Travail"

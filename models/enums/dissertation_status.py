@@ -54,9 +54,9 @@ DISSERTATION_STATUS = (
     (EVA_OK, _('Accepted by first year evaluation')),
     (EVA_KO, _('Refused by first year evaluation')),
     (TO_RECEIVE, _('To be received')),
-    (TO_DEFEND, _('To be received defended')),
+    (TO_DEFEND, _('To be defended')),
     (DEFENDED, _('Defended')),
-    (ENDED, _('End')),
+    (ENDED, _('Finished')),
     (ENDED_WIN, _('Win')),
     (ENDED_LOS, _('Reported')),
 )
