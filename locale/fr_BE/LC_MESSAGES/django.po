@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-29 15:22+0100\n"
+"POT-Creation-Date: 2019-11-29 15:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -309,6 +309,9 @@ msgstr "Statut"
 msgid "Subject informations"
 msgstr "Informations du sujet de mémoire"
 
+msgid "Subject type"
+msgstr "Type de sujet"
+
 msgid "Submit this dissertation project to promoter"
 msgstr "Soumettre le projet au promoteur"
 
@@ -346,9 +349,6 @@ msgstr "En attente de défense"
 
 msgid "To be received"
 msgstr "En attente de réception"
-
-msgid "Type"
-msgstr "Type de sujet"
 
 msgid "Undefined"
 msgstr "Indéfini"
