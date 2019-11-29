@@ -87,7 +87,7 @@ def dissertations(request):
                        'proposition_dissertation__author__person',
                        'author',
                        'education_group_year',
-                       'education_group_year_start__academic_year')
+                       'education_group_year__academic_year')
     date_now = timezone.now().date()
     visibility = False
     for offer_pro in offer_propositions:
@@ -130,7 +130,7 @@ def dissertation_detail(request, pk):
                 offer_enrollment_state.PROVISORY
             ]
         ).values_list('id', flat=True)
-        educ_group = dissert.education_group_year_start.education_group
+        educ_group = dissert.education_group_year.education_group
         offer_pro = offer_proposition.get_by_education_group(educ_group)
         offer_propositions = dissert.proposition_dissertation.offer_propositions.filter(
             education_group__educationgroupyear__offerenrollment__id__in=student_offer_enrollments
@@ -191,7 +191,7 @@ def dissertation_edit(request, pk):
     if dissert.author_is_logged_student(request):
         education_groups = education_group.find_by_student_and_enrollment_states(
             student, [offer_enrollment_state.SUBSCRIBED, offer_enrollment_state.PROVISORY])
-        offer_pro = offer_proposition.get_by_education_group(dissert.education_group_year_start.education_group)
+        offer_pro = offer_proposition.get_by_education_group(dissert.education_group_year.education_group)
         if dissert.status == 'DRAFT' or dissert.status == 'DIR_KO':
             return _manage_draft_or_ko_dissertation_form(dissert, education_groups, request)
         else:

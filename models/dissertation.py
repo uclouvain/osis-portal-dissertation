@@ -161,7 +161,7 @@ class Dissertation(SerializableModel):
 
 def count_disser_submit_by_student_in_educ_group(student, educ_group):
     return Dissertation.objects.filter(author=student) \
-        .filter(education_group_year_start__education_group=educ_group) \
+        .filter(education_group_year__education_group=educ_group) \
         .exclude(status='DIR_KO') \
         .exclude(status='DRAFT') \
         .filter(active=True) \
@@ -207,7 +207,7 @@ def count_by_proposition(proposition):
     current_academic_year = academic_year.starting_academic_year()
     return Dissertation.objects.filter(proposition_dissertation=proposition) \
         .filter(active=True) \
-        .filter(education_group_year_start__academic_year=current_academic_year) \
+        .filter(education_group_year__academic_year=current_academic_year) \
         .exclude(status='DRAFT') \
         .exclude(status='DIR_KO') \
         .count()

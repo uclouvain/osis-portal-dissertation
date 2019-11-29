@@ -101,7 +101,7 @@ class DissertationModelTestCase(TestCase):
                                                                        )
         self.dissertation_to_put_back_to_draft = DissertationFactory(
             author=self.student1,
-            education_group_year_start=self.current_education_group_year,
+            education_group_year=self.current_education_group_year,
             proposition_dissertation=self.proposition_dissertation,
             status='DIR_SUBMIT',
             active=True,
@@ -110,7 +110,7 @@ class DissertationModelTestCase(TestCase):
         )
         self.dissertation_test_count2015 = DissertationFactory(
             author=self.student1,
-            education_group_year_start=self.education_group_year_2015,
+            education_group_year=self.education_group_year_2015,
             proposition_dissertation=self.proposition_dissertation,
             status='COM_SUBMIT',
             active=True,
@@ -119,7 +119,7 @@ class DissertationModelTestCase(TestCase):
         )
         self.dissertation_test_count2017 = DissertationFactory(
             author=self.student2,
-            education_group_year_start=self.current_education_group_year,
+            education_group_year=self.current_education_group_year,
             proposition_dissertation=self.proposition_dissertation,
             status='COM_SUBMIT',
             active=True,

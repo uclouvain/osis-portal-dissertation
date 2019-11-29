@@ -128,10 +128,10 @@
                     {{ dissertation.get_status_display }}
                     </span>
                 </td>
-                <td>{{ dissertation.education_group_year_start.academic_year.year }} -
-                    {{ dissertation.education_group_year_start.academic_year.year |add:"1"}}
+                <td>{{ dissertation.education_group_year.academic_year.year }} -
+                    {{ dissertation.education_group_year.academic_year.year |add:"1"}}
                 </td>
-                <td>{{ dissertation.education_group_year_start.acronym }}</td>
+                <td>{{ dissertation.education_group_year.acronym }}</td>
                 <td>{{ dissertation.proposition_dissertation.title }}
                     - {{ dissertation.proposition_dissertation.author.person }}</td>
                 </tr>
