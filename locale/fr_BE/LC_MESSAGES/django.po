@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-29 14:10+0100\n"
+"POT-Creation-Date: 2019-11-29 15:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -107,6 +107,12 @@ msgstr "Année de défense"
 
 msgid "Defended"
 msgstr "Défendu"
+
+msgid "Defense period"
+msgstr "Session de la défense"
+
+msgid "Defense year"
+msgstr "Année de la défense"
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -244,7 +250,7 @@ msgid "Number of places remaining"
 msgstr "Nombre de places restantes"
 
 msgid "Offers"
-msgstr "Programmes"
+msgstr ""
 
 msgid "Person"
 msgstr "Personne"
@@ -260,6 +266,9 @@ msgstr "En traitement..."
 
 msgid "Professor"
 msgstr "Professeur"
+
+msgid "Programs"
+msgstr "Programmes"
 
 msgid "Promoter"
 msgstr "Promoteur"
@@ -340,6 +349,9 @@ msgstr "En attente de réception"
 
 msgid "Type"
 msgstr "Type de sujet"
+
+msgid "Undefined"
+msgstr "Indéfini"
 
 msgid ""
 "Warning : you will submit the draft memorandum to the promotor. Are you sure "

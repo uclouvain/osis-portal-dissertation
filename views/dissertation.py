@@ -86,7 +86,7 @@ def dissertations(request):
                        'proposition_dissertation',
                        'proposition_dissertation__author__person',
                        'author',
-                       'education_group_year_start',
+                       'education_group_year',
                        'education_group_year_start__academic_year')
     date_now = timezone.now().date()
     visibility = False
@@ -228,14 +228,14 @@ def _manage_draft_or_ko_dissertation_form(dissert, education_groups, request):
                                     justification="student edited the dissertation")
             return redirect('dissertation_detail', pk=dissert.pk)
         else:
-            form.fields["education_group_year_start"].queryset = education_group_year.find_by_education_groups(
+            form.fields["education_group_year"].queryset = education_group_year.find_by_education_groups(
                 education_groups)
             form.fields[
                 "proposition_dissertation"].queryset = proposition_dissertation.find_by_education_groups(
                 education_groups)
     else:
         form = DissertationEditForm(instance=dissert)
-        form.fields["education_group_year_start"].queryset = education_group_year.find_by_education_groups(
+        form.fields["education_group_year"].queryset = education_group_year.find_by_education_groups(
             education_groups)
         form.fields["proposition_dissertation"].queryset = proposition_dissertation.find_by_education_groups(
             education_groups)
@@ -283,7 +283,7 @@ class DissertationJuryNewView(AjaxTemplateMixin, UserPassesTestMixin, CreateView
         dissert = self.dissertation
         count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
         count_reader = dissertation_role.count_reader_by_dissertation(dissert)
-        offer_pro = offer_proposition.get_by_education_group(dissert.education_group_year_start.education_group)
+        offer_pro = offer_proposition.get_by_education_group(dissert.education_group_year.education_group)
         return offer_pro.student_can_manage_readers and count_dissertation_role < 5 and count_reader < 3
 
     def dispatch(self, request, *args, **kwargs):
@@ -360,7 +360,7 @@ def dissertation_new(request, pk):
                                     )
             return redirect('dissertation_detail', pk=memory.pk)
 
-        form.fields["education_group_year_start"].queryset = EducationGroupYear.objects.filter(
+        form.fields["education_group_year"].queryset = EducationGroupYear.objects.filter(
             offerenrollment__student=student,
             education_group__in=[offer_prop.education_group for offer_prop in offer_propositions]
         ).order_by(
@@ -385,7 +385,7 @@ def dissertation_reader_delete(request, pk):
     role = get_object_or_404(dissertation_role.DissertationRole, pk=pk)
     dissert = role.dissertation
     if dissert.author_is_logged_student(request):
-        offer_pro = offer_proposition.get_by_education_group(dissert.education_group_year_start.education_group)
+        offer_pro = offer_proposition.get_by_education_group(dissert.education_group_year.education_group)
         if offer_pro.student_can_manage_readers and dissert.status == 'DRAFT':
             justification = "Student deleted reader {}".format(role)
             dissertation_update.add(request, dissert, dissert.status, justification=justification)
@@ -414,7 +414,7 @@ def dissertation_to_dir_submit(request, pk):
     student = person.student_set.first()
     submitted_memories_count = dissertation.count_disser_submit_by_student_in_educ_group(
         student,
-        dissert.education_group_year_start.education_group)
+        dissert.education_group_year.education_group)
     if dissert.author_is_logged_student(request) and submitted_memories_count == 0:
         new_status = dissertation.get_next_status(dissert, "go_forward")
         status_dict = dict(dissertation_status.DISSERTATION_STATUS)

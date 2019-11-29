@@ -27,21 +27,15 @@ from django.utils.translation import gettext_lazy as _
 
 from osis_common.utils.enumerations import ChoiceEnum
 
-UNDEFINED = 'UNDEFINED'
-JANUARY = 'JANUARY'
-JUNE = 'JUNE'
-SEPTEMBER = 'SEPTEMBER'
+PROFESSOR = 'PROFESSOR'
+COURSE_MANAGER = 'COURSE_MANAGER'
 
-DEFEND_PERIODE_CHOICES = (
-    (UNDEFINED, _('Undefined')),
-    (JANUARY, _('January')),
-    (JUNE, _('June')),
-    (SEPTEMBER, _('September')),
-)
+ADVISER_TYPES = (
+        ('PROFESSOR', _('Professor')),
+        ('COURSE_MANAGER', _('Course manager')),
+    )
 
 
-class DefendPeriode(ChoiceEnum):
-    UNDEFINED = 'UNDEFINED'
-    JANUARY = 'JANUARY'
-    JUNE = 'JUNE'
-    SEPTEMBER = 'SEPTEMBER'
+class AdviserTypes(ChoiceEnum):
+    PROFESSOR = 'PROFESSOR'
+    COURSE_MANAGER = 'COURSE_MANAGER'

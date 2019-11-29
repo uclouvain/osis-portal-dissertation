@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-29 14:10+0100\n"
+"POT-Creation-Date: 2019-11-29 15:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,12 @@ msgid "Defend year"
 msgstr ""
 
 msgid "Defended"
+msgstr ""
+
+msgid "Defense period"
+msgstr ""
+
+msgid "Defense year"
 msgstr ""
 
 msgid "Delete"
@@ -270,6 +276,9 @@ msgstr ""
 msgid "Professor"
 msgstr ""
 
+msgid "Programs"
+msgstr ""
+
 msgid "Promoter"
 msgstr ""
 
@@ -345,6 +354,9 @@ msgid "To be received"
 msgstr ""
 
 msgid "Type"
+msgstr ""
+
+msgid "Undefined"
 msgstr ""
 
 msgid ""

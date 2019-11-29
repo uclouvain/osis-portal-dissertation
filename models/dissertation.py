@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -28,10 +28,11 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from base import models as mdl
-from base.models import student, academic_year, offer_year
-from dissertation.models import dissertation_location, proposition_dissertation
-from dissertation.models.enums.defend_periode_choices import DEFEND_PERIODE_CHOICES
-from dissertation.models.enums import dissertation_status
+from base.models import student, academic_year
+from base.models.education_group_year import EducationGroupYear
+from dissertation.models import dissertation_location
+from dissertation.models.enums import dissertation_status, defend_periode_choices
+from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.utils import emails_dissert
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
@@ -45,14 +46,13 @@ class DissertationAdmin(SerializableModelAdmin):
         'active',
         'proposition_dissertation',
         'modification_date',
-        'education_group_year_start'
+        'education_group_year'
     )
     raw_id_fields = (
         'author',
-        'offer_year_start',
         'proposition_dissertation',
         'location',
-        'education_group_year_start'
+        'education_group_year'
     )
     search_fields = (
         'uuid',
@@ -62,7 +62,7 @@ class DissertationAdmin(SerializableModelAdmin):
         'proposition_dissertation__title',
         'proposition_dissertation__author__person__last_name',
         'proposition_dissertation__author__person__first_name',
-        'education_group_year_start__acronym'
+        'education_group_year__acronym'
     )
 
 
@@ -79,40 +79,55 @@ class Dissertation(SerializableModel):
     status = models.CharField(
         max_length=12,
         choices=dissertation_status.DISSERTATION_STATUS,
-        default=dissertation_status.DRAFT
+        default=dissertation_status.DissertationStatus.DRAFT.value
     )
     defend_periode = models.CharField(
-        _('Defend period'),
         max_length=12,
-        choices=DEFEND_PERIODE_CHOICES,
-        default='UNDEFINED',
-        null=True
-    )
-    defend_year = models.IntegerField(_('Defend year'), blank=True, null=True)
-    offer_year_start = models.ForeignKey(offer_year.OfferYear, null=True, blank=True, on_delete=models.PROTECT)
-    education_group_year_start = models.ForeignKey(
-        'base.EducationGroupYear',
+        choices=defend_periode_choices.DEFEND_PERIODE_CHOICES,
+        default=defend_periode_choices.DefendPeriode.UNDEFINED.value,
         null=True,
+        verbose_name=_('Defense period')
+    )
+    defend_year = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name=_('Defense year')
+    )
+    education_group_year = models.ForeignKey(
+        EducationGroupYear,
+        null=True,
+        blank=True,
         on_delete=models.PROTECT,
         related_name='dissertations',
-        verbose_name=_('Offers')
+        verbose_name=_('Programs')
     )
     proposition_dissertation = models.ForeignKey(
-        proposition_dissertation.PropositionDissertation,
-        verbose_name=_('Dissertation subject'),
+        PropositionDissertation,
         related_name='dissertations',
+        verbose_name=_('Dissertation subject'),
         on_delete=models.PROTECT
     )
-    description = models.TextField(_('Description'), blank=True, null=True)
-    active = models.BooleanField(default=True)
-    creation_date = models.DateTimeField(auto_now_add=True, editable=False)
-    modification_date = models.DateTimeField(auto_now=True)
+    description = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name=_('Description')
+    )
+    active = models.BooleanField(
+        default=True
+    )
+    creation_date = models.DateTimeField(
+        auto_now_add=True,
+        editable=False
+    )
+    modification_date = models.DateTimeField(
+        auto_now=True
+    )
     location = models.ForeignKey(
         dissertation_location.DissertationLocation,
         blank=True,
         null=True,
-        on_delete=models.PROTECT,
-        verbose_name=_('Dissertation location')
+        verbose_name=_('Dissertation location'),
+        on_delete=models.PROTECT
     )
 
     def __str__(self):
