@@ -51,7 +51,7 @@ class Adviser(SerializableModel):
         on_delete=models.CASCADE
     )
     type = models.CharField(
-        max_length=3,
+        max_length=15,
         choices=adviser_types.ADVISER_TYPES,
         default=adviser_types.AdviserTypes.PROFESSOR.value
     )
