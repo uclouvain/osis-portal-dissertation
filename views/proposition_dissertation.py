@@ -78,7 +78,7 @@ def proposition_dissertations(request):
                 When(
                     Q(
                         Q(dissertations__active=True,
-                          dissertations__education_group_year_start__academic_year=
+                          dissertations__education_group_year__academic_year=
                           starting_academic_year),
                         ~Q(dissertations__status__in=('DRAFT', 'DIR_KO'))
                     ), then=1

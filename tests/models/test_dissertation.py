@@ -72,11 +72,8 @@ class DissertationModelTestCase(TestCase):
             education_group=self.education_group2,
             academic_year=self.current_academic_year
         )
-        self.academic_year2015 = AcademicYearFactory(year=2015)
-        self.offer_year_start2015 = OfferYearFactory(
-            acronym="test_offer1",
-            offer=self.offer1,
-            academic_year=self.academic_year2015
+        self.academic_year2015 = AcademicYearFactory(
+            year=2015
         )
         self.education_group_year_2015 = EducationGroupYearFactory(
             acronym="test_offer1",
@@ -90,7 +87,6 @@ class DissertationModelTestCase(TestCase):
             enrollment_state=offer_enrollment_state.SUBSCRIBED
         )
         self.offer_enrollment2015 = OfferEnrollmentFactory(
-            offer_year=self.offer_year_start2015,
             student=self.student2,
             education_group_year=self.education_group_year_2015,
             enrollment_state=offer_enrollment_state.SUBSCRIBED
@@ -101,7 +97,7 @@ class DissertationModelTestCase(TestCase):
                                                                        )
         self.dissertation_to_put_back_to_draft = DissertationFactory(
             author=self.student1,
-            education_group_year_start=self.current_education_group_year,
+            education_group_year=self.current_education_group_year,
             proposition_dissertation=self.proposition_dissertation,
             status='DIR_SUBMIT',
             active=True,
@@ -110,7 +106,7 @@ class DissertationModelTestCase(TestCase):
         )
         self.dissertation_test_count2015 = DissertationFactory(
             author=self.student1,
-            education_group_year_start=self.education_group_year_2015,
+            education_group_year=self.education_group_year_2015,
             proposition_dissertation=self.proposition_dissertation,
             status='COM_SUBMIT',
             active=True,
@@ -119,7 +115,7 @@ class DissertationModelTestCase(TestCase):
         )
         self.dissertation_test_count2017 = DissertationFactory(
             author=self.student2,
-            education_group_year_start=self.current_education_group_year,
+            education_group_year=self.current_education_group_year,
             proposition_dissertation=self.proposition_dissertation,
             status='COM_SUBMIT',
             active=True,

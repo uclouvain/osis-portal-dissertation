@@ -25,14 +25,23 @@
 ##############################################################################
 from django.utils.translation import gettext_lazy as _
 
+from osis_common.utils.enumerations import ChoiceEnum
+
 UNDEFINED = 'UNDEFINED'
 JANUARY = 'JANUARY'
 JUNE = 'JUNE'
 SEPTEMBER = 'SEPTEMBER'
 
-DEFEND_PERIODE_CHOICES = (
+DEFEND_PERIODE = (
     (UNDEFINED, _('undefined')),
     (JANUARY, _('January')),
     (JUNE, _('June')),
     (SEPTEMBER, _('September')),
 )
+
+
+class DefendPeriodes(ChoiceEnum):
+    UNDEFINED = 'UNDEFINED'
+    JANUARY = 'JANUARY'
+    JUNE = 'JUNE'
+    SEPTEMBER = 'SEPTEMBER'

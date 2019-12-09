@@ -30,35 +30,70 @@ from django.utils.translation import gettext_lazy as _
 from base import models as mdl
 from base.models import student, academic_year, offer_year
 from dissertation.models import dissertation_location, proposition_dissertation
-from dissertation.models.enums.defend_periode_choices import DEFEND_PERIODE_CHOICES
-from dissertation.models.enums.dissertation_status import DISSERTATION_STATUS
+from dissertation.models.enums.defend_periodes import DEFEND_PERIODE, DefendPeriodes
+from dissertation.models.enums.dissertation_status import DISSERTATION_STATUS, DissertationStatus
 from dissertation.utils import emails_dissert
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
 class DissertationAdmin(SerializableModelAdmin):
-    list_display = ('uuid', 'title', 'author', 'status', 'active', 'proposition_dissertation', 'modification_date',
-                    'education_group_year_start')
-    raw_id_fields = ('author', 'offer_year_start', 'proposition_dissertation', 'location', 'education_group_year_start')
-    search_fields = ('uuid', 'title', 'author__person__last_name', 'author__person__first_name',
-                     'proposition_dissertation__title', 'proposition_dissertation__author__person__last_name',
-                     'proposition_dissertation__author__person__first_name', 'education_group_year_start__id')
+    list_display = (
+        'uuid',
+        'title',
+        'author',
+        'status',
+        'active',
+        'proposition_dissertation',
+        'modification_date',
+        'education_group_year'
+    )
+    raw_id_fields = (
+        'author',
+        'proposition_dissertation',
+        'location',
+        'education_group_year'
+    )
+    search_fields = (
+        'uuid',
+        'title',
+        'author__person__last_name',
+        'author__person__first_name',
+        'proposition_dissertation__title',
+        'proposition_dissertation__author__person__last_name',
+        'proposition_dissertation__author__person__first_name',
+        'education_group_year__acronym'
+    )
 
 
 class Dissertation(SerializableModel):
-    title = models.CharField(_('Dissertation'), max_length=500)
-    author = models.ForeignKey(student.Student, on_delete=models.PROTECT)
-    status = models.CharField(max_length=12, choices=DISSERTATION_STATUS, default='DRAFT')
-    defend_periode = models.CharField(
-        _('Defend period'),
-        max_length=12,
-        choices=DEFEND_PERIODE_CHOICES,
-        default='UNDEFINED',
-        null=True
+    title = models.CharField(
+        max_length=500,
+        verbose_name=_('Title')
     )
-    defend_year = models.IntegerField(_('Defend year'), blank=True, null=True)
-    offer_year_start = models.ForeignKey(offer_year.OfferYear, null=True, blank=True, on_delete=models.PROTECT)
-    education_group_year_start = models.ForeignKey(
+    author = models.ForeignKey(
+        student.Student,
+        verbose_name=_('Author'),
+        on_delete=models.PROTECT
+    )
+    status = models.CharField(
+        max_length=12,
+        choices=DISSERTATION_STATUS,
+        default=DissertationStatus.DRAFT.value
+    )
+    defend_periode = models.CharField(
+        max_length=12,
+        choices=DEFEND_PERIODE,
+        default=DefendPeriodes.UNDEFINED.value,
+        blank=True,
+        null=True,
+        verbose_name=_('Defense period')
+    )
+    defend_year = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name=_('Defense year')
+       )
+    education_group_year = models.ForeignKey(
         'base.EducationGroupYear',
         null=True,
         on_delete=models.PROTECT,
@@ -71,10 +106,21 @@ class Dissertation(SerializableModel):
         related_name='dissertations',
         on_delete=models.PROTECT
     )
-    description = models.TextField(_('Description'), blank=True, null=True)
-    active = models.BooleanField(default=True)
-    creation_date = models.DateTimeField(auto_now_add=True, editable=False)
-    modification_date = models.DateTimeField(auto_now=True)
+    description = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name=_('Description'),
+    )
+    active = models.BooleanField(
+        default=True
+    )
+    creation_date = models.DateTimeField(
+        auto_now_add=True,
+        editable=False
+    )
+    modification_date = models.DateTimeField(
+        auto_now=True
+    )
     location = models.ForeignKey(
         dissertation_location.DissertationLocation,
         blank=True,
@@ -114,7 +160,7 @@ class Dissertation(SerializableModel):
 
 def count_disser_submit_by_student_in_educ_group(student, educ_group):
     return Dissertation.objects.filter(author=student) \
-        .filter(education_group_year_start__education_group=educ_group) \
+        .filter(education_group_year__education_group=educ_group) \
         .exclude(status='DIR_KO') \
         .exclude(status='DRAFT') \
         .filter(active=True) \
@@ -160,7 +206,7 @@ def count_by_proposition(proposition):
     current_academic_year = academic_year.starting_academic_year()
     return Dissertation.objects.filter(proposition_dissertation=proposition) \
         .filter(active=True) \
-        .filter(education_group_year_start__academic_year=current_academic_year) \
+        .filter(education_group_year__academic_year=current_academic_year) \
         .exclude(status='DRAFT') \
         .exclude(status='DIR_KO') \
         .count()
