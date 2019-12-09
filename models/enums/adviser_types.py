@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,14 +25,17 @@
 ##############################################################################
 from django.utils.translation import gettext_lazy as _
 
-UNDEFINED = 'UNDEFINED'
-JANUARY = 'JANUARY'
-JUNE = 'JUNE'
-SEPTEMBER = 'SEPTEMBER'
+from osis_common.utils.enumerations import ChoiceEnum
 
-DEFEND_PERIODE_CHOICES = (
-    (UNDEFINED, _('undefined')),
-    (JANUARY, _('January')),
-    (JUNE, _('June')),
-    (SEPTEMBER, _('September')),
+PRF = 'PRF'
+MGR = 'MGR'
+
+ADVISER_TYPES = (
+    (PRF, _("Professor")),
+    (MGR, _("Course manager"))
 )
+
+
+class AdviserTypes(ChoiceEnum):
+    PRF = 'PRF'
+    MGR = 'MGR'

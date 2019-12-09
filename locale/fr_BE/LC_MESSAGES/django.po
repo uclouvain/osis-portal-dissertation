@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-21 15:59+0200\n"
+"POT-Creation-Date: 2019-12-06 18:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -107,6 +107,12 @@ msgstr "Année de défense"
 
 msgid "Defended"
 msgstr "Défendu"
+
+msgid "Defense period"
+msgstr "Session de la défense"
+
+msgid "Defense year"
+msgstr "Année de la défense"
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -425,51 +431,3 @@ msgstr "indéfini"
 
 msgid "year start"
 msgstr "Année de début"
-
-#~ msgid "Case study"
-#~ msgstr "Cas d'étude"
-
-#~ msgid "Theme"
-#~ msgstr "Theme"
-
-#~ msgid "ACCOMPANIST"
-#~ msgstr "Accompagnateur"
-
-#~ msgid "case_study"
-#~ msgstr "Cas d'étude"
-
-#~ msgid "CO_PROMOTEUR"
-#~ msgstr "Co-Promoteur"
-
-#~ msgid "copromotor"
-#~ msgstr "Co-promoteur"
-
-#~ msgid "domain"
-#~ msgstr "Domaine"
-
-#~ msgid "INTERNSHIP"
-#~ msgstr "Maître de stage"
-
-#~ msgid "justification_confirmation_message"
-#~ msgstr "Confirmer la justification"
-
-#~ msgid "optional"
-#~ msgstr "Facultatif"
-
-#~ msgid "PRESIDENT"
-#~ msgstr "Président"
-
-#~ msgid "PROMOTEUR"
-#~ msgstr "Promoteur"
-
-#~ msgid "question"
-#~ msgstr "Question"
-
-#~ msgid "READER"
-#~ msgstr "Lecteur"
-
-#~ msgid "visibility"
-#~ msgstr "Visibilité"
-
-#~ msgid "work"
-#~ msgstr "Travail"

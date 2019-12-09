@@ -63,11 +63,7 @@ class DissertationViewTestCase(TestCase):
         self.offer1 = OfferFactory(title="test_offer1")
         self.education_group1 = EducationGroupFactory()
         self.academic_year1 = AcademicYearFactory()
-        self.offer_year_start1 = OfferYearFactory(
-            acronym="test_offer1", offer=self.offer1,
-            academic_year=self.academic_year1
-        )
-        self.education_group_year_start1 = EducationGroupYearFactory(
+        self.education_group_year1 = EducationGroupYearFactory(
             acronym="test_offer1",
             education_group=self.education_group1,
             academic_year=self.academic_year1
@@ -86,7 +82,7 @@ class DissertationViewTestCase(TestCase):
         self.dissertation = DissertationFactory(
             author=self.student,
             title='Dissertation test',
-            education_group_year_start=self.education_group_year_start1,
+            education_group_year=self.education_group_year1,
             proposition_dissertation=self.proposition_dissertation2,
             status='DIR_SUBMIT',
             active=True,
@@ -105,7 +101,7 @@ class DissertationViewTestCase(TestCase):
         self.dissertation_test_email = DissertationFactory(
             author=self.student,
             title='Dissertation_test_email',
-            education_group_year_start=self.education_group_year_start1,
+            education_group_year=self.education_group_year1,
             proposition_dissertation=self.proposition_dissertation,
             status='DRAFT',
             active=True,
