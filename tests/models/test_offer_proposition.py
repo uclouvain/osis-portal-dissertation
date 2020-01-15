@@ -31,11 +31,12 @@ from dissertation.tests.factories.offer_proposition import OfferPropositionFacto
 
 
 class OfferPropositionModelTestCase(TestCase):
-    def setUp(self):
-        self.education_group1 = EducationGroupFactory()
-        self.education_group2 = EducationGroupFactory()
-        self.offer_prop1 = OfferPropositionFactory(education_group=self.education_group1)
-        self.offer_prop2 = OfferPropositionFactory(education_group=self.education_group2)
+    @classmethod
+    def setUpTestData(cls):
+        cls.education_group1 = EducationGroupFactory()
+        cls.education_group2 = EducationGroupFactory()
+        cls.offer_prop1 = OfferPropositionFactory(education_group=cls.education_group1)
+        cls.offer_prop2 = OfferPropositionFactory(education_group=cls.education_group2)
 
     def test_get_by_education_group(self):
         self.assertEqual(get_by_education_group(self.education_group1), self.offer_prop1)

@@ -43,83 +43,84 @@ from dissertation.tests.factories.proposition_dissertation import PropositionDis
 
 
 class DissertationModelTestCase(TestCase):
-    def setUp(self):
-        self.manager = AdviserManagerFactory()
+    @classmethod
+    def setUpTestData(cls):
+        cls.manager = AdviserManagerFactory()
         a_person_teacher = PersonFactory(first_name='Pierre',
                                          last_name='Dupont')
-        self.teacher = AdviserTeacherFactory(person=a_person_teacher)
+        cls.teacher = AdviserTeacherFactory(person=a_person_teacher)
         a_person_student1 = PersonFactory(last_name="Durant",
                                           user=None)
-        self.student1 = StudentFactory(person=a_person_student1)
+        cls.student1 = StudentFactory(person=a_person_student1)
         a_person_student2 = PersonFactory(last_name="Robert",
                                           user=None)
-        self.student2 = StudentFactory(person=a_person_student2)
-        self.offer1 = OfferFactory()
-        self.education_group1 = EducationGroupFactory()
-        self.current_academic_year = create_current_academic_year()
-        self.current_offer_year = OfferYearFactory(
+        cls.student2 = StudentFactory(person=a_person_student2)
+        cls.offer1 = OfferFactory()
+        cls.education_group1 = EducationGroupFactory()
+        cls.current_academic_year = create_current_academic_year()
+        cls.current_offer_year = OfferYearFactory(
             acronym="test_offer1",
-            offer=self.offer1,
-            academic_year=self.current_academic_year
+            offer=cls.offer1,
+            academic_year=cls.current_academic_year
         )
-        self.current_education_group_year = EducationGroupYearFactory(
-            education_group=self.education_group1,
+        cls.current_education_group_year = EducationGroupYearFactory(
+            education_group=cls.education_group1,
             acronym="test_offer1",
-            academic_year=self.current_academic_year
+            academic_year=cls.current_academic_year
         )
-        self.education_group2 = EducationGroupFactory()
-        self.education_group_year = EducationGroupYearFactory(
-            education_group=self.education_group2,
-            academic_year=self.current_academic_year
+        cls.education_group2 = EducationGroupFactory()
+        cls.education_group_year = EducationGroupYearFactory(
+            education_group=cls.education_group2,
+            academic_year=cls.current_academic_year
         )
-        self.academic_year2015 = AcademicYearFactory(
+        cls.academic_year2015 = AcademicYearFactory(
             year=2015
         )
-        self.education_group_year_2015 = EducationGroupYearFactory(
+        cls.education_group_year_2015 = EducationGroupYearFactory(
             acronym="test_offer1",
-            education_group=self.education_group1,
-            academic_year=self.academic_year2015
+            education_group=cls.education_group1,
+            academic_year=cls.academic_year2015
         )
-        self.offer_enrollment_curent_year = OfferEnrollmentFactory(
-            offer_year=self.current_offer_year,
-            student=self.student1,
-            education_group_year=self.current_education_group_year,
+        cls.offer_enrollment_curent_year = OfferEnrollmentFactory(
+            offer_year=cls.current_offer_year,
+            student=cls.student1,
+            education_group_year=cls.current_education_group_year,
             enrollment_state=offer_enrollment_state.SUBSCRIBED
         )
-        self.offer_enrollment2015 = OfferEnrollmentFactory(
-            student=self.student2,
-            education_group_year=self.education_group_year_2015,
+        cls.offer_enrollment2015 = OfferEnrollmentFactory(
+            student=cls.student2,
+            education_group_year=cls.education_group_year_2015,
             enrollment_state=offer_enrollment_state.SUBSCRIBED
         )
-        self.proposition_dissertation = PropositionDissertationFactory(author=self.teacher,
-                                                                       creator=a_person_teacher,
-                                                                       title='Proposition de memoire'
-                                                                       )
-        self.dissertation_to_put_back_to_draft = DissertationFactory(
-            author=self.student1,
-            education_group_year=self.current_education_group_year,
-            proposition_dissertation=self.proposition_dissertation,
+        cls.proposition_dissertation = PropositionDissertationFactory(author=cls.teacher,
+                                                                      creator=a_person_teacher,
+                                                                      title='Proposition de memoire'
+                                                                      )
+        cls.dissertation_to_put_back_to_draft = DissertationFactory(
+            author=cls.student1,
+            education_group_year=cls.current_education_group_year,
+            proposition_dissertation=cls.proposition_dissertation,
             status='DIR_SUBMIT',
             active=True,
-            dissertation_role__adviser=self.teacher,
+            dissertation_role__adviser=cls.teacher,
             dissertation_role__status=dissertation_role_status.PROMOTEUR
         )
-        self.dissertation_test_count2015 = DissertationFactory(
-            author=self.student1,
-            education_group_year=self.education_group_year_2015,
-            proposition_dissertation=self.proposition_dissertation,
+        cls.dissertation_test_count2015 = DissertationFactory(
+            author=cls.student1,
+            education_group_year=cls.education_group_year_2015,
+            proposition_dissertation=cls.proposition_dissertation,
             status='COM_SUBMIT',
             active=True,
-            dissertation_role__adviser=self.teacher,
+            dissertation_role__adviser=cls.teacher,
             dissertation_role__status=dissertation_role_status.PROMOTEUR
         )
-        self.dissertation_test_count2017 = DissertationFactory(
-            author=self.student2,
-            education_group_year=self.current_education_group_year,
-            proposition_dissertation=self.proposition_dissertation,
+        cls.dissertation_test_count2017 = DissertationFactory(
+            author=cls.student2,
+            education_group_year=cls.current_education_group_year,
+            proposition_dissertation=cls.proposition_dissertation,
             status='COM_SUBMIT',
             active=True,
-            dissertation_role__adviser=self.teacher,
+            dissertation_role__adviser=cls.teacher,
             dissertation_role__status=dissertation_role_status.PROMOTEUR
         )
 
