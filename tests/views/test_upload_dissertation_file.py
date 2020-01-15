@@ -29,15 +29,17 @@ from dissertation.tests.factories.dissertation_document_file import Dissertation
 
 
 class TestDeleteDissertationFileView(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = UserFactory()
+        cls.person = PersonFactory(user=cls.user)
+        cls.student = StudentFactory(person=cls.person)
+        cls.dissertation = DissertationFactory(author=cls.student)
+        cls.dissertation_document = DissertationDocumentFileFactory(dissertation=cls.dissertation)
+        cls.dissertation2 = DissertationFactory()
+        cls.dissertation_document2 = DissertationDocumentFileFactory(dissertation=cls.dissertation2)
 
     def setUp(self):
-        self.user = UserFactory()
-        self.person = PersonFactory(user=self.user)
-        self.student = StudentFactory(person=self.person)
-        self.dissertation = DissertationFactory(author=self.student)
-        self.dissertation_document = DissertationDocumentFileFactory(dissertation=self.dissertation)
-        self.dissertation2 = DissertationFactory()
-        self.dissertation_document2 = DissertationDocumentFileFactory(dissertation=self.dissertation2)
         self.client.force_login(self.student.person.user)
 
     def test_delete_file(self):
