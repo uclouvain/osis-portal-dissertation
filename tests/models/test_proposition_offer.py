@@ -34,19 +34,20 @@ from dissertation.tests.factories.proposition_offer import PropositionOfferFacto
 
 
 class PropositionOfferModelTestCase(TestCase):
-    def setUp(self):
-        self.education_group1 = EducationGroupFactory()
-        self.education_group_year = EducationGroupYearFactory(education_group=self.education_group1,
-                                                              acronym="Offer_test")
-        self.offer_prop1 = OfferPropositionFactory(education_group=self.education_group1)
-        self.proposition_dissert_1 = PropositionDissertationFactory()
-        self.prop_offer1 = PropositionOfferFactory(
-            proposition_dissertation=self.proposition_dissert_1,
-            offer_proposition=self.offer_prop1
+    @classmethod
+    def setUpTestData(cls):
+        cls.education_group1 = EducationGroupFactory()
+        cls.education_group_year = EducationGroupYearFactory(education_group=cls.education_group1,
+                                                             acronym="Offer_test")
+        cls.offer_prop1 = OfferPropositionFactory(education_group=cls.education_group1)
+        cls.proposition_dissert_1 = PropositionDissertationFactory()
+        cls.prop_offer1 = PropositionOfferFactory(
+            proposition_dissertation=cls.proposition_dissert_1,
+            offer_proposition=cls.offer_prop1
         )
-        self.prop_offer3 = PropositionOfferFactory(
-            proposition_dissertation=self.proposition_dissert_1,
-            offer_proposition=self.offer_prop1
+        cls.prop_offer3 = PropositionOfferFactory(
+            proposition_dissertation=cls.proposition_dissert_1,
+            offer_proposition=cls.offer_prop1
         )
 
     def test_find_visible_by_education_groups(self):

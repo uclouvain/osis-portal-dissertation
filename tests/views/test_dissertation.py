@@ -34,7 +34,6 @@ from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.education_group import EducationGroupFactory
 from base.tests.factories.education_group_year import EducationGroupYearFactory
 from base.tests.factories.offer import OfferFactory
-from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from dissertation.forms import DissertationUpdateForm
@@ -50,35 +49,39 @@ from osis_common.models import message_template
 class DissertationViewTestCase(TestCase):
     fixtures = ['dissertation/fixtures/message_templates_dissertation.json', ]
 
-    def setUp(self):
-        self.maxDiff = None
-        self.manager = AdviserManagerFactory()
+    @classmethod
+    def setUpTestData(cls):
+        cls.maxDiff = None
+        cls.manager = AdviserManagerFactory()
         a_person_teacher = PersonFactory(first_name='Pierre',
                                          last_name='Dupont')
-        self.teacher = AdviserTeacherFactory(person=a_person_teacher)
+        cls.teacher = AdviserTeacherFactory(person=a_person_teacher)
         a_person_student = PersonFactory(last_name="Durant")
         another_person_student = PersonFactory(last_name="Paul")
-        self.student = StudentFactory.create(person=a_person_student)
-        self.student_with_1_dissertation = StudentFactory(person=another_person_student)
-        self.offer1 = OfferFactory(title="test_offer1")
-        self.education_group1 = EducationGroupFactory()
-        self.academic_year1 = AcademicYearFactory()
-        self.education_group_year1 = EducationGroupYearFactory(
+        cls.student = StudentFactory.create(person=a_person_student)
+        cls.student_with_1_dissertation = StudentFactory(person=another_person_student)
+        cls.offer1 = OfferFactory(title="test_offer1")
+        cls.education_group1 = EducationGroupFactory()
+        cls.academic_year1 = AcademicYearFactory()
+        cls.education_group_year1 = EducationGroupYearFactory(
             acronym="test_offer1",
-            education_group=self.education_group1,
-            academic_year=self.academic_year1
+            education_group=cls.education_group1,
+            academic_year=cls.academic_year1
         )
-        self.offer_proposition1 = OfferPropositionFactory(offer=self.offer1, education_group=self.education_group1)
-        self.proposition_dissertation = PropositionDissertationFactory(
-            author=self.teacher,
+        cls.offer_proposition1 = OfferPropositionFactory(offer=cls.offer1, education_group=cls.education_group1)
+        cls.proposition_dissertation = PropositionDissertationFactory(
+            author=cls.teacher,
             creator=a_person_teacher,
             title='Proposition 1212121'
         )
-        self.proposition_dissertation2 = PropositionDissertationFactory(
-            author=self.teacher,
+        cls.proposition_dissertation2 = PropositionDissertationFactory(
+            author=cls.teacher,
             creator=a_person_teacher,
             title='Proposition 1212121'
         )
+
+    def setUp(self):
+        self.client.force_login(self.student.person.user)
         self.dissertation = DissertationFactory(
             author=self.student,
             title='Dissertation test',
@@ -135,7 +138,6 @@ class DissertationViewTestCase(TestCase):
         self.assertEqual(response.status_code, HttpResponseRedirect.status_code)
 
     def test_dissertation_to_dir_submit_with_another_student(self):
-        self.client.force_login(self.student.person.user)
         form = DissertationUpdateForm(
             dissertation=self.dissertation_to_dir_submit,
             person=self.student_with_1_dissertation.person,
@@ -162,7 +164,6 @@ class DissertationViewTestCase(TestCase):
         self.assertEqual(response.status_code, HttpResponse.status_code)
 
     def test_dissertation_back_to_draft(self):
-        self.client.force_login(self.student.person.user)
         form = DissertationUpdateForm(
             dissertation=self.dissertation,
             person=self.student.person,
@@ -178,7 +179,6 @@ class DissertationViewTestCase(TestCase):
 
     @patch("dissertation.forms.DissertationUpdateForm.is_valid", return_value=False)
     def test_dissertation_back_to_draft_with_invalid_form(self, mock_form):
-        self.client.force_login(self.student.person.user)
         form = DissertationUpdateForm(
             dissertation=self.dissertation,
             person=self.student.person,
@@ -191,7 +191,6 @@ class DissertationViewTestCase(TestCase):
         self.assertEqual(response.status_code, HttpResponse.status_code)
 
     def test_dissertation_jury_new_view(self):
-        self.client.force_login(self.student.person.user)
         response = self.client.post(
             reverse('add_reader', args=[self.dissertation.pk]), {
                 "status": "READER",
@@ -214,12 +213,13 @@ class DissertationViewTestCase(TestCase):
 
 
 class TestAdviserAutocomplete(TestCase):
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
         a_person_student = PersonFactory(last_name="Durant")
-        self.student = StudentFactory.create(person=a_person_student)
-        self.url = reverse('adviser-autocomplete')
-        self.person = PersonFactory(first_name="pierre")
-        self.adviser = AdviserTeacherFactory(person=self.person)
+        cls.student = StudentFactory.create(person=a_person_student)
+        cls.url = reverse('adviser-autocomplete')
+        cls.person = PersonFactory(first_name="pierre")
+        cls.adviser = AdviserTeacherFactory(person=cls.person)
 
     def test_when_filter(self):
         self.client.force_login(user=self.student.person.user)
