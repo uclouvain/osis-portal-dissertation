@@ -79,26 +79,26 @@ class DissertationViewTestCase(TestCase):
             creator=a_person_teacher,
             title='Proposition 1212121'
         )
-        cls.dissertation = DissertationFactory(
-            author=cls.student,
-            title='Dissertation test',
-            education_group_year=cls.education_group_year1,
-            proposition_dissertation=cls.proposition_dissertation2,
-            status='DIR_SUBMIT',
-            active=True,
-            dissertation_role__adviser=cls.teacher,
-            dissertation_role__status=dissertation_role_status.PROMOTEUR
-        )
-        cls.dissertation_to_dir_submit = DissertationFactory(
-            author=cls.student_with_1_dissertation,
-            status='DRAFT',
-            active=True,
-            dissertation_role__adviser=cls.teacher,
-            dissertation_role__status=dissertation_role_status.PROMOTEUR
-        )
 
     def setUp(self):
         self.client.force_login(self.student.person.user)
+        self.dissertation = DissertationFactory(
+            author=self.student,
+            title='Dissertation test',
+            education_group_year=self.education_group_year1,
+            proposition_dissertation=self.proposition_dissertation2,
+            status='DIR_SUBMIT',
+            active=True,
+            dissertation_role__adviser=self.teacher,
+            dissertation_role__status=dissertation_role_status.PROMOTEUR
+        )
+        self.dissertation_to_dir_submit = DissertationFactory(
+            author=self.student_with_1_dissertation,
+            status='DRAFT',
+            active=True,
+            dissertation_role__adviser=self.teacher,
+            dissertation_role__status=dissertation_role_status.PROMOTEUR
+        )
 
     def test_email_new_dissert(self):
         self.dissertation_test_email = DissertationFactory(
