@@ -35,7 +35,6 @@ class TestDeleteDissertationFileView(TestCase):
         cls.person = PersonFactory(user=cls.user)
         cls.student = StudentFactory(person=cls.person)
         cls.dissertation = DissertationFactory(author=cls.student)
-        DissertationDocumentFileFactory()
 
     def setUp(self):
         self.client.force_login(self.student.person.user)
