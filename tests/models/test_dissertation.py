@@ -30,9 +30,7 @@ from base.models.enums import offer_enrollment_state
 from base.tests.factories.academic_year import AcademicYearFactory, create_current_academic_year
 from base.tests.factories.education_group import EducationGroupFactory
 from base.tests.factories.education_group_year import EducationGroupYearFactory
-from base.tests.factories.offer import OfferFactory
 from base.tests.factories.offer_enrollment import OfferEnrollmentFactory
-from base.tests.factories.offer_year import OfferYearFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from dissertation.models import dissertation
@@ -55,14 +53,8 @@ class DissertationModelTestCase(TestCase):
         a_person_student2 = PersonFactory(last_name="Robert",
                                           user=None)
         cls.student2 = StudentFactory(person=a_person_student2)
-        cls.offer1 = OfferFactory()
         cls.education_group1 = EducationGroupFactory()
         cls.current_academic_year = create_current_academic_year()
-        cls.current_offer_year = OfferYearFactory(
-            acronym="test_offer1",
-            offer=cls.offer1,
-            academic_year=cls.current_academic_year
-        )
         cls.current_education_group_year = EducationGroupYearFactory(
             education_group=cls.education_group1,
             acronym="test_offer1",
@@ -82,7 +74,6 @@ class DissertationModelTestCase(TestCase):
             academic_year=cls.academic_year2015
         )
         cls.offer_enrollment_curent_year = OfferEnrollmentFactory(
-            offer_year=cls.current_offer_year,
             student=cls.student1,
             education_group_year=cls.current_education_group_year,
             enrollment_state=offer_enrollment_state.SUBSCRIBED

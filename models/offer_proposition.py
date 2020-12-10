@@ -26,7 +26,6 @@
 from django.db import models
 from django.utils import timezone
 
-from base.models import offer
 from dissertation.models.offer_proposition_group import OfferPropositionGroup
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
