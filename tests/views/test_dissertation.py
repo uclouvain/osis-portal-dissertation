@@ -33,7 +33,6 @@ from django.urls import reverse
 from base.tests.factories.academic_year import AcademicYearFactory
 from base.tests.factories.education_group import EducationGroupFactory
 from base.tests.factories.education_group_year import EducationGroupYearFactory
-from base.tests.factories.offer import OfferFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from dissertation.forms import DissertationUpdateForm
@@ -68,7 +67,7 @@ class DissertationViewTestCase(TestCase):
             education_group=cls.education_group1,
             academic_year=cls.academic_year1
         )
-        cls.offer_proposition1 = OfferPropositionFactory(offer=cls.offer1, education_group=cls.education_group1)
+        cls.offer_proposition1 = OfferPropositionFactory(education_group=cls.education_group1)
         cls.proposition_dissertation = PropositionDissertationFactory(
             author=cls.teacher,
             creator=a_person_teacher,
