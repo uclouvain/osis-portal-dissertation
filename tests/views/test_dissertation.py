@@ -59,7 +59,6 @@ class DissertationViewTestCase(TestCase):
         another_person_student = PersonFactory(last_name="Paul")
         cls.student = StudentFactory.create(person=a_person_student)
         cls.student_with_1_dissertation = StudentFactory(person=another_person_student)
-        cls.offer1 = OfferFactory(title="test_offer1")
         cls.education_group1 = EducationGroupFactory()
         cls.academic_year1 = AcademicYearFactory()
         cls.education_group_year1 = EducationGroupYearFactory(
