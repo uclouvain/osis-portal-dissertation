@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -32,15 +32,14 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 
 class OfferPropositionAdmin(SerializableModelAdmin):
-    list_display = ('acronym', 'offer',
+    list_display = ('acronym',
                     'recent_acronym_education_group')
-    raw_id_fields = ('offer', 'education_group')
-    search_fields = ('uuid', 'acronym', 'offer_id', 'education_group_id',)
+    raw_id_fields = ('education_group')
+    search_fields = ('uuid', 'acronym', 'education_group_id',)
 
 
 class OfferProposition(SerializableModel):
     acronym = models.CharField(max_length=200)
-    offer = models.ForeignKey(offer.Offer, on_delete=models.CASCADE)
     education_group = models.OneToOneField('base.EducationGroup',
                                            null=True,
                                            blank=True,
