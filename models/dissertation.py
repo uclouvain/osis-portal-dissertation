@@ -28,7 +28,7 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from base import models as mdl
-from base.models import student, academic_year, offer_year
+from base.models import student, academic_year
 from dissertation.models import dissertation_location, proposition_dissertation
 from dissertation.models.enums.defend_periodes import DEFEND_PERIODE, DefendPeriodes
 from dissertation.models.enums.dissertation_status import DISSERTATION_STATUS, DissertationStatus
