@@ -25,10 +25,13 @@
 ##############################################################################
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import models
 from django.db.models import Sum, Case, When, Q, F, ExpressionWrapper, OuterRef, Subquery, Prefetch
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
+from django.utils.functional import cached_property
+from django.views.generic import TemplateView
 
 from base import models as mdl
 from base.models import education_group, academic_year
@@ -41,6 +44,28 @@ from dissertation.models.offer_proposition import OfferProposition
 from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.proposition_document_file import PropositionDocumentFile
 from dissertation.models.proposition_role import PropositionRole
+from dissertation.services.proposition_dissertation import PropositionDissertationService
+
+
+class PropositionDissertationListView(LoginRequiredMixin, TemplateView):
+    # TemplateView
+    template_name = "proposition_dissertations_list.html"
+
+    @cached_property
+    def person(self):
+        return self.request.user.person
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super().get_context_data(),
+            'date_now': timezone.now().date(),
+            'propositions_dissertations': self.get_propositions_dissertations()
+        }
+
+    def get_propositions_dissertations(self):
+        return PropositionDissertationService.search('', self.person)
+
+
 
 
 @login_required

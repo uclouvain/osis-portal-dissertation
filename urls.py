@@ -29,6 +29,7 @@ from django.conf.urls import url
 from dissertation.views import common, dissertation, proposition_dissertation, \
     upload_dissertation_file, upload_proposition_file
 from dissertation.views.dissertation import AdviserAutocomplete
+from dissertation.views.proposition_dissertation import PropositionDissertationListView
 from dissertation.views.upload_dissertation_file import DeleteDissertationFileView
 
 urlpatterns = [
@@ -59,8 +60,7 @@ urlpatterns = [
     url(r'^dissertation_back_to_draft/(?P<pk>[0-9]+)$', dissertation.dissertation_back_to_draft,
         name='dissertation_back_to_draft'),
 
-    url(r'^proposition_dissertations/$', proposition_dissertation.proposition_dissertations,
-        name='proposition_dissertations'),
+    url(r'^proposition_dissertations/$', PropositionDissertationListView.as_view(), name='proposition_dissertations'),
     url(r'^proposition_dissertation_detail/(?P<pk>[0-9]+)/$', proposition_dissertation.proposition_dissertation_detail,
         name='proposition_dissertation_detail'),
     url(r'^proposition_dissertations_search$', proposition_dissertation.proposition_dissertations_search,
