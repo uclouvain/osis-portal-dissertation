@@ -28,44 +28,53 @@
 
 {% block content %}
     <ol class="breadcrumb">
-        <li><a href="{% url 'dissertation' %}" id="lnk_home_osis"><span class="glyphicon glyphicon-home"
-                                                                        aria-hidden="true"></span></a></li>
-        <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
+        <li>
+            <a href="{% url 'dissertation' %}" id="lnk_home_osis">
+                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'dissertations' %}" id="lnk_dissertations">
+                {% trans 'Dissertations' %}
+            </a>
+        </li>
         <li class="active">{{ dissertation.title|truncatechars:24 }}</li>
     </ol>
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#">{% trans 'Main' %}</a></li>
+        <li class="active">
+            <a href="#">{% trans 'Main' %}</a>
+        </li>
         <li>
-            <a href="{% url 'dissertation_history' pk=dissertation.pk %}">
+            <a href="{% url 'dissertation_history' uuid=dissertation.uuid %}">
                 {% trans 'Dissertation updates' %}
             </a>
         </li>
         {% if dissertation.status == 'DRAFT' or dissertation.status == 'DIR_KO' %}
             <a class="btn btn-default btn-warning pull-right"
-               href="{% url 'dissertation_delete' pk=dissertation.pk %}"
+               href="{% url 'dissertation_delete' uuid=dissertation.uuid %}"
                onclick="return confirm('{% trans 'Confirm dissertation' %}')"
                title="{% trans 'Defend year' %}">
-                <span class="glyphicon glyphicon-remove"></span></a>
-            <a class="btn btn-default btn-primary pull-right " href="{% url 'dissertation_edit' pk=dissertation.pk %}"
+                <span class="glyphicon glyphicon-remove"></span>
+            </a>
+            <a class="btn btn-default btn-primary pull-right " href="{% url 'dissertation_edit' uuid=dissertation.uuid %}"
                style="margin-right: 5px;" title="{% trans 'Edit' %}">
-                <span class="glyphicon glyphicon-edit"></span></a>
-            {% elif check_edit == True %}
+                <span class="glyphicon glyphicon-edit"></span>
+            </a>
+        {% elif check_edit == True %}
             <a class="btn btn-default btn-primary pull-right"
-               href="{% url 'dissertation_edit' pk=dissertation.pk %}"
+               href="{% url 'dissertation_edit' uuid=dissertation.uuid %}"
                style="margin-right: 5px;"
                title="{% trans 'Edit' %}">
                 <span class="glyphicon glyphicon-edit"></span></a>
         {% endif %}
     </ul>
-    <input type="hidden" value="{{ dissertation.pk | default_if_none:''}}" id="hdn_current_dissertation_id"
-           name="dissertation_id" title="dissertation_id">
     <div class="panel panel-default">
-    <div class="panel-body">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">{% trans 'Dissertation informations' %}</h3>
-            </div>
-            <div class="panel-body">
+        <div class="panel-body">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{% trans 'Dissertation informations' %}</h3>
+                </div>
+                <div class="panel-body">
                 <div class="row">
                     <div class="col-md-4" style="text-align: right">
                         <label>{% trans 'Author' %}</label>
@@ -86,15 +95,15 @@
                     <div class="col-md-4" style="text-align:right">
                         <label>{% trans 'file' %}</label>
                     </div>
-                    {% if filename != "" %}
+                    {% if dissertation.link.document_url %}
                         <div class="col-md-5">
-                            <a href="{% url 'dissertation_download' pk=dissertation.pk %}"
+                            <a href="{{ dissertation.link.document_url }}"
                                title="{% trans 'Download' %}">
                                 <em class="fa fa-file"> {{ filename }}</em>
                             </a>
-                            <a data-url="{% url 'dissertation_file_delete' dissertation_pk=dissertation.pk %}"
+                            <a data-url="{{ dissertation.link.delete_document_url }}"
                                class="btn btn-warning btn-xs trigger_modal" role="button">
-                             <span class="fa fa-times">
+                                <span class="fa fa-times">
                              </span>
                             </a>
                         </div>
@@ -156,7 +165,7 @@
                     {% else %}
                         <span class="label label-default">
                     {% endif %}
-                    {{ dissertation.get_status_display }}
+                    {{ dissertation.status_text }}
                     </span>
                 </div>
                 </div>
@@ -173,7 +182,7 @@
                         <label>{% trans 'Defend period' %}</label>
                     </div>
                     <div class="col-md-8">
-                        {{ dissertation.get_defend_periode_display|default_if_none:_("undefined") }}
+                        {{ dissertation.defend_period_text|default_if_none:_("undefined") }}
                     </div>
                 </div>
                 <div class="row">
@@ -189,41 +198,39 @@
                         <label>{% trans 'Dissertation location' %}</label>
                     </div>
                     <div class="col-md-8">
-                        {{ dissertation.location|default_if_none:_("undefined") }}
+                        {{ dissertation.location.name|default_if_none:_("undefined") }}
                     </div>
                 </div>
                 </div>
             </div>
-            {% if jury_visibility %}
+            {% if dissertation.jury %}
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">{% trans 'Dissertation jury' %}</h3>
                     </div>
                     <div class="panel-body">
-                        {% for dissertation_role in dissertation_roles %}
+                        {% for jury_member in dissertation.jury %}
                             <div class="row" style="margin: 10px;">
-                                {% if dissertation_role.status == "READER" and manage_readers == True and dissertation.status == 'DRAFT' %}
+                                {% if jury_member.status == "READER" and manage_readers == True and dissertation.status == 'DRAFT' %}
                                     <div class="col-md-4" style="text-align: right">
-                                        <label>{{ dissertation_role.get_status_display }}</label>
+                                        <label>{{ jury_member.status_text }}</label>
                                     </div>
                                     <div class="col-md-2">
-                                        {{ dissertation_role.adviser.person.first_name }}&nbsp;
-                                        {{ dissertation_role.adviser.person.last_name }}
+                                        {{ jury_member.adviser }}&nbsp;
                                     </div>
                                     <div class="col-md-1">
                                         <a class="btn btn-warning btn-sm" style="margin-top: -7px;text-align: left"
-                                           href="{% url 'dissertation_reader_delete' pk=dissertation_role.pk %}"
+                                           href="{% url 'dissertation_reader_delete' uuid=dissertation.uuid reader_uuid=dissertation_role.uuid %}"
                                            onclick="return confirm('{% trans 'You are ready to delete this jury member. Are you sure you want to continue ?' %}')"
                                            title="{% trans 'Defend year' %}">
                                             <span class="glyphicon glyphicon-remove"></span></a>
                                     </div>
                                 {% else %}
                                     <div class="col-md-4" style="text-align: right">
-                                        <label>{{ dissertation_role.get_status_display }}</label>
+                                        <label>{{ dissertation_role.status_text }}</label>
                                     </div>
                                     <div class="col-md-2">
-                                        {{ dissertation_role.adviser.person.first_name }}&nbsp;
-                                        {{ dissertation_role.adviser.person.last_name }}
+                                         {{ jury_member.adviser }}&nbsp;
                                     </div>
                                 {% endif %}
                             </div>
@@ -231,7 +238,7 @@
                         {% if count_dissertation_role < 4 and count_reader < 2 and manage_readers == True %}
                             <div class="row">
                                 <div class="col-md-2 pull-right">
-                                    <a data-url="{% url 'add_reader' pk=dissertation.pk %}"
+                                    <a data-url="{% url 'add_reader' uuid=dissertation.uuid %}"
                                        id="lnk_add_reader" data-modal_class="modal-lg"
                                        class="btn btn-default btn-sm trigger_modal"
                                        role="button" title="{% trans 'Add a reader' %}"><span
@@ -253,7 +260,8 @@
                             <label>{% trans 'Promoter' %}</label>
                         </div>
                         <div class="col-md-8">
-                            {{ dissertation.proposition_dissertation.author }}
+                            {{ proposition_dissertation.author.first_name }}
+                            {{ proposition_dissertation.author.last_name }}
                         </div>
                     </div>
                     <div class="row">
@@ -261,7 +269,7 @@
                             <label>{% trans 'Title' %}</label>
                         </div>
                         <div class="col-md-8">
-                            {{ dissertation.proposition_dissertation.title }}
+                            {{ proposition_dissertation.title }}
                         </div>
                     </div>
                     <div class="row">
@@ -269,8 +277,8 @@
                             <label>{% trans 'Offers' %}</label>
                         </div>
                         <div class="col-md-8">
-                            {% for offer_proposition in offer_propositions %}
-                                <span class="label label-default">{{ offer_proposition.last_acronym }}</span>
+                            {% for offer in proposition_dissertation.offers %}
+                                <span class="label label-default">{{ offer }}</span>
                             {% endfor %}
                         </div>
                     </div>
@@ -279,7 +287,7 @@
                             <label>{% trans 'Level' %}</label>
                         </div>
                         <div class="col-md-8" style="text-align: justify">
-                            {{ dissertation.proposition_dissertation.get_level_display }}
+                            {{ proposition_dissertation.level_text }}
                         </div>
                     </div>
                     <div class="row">
@@ -287,7 +295,7 @@
                             <label>{% trans 'Type' %}</label>
                         </div>
                         <div class="col-md-8" style="text-align: justify">
-                            {{ dissertation.proposition_dissertation.get_type_display }}
+                            {{ proposition_dissertation.type_text }}
                         </div>
                     </div>
                     <div class="row">
@@ -295,7 +303,7 @@
                             <label>{% trans 'Description' %}</label>
                         </div>
                         <div class="col-md-8" style="text-align: left">
-                            {{ dissertation.proposition_dissertation.description|linebreaks }}
+                            {{ proposition_dissertation.description|linebreaks }}
                         </div>
                     </div>
                 </div>
@@ -305,28 +313,34 @@
                     {% if dissertation.status == 'DRAFT' or dissertation.status == 'DIR_KO' %}
                         {% if count == 0 %}
                             <a href="{% url 'dissertation_to_dir_submit' pk=dissertation.pk %}"
-                               id="dissertation_to_dir_submit" class="btn btn-default btn-primary pull-right"
-                               role="button" title="{% trans 'Submit this dissertation project to promoter' %}"
+                               id="dissertation_to_dir_submit"
+                               class="btn btn-default btn-primary pull-right"
+                               role="button"
+                               title="{% trans 'Submit this dissertation project to promoter' %}"
                                onclick="return confirm('{% trans 'Warning : you will submit the draft memorandum to the promotor. Are you sure you want to continue ?' %}')">
                             <span class="fa fa-arrow-circle-right"
                                   aria-hidden="true"></span> {% trans 'Submit this dissertation project to promoter' %}
                             </a>
                         {% else %}
-                            <a href="{% url 'dissertation_to_dir_submit' pk=dissertation.pk %}"
-                               id="dissertation_to_dir_submit" class="btn btn-default btn-primary pull-right"
-                               role="button" disabled
+                            <a id="dissertation_to_dir_submit"
+                               class="btn btn-default btn-primary pull-right"
+                               role="button"
+                               disabled
                                title="{% trans 'You already have a dissertation submitted to promotor' %}">
-                            <span class="fa fa-arrow-circle-right"
-                                  aria-hidden="true"></span> {% trans 'Submit this dissertation project to promoter' %}
+                                <span class="fa fa-arrow-circle-right" aria-hidden="true"></span>
+                                {% trans 'Submit this dissertation project to promoter' %}
                             </a>
                         {% endif %}
                     {% elif dissertation.status == 'DIR_SUBMIT' %}
-                        <a href="{% url 'dissertation_back_to_draft' pk=dissertation.pk %}"
-                           id="dissertation_back_to_draft" class="btn btn-default btn-primary pull-right"
-                           role="button" title="{% trans 'Back to draft' %}"
+                        <a href="{% url 'dissertation_back_to_draft' uuid=dissertation.uuid %}"
+                           id="dissertation_back_to_draft"
+                           class="btn btn-default btn-primary pull-right"
+                           role="button"
+                           title="{% trans 'Back to draft' %}"
                            onclick="return confirm('{% trans 'Are you sure you want to put the dissertation back to draft ? Your promotor will receive an information e-mail.' %}')">
-                        <span class="fa fa-arrow-circle-left"
-                              aria-hidden="true"></span> {% trans 'Back to draft' %}</a>
+                            <span class="fa fa-arrow-circle-left" aria-hidden="true"></span>
+                            {% trans 'Back to draft' %}
+                        </a>
                     {% endif %}
                 </div>
             </div>

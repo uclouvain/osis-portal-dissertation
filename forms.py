@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -27,25 +27,45 @@ from dal import autocomplete
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
+from django.utils.translation import gettext_lazy as _
 
+from base.models.education_group_year import EducationGroupYear
 from dissertation.models import dissertation_role
 from dissertation.models.dissertation import Dissertation
+from dissertation.models.dissertation_location import DissertationLocation
 from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models.dissertation_update import DissertationUpdate, JUSTIFICATION_LINK
+from dissertation.models.enums import defend_periodes
 
 
-class DissertationForm(ModelForm):
-    class Meta:
-        model = Dissertation
-        fields = ('title', 'author', 'proposition_dissertation', 'description', 'defend_year',
-                  'defend_periode', 'location', 'education_group_year')
-        widgets = {'author': forms.HiddenInput()}
+class CreateDissertationForm(forms.Form):
+    title = forms.CharField(label=_('Title'))
+    description = forms.CharField(label=_('Description'), required=False)
+    defend_year = forms.IntegerField(label=_('Defense year'))
+    defend_period = forms.ChoiceField(label=_('Defense period'), choices=defend_periodes.DEFEND_PERIODE)
+    location = forms.ModelChoiceField(label=_('Dissertation location'), queryset=DissertationLocation.objects.all())
+    education_group_year = forms.ModelChoiceField(label=_('Offers'), queryset=EducationGroupYear.objects.all())
+    proposition_dissertation = forms.CharField(label=_('Dissertation subject'), disabled=True, required=False)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, student, proposition_dissertation, **kwargs):
+        self.student = student
         super().__init__(*args, **kwargs)
-        if "proposition_dissertation" in self.initial:
-            self.fields['proposition_dissertation'].disabled = True
-            self.fields['proposition_dissertation'].required = False
+
+        # TODO: Make a webservice to get enrollment
+        self.fields['education_group_year'].queryset = EducationGroupYear.objects.filter(
+            offerenrollment__student=student,
+            # acronym__in=[offer for offer in proposition_dissertation.offers]
+        ).order_by(
+            "academic_year__year", "acronym"
+        )
+
+    def clean_education_group_year(self) -> str:
+        education_group_year_obj = self.cleaned_data['education_group_year']
+        return str(education_group_year_obj.uuid)
+
+    def clean_location(self) -> str:
+        location_obj = self.cleaned_data['location']
+        return str(location_obj.uuid)
 
 
 class DissertationEditForm(ModelForm):

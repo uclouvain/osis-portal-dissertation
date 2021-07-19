@@ -28,8 +28,9 @@
 
 {% block content %}
     <ol class="breadcrumb">
-        <li><a href="{% url 'dissertation' %}" id="lnk_home_osis"><span class="glyphicon glyphicon-home"
-                                                                        aria-hidden="true"></span></a></li>
+        <li><a href="{% url 'dissertation' %}" id="lnk_home_osis">
+            <span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>
+        </li>
         <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
         <li class="active">{% trans 'Dissertation creation' %}</li>
     </ol>
@@ -37,14 +38,13 @@
         <div class="panel-body">
             <form method="POST" class="post-form">
                 {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-3 col-lg-offset-3">
-                        {{ form.author }}
+                 <div class="row">
+                    <div class="col-md-12 required_field">
+                        {% bootstrap_field form.title %}
                     </div>
-                </div>
-                {% bootstrap_field form.title %}
+                 </div>
                 <div class="row">
-                    <div class="col-md-6" {% if form.education_group_year.errors %} style="color:red;" {% endif %}>
+                    <div class="col-md-6 required_field" {% if form.education_group_year.errors %} style="color:red;" {% endif %}>
                         {% bootstrap_field form.education_group_year %}
                     </div>
                     <div class="col-md-6">
@@ -52,21 +52,31 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
-                        {% bootstrap_field form.defend_periode %}
+                    <div class="col-md-6 required_field">
+                        {% bootstrap_field form.defend_period %}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 required_field">
                         {% bootstrap_field form.defend_year %}
                     </div>
                 </div>
-                {% bootstrap_field form.location %}
 
-                <div class="panel-group">
-                    {% bootstrap_field form.description %}
+                <div class="row">
+                     <div class="col-md-12 required_field">
+                          {% bootstrap_field form.location %}
+                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        {% bootstrap_field form.description %}
+                    </div>
+                </div>
+
                 <div style="text-align:right">
                     <button type="submit" class="save btn btn-primary"
-                            onclick="return confirm('{% trans 'Confirm dissertation' %}')">{% trans 'Save' %}</button>
+                            onclick="return confirm('{% trans 'Confirm dissertation' %}')">
+                        {% trans 'Save' %}
+                    </button>
                 </div>
             </form>
         </div>

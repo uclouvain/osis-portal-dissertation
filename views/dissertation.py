@@ -25,12 +25,14 @@
 ##############################################################################
 from dal import autocomplete
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.db.models import Q, Subquery, OuterRef
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView
+from django.views import View
+from django.views.generic import CreateView, TemplateView, FormView
 
 import dissertation.models.enums.defend_periodes
 import dissertation.models.enums.dissertation_status
@@ -41,8 +43,8 @@ from base.models.enums import offer_enrollment_state
 from base.models.offer_enrollment import OfferEnrollment
 from base.views import layout
 from base.views.mixin import AjaxTemplateMixin
-from dissertation.forms import DissertationForm, DissertationEditForm, DissertationRoleForm, \
-    DissertationTitleForm, DissertationUpdateForm
+from dissertation.forms import DissertationEditForm, DissertationRoleForm, \
+    DissertationTitleForm, DissertationUpdateForm, CreateDissertationForm
 from dissertation.models import dissertation, dissertation_role, dissertation_update, \
     offer_proposition, proposition_dissertation
 from dissertation.models.adviser import Adviser
@@ -50,64 +52,85 @@ from dissertation.models.dissertation import Dissertation
 from dissertation.models.dissertation_document_file import DissertationDocumentFile
 from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models.enums import dissertation_status, dissertation_role_status
-from dissertation.models.offer_proposition import OfferProposition
-from dissertation.models.proposition_dissertation import PropositionDissertation
 from dissertation.models.proposition_role import PropositionRole
-
-INVISIBLE_JUSTIFICATION_KEYWORDS = ('auto_add_jury',
-                                    'Auto add jury',
-                                    'manager_add_jury',
-                                    'Manager add jury',
-                                    'Le manager a ajouté un membre du jury',
-                                    'manager_creation_dissertation',
-                                    'manager_delete_jury',
-                                    'Manager deleted jury',
-                                    'manager_edit_dissertation',
-                                    'manager has edited the dissertation',
-                                    'manager_set_active_false',
-                                    'teacher_add_jury',
-                                    'Teacher added jury',
-                                    'teacher_delete_jury',
-                                    'Teacher deleted jury',
-                                    'teacher_set_active_false'
-
-                                    )
+from dissertation.services.dissertation import DissertationService
+from dissertation.services.proposition_dissertation import PropositionDissertationService
 
 
-@login_required
-def dissertations(request):
-    person = request.user.person
-    student = mdl.student.find_by_person(person)
-    education_groups = education_group.find_by_student_and_enrollment_states(
-        student, [offer_enrollment_state.SUBSCRIBED, offer_enrollment_state.PROVISORY])
-    offer_propositions = offer_proposition.search_by_education_groups(education_groups)
-    dissert = Dissertation.objects.filter(author=student).exclude(active=False). \
-        select_related('author__person',
-                       'proposition_dissertation',
-                       'proposition_dissertation__author__person',
-                       'author',
-                       'education_group_year',
-                       'education_group_year__academic_year')
-    date_now = timezone.now().date()
-    visibility = False
-    for offer_pro in offer_propositions:
-        if offer_pro.start_visibility_dissertation <= date_now <= offer_pro.end_visibility_dissertation:
-            visibility = True
-    return render(request, 'dissertations_list.html', {
-        'date_now': date_now,
-        'dissertations': dissert,
-        'student': student,
-        'visibility': visibility
-    })
+class DissertationListView(LoginRequiredMixin, TemplateView):
+    # TemplateView
+    template_name = "dissertations_list.html"
+
+    @cached_property
+    def person(self):
+        return self.request.user.person
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super().get_context_data(),
+            'dissertations': self.get_dissertations(),
+        }
+
+    def get_dissertations(self):
+        search_term = self.request.GET.get('search', '')
+        return DissertationService.search(search_term, self.person)
 
 
-@login_required
-def dissertation_delete(request, pk):
-    memory = get_object_or_404(dissertation.Dissertation, pk=pk)
-    if memory.author_is_logged_student(request):
-        memory.deactivate()
-        dissertation_update.add(request, memory, memory.status, justification="Student set dissertation inactive")
-    return redirect('dissertations')
+class DissertationDetailView(LoginRequiredMixin, TemplateView):
+    # TemplateView
+    template_name = "dissertation_detail.html"
+
+    @cached_property
+    def person(self):
+        return self.request.user.person
+
+    @cached_property
+    def dissertation(self):
+        return DissertationService.get(self.kwargs['uuid'], self.person)
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super().get_context_data(),
+            'dissertation': self.dissertation,
+            'proposition_dissertation': self.get_proposition_dissertation()
+        }
+
+    def get_proposition_dissertation(self):
+        proposition_dissertation_uuid = self.dissertation['proposition_uuid']
+        return PropositionDissertationService.get(proposition_dissertation_uuid, self.person)
+
+
+class DissertationHistoryView(LoginRequiredMixin, TemplateView):
+    # TemplateView
+    template_name = "dissertation_history.html"
+
+    @cached_property
+    def person(self):
+        return self.request.user.person
+
+    @cached_property
+    def dissertation(self):
+        return DissertationService.get(self.kwargs['uuid'], self.person)
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super().get_context_data(),
+            'dissertation': self.dissertation,
+            'dissertation_history': self.get_dissertation_history()
+        }
+
+    def get_dissertation_history(self):
+        return DissertationService.history(self.kwargs['uuid'], self.person)
+
+
+class DissertationDeleteView(LoginRequiredMixin, View):
+    @cached_property
+    def person(self):
+        return self.request.user.person
+
+    def post(self):
+        DissertationService.deactivate(self.kwargs['uuid'], self.person)
+        return redirect('dissertations')
 
 
 @login_required
@@ -255,23 +278,6 @@ def build_justification_with_title(dissert, titre_original):
     )
 
 
-@login_required
-def dissertation_history(request, pk):
-    dissert = get_object_or_404(Dissertation.objects.select_related('author', )
-                                .prefetch_related('dissertation_updates', 'dissertation_updates__person'), pk=pk)
-    if dissert.author_is_logged_student(request):
-        dissertation_updates = dissert.dissertation_updates.all().prefetch_related('person')
-        for keyword in INVISIBLE_JUSTIFICATION_KEYWORDS:
-            dissertation_updates = dissertation_updates.exclude(justification__contains=keyword)
-        return render(request, 'dissertation_history.html',
-                      {
-                          'dissertation': dissert,
-                          'dissertation_updates': dissertation_updates
-                      })
-    else:
-        return redirect('dissertations')
-
-
 class DissertationJuryNewView(AjaxTemplateMixin, UserPassesTestMixin, CreateView):
     model = DissertationRole
     template_name = 'dissertation_reader_edit_inner.html'
@@ -325,59 +331,68 @@ class AdviserAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 
-@login_required
-def dissertation_new(request, pk):
-    person = request.user.person
-    student = person.student_set.first()
-    this_academic_year = academic_year.starting_academic_year()
-    offer_enrollements = OfferEnrollment.objects.filter(
-        student=student,
-        education_group_year__academic_year=this_academic_year,
-        enrollment_state__in=[
-            offer_enrollment_state.SUBSCRIBED,
-            offer_enrollment_state.PROVISORY
-        ]).select_related('education_group_year', 'education_group_year__education_group')
-    offer_propositions = OfferProposition.objects.filter(
-        education_group__in=[
-            offer_enrollment.education_group_year.education_group for offer_enrollment in offer_enrollements
-        ]
-    )
-    date_now = timezone.now().date()
-    if any(o.start_visibility_dissertation <= date_now <= o.end_visibility_dissertation for o in offer_propositions):
-        initial = {
-            'active': True,
-            'author': student
-        }
-        if pk:
-            prop_diss = get_object_or_404(PropositionDissertation, pk=pk)
-            initial['proposition_dissertation'] = prop_diss.pk
-        form = DissertationForm(request.POST or None, initial=initial)
-        if form.is_valid():
-            memory = form.save()
-            dissertation_update.add(request, memory,
-                                    memory.status,
-                                    justification="Student created the dissertation : {}".format(memory.title)
-                                    )
-            return redirect('dissertation_detail', pk=memory.pk)
+# TODO : Implement check on visibility date according to offerproposition
+# offer_propositions = OfferProposition.objects.filter(
+#         education_group__in=[
+#             offer_enrollment.education_group_year.education_group for offer_enrollment in offer_enrollements
+#         ]
+#     )
+#     date_now = timezone.now().date()
+#     if any(o.start_visibility_dissertation <= date_now <= o.end_visibility_dissertation for o in offer_propositions):
+class DissertationCreateView(LoginRequiredMixin, FormView):
+    # FormView
+    form_class = CreateDissertationForm
+    template_name = "dissertation_form.html"
 
-        form.fields["education_group_year"].queryset = EducationGroupYear.objects.filter(
-            offerenrollment__student=student,
-            education_group__in=[offer_prop.education_group for offer_prop in offer_propositions]
-        ).order_by(
-            "academic_year__year", "acronym"
+    @cached_property
+    def person(self):
+        return self.request.user.person
+
+    @cached_property
+    def student(self):
+        return self.person.student_set.first()
+
+    @cached_property
+    def proposition_dissertation(self):
+        return PropositionDissertationService.get(self.kwargs['uuid'], self.person)
+
+    def form_valid(self, form):
+        uuid_dissertation = DissertationService.create(
+            proposition_dissertation_uuid=self.kwargs['uuid'],
+            title=form.cleaned_data['title'],
+            description=form.cleaned_data['description'],
+            defend_year=form.cleaned_data['defend_year'],
+            defend_period=form.cleaned_data['defend_period'],
+            location_uuid=form.cleaned_data['location'],
+            education_group_year_uuid=form.cleaned_data['education_group_year'],
+            person=self.person
+        )
+        return redirect("dissertation_detail", uuid=uuid_dissertation)
+
+    def get_form_kwargs(self):
+        return {
+            **super().get_form_kwargs(),
+            'student': self.student,
+            'proposition_dissertation': self.proposition_dissertation
+        }
+
+    def get_initial(self):
+        proposition_dissertation_str = "%s %s %s - %s" % (
+            self.proposition_dissertation.author.last_name.upper(),
+            self.proposition_dissertation.author.first_name,
+            self.proposition_dissertation.author.middle_name,
+            self.proposition_dissertation.title
         )
 
-        form.fields["proposition_dissertation"].queryset = \
-            proposition_dissertation.find_by_education_groups(
-                [offer_enroll.education_group_year.education_group for offer_enroll in offer_enrollements]
-            )
-        return render(request, 'dissertation_form.html',
-                      {
-                          'form': form,
-                          'defend_periode_choices': dissertation.DEFEND_PERIODE
-                      })
-    else:
-        return redirect('dissertations')
+        return {
+            'proposition_dissertation': proposition_dissertation_str
+        }
+
+    def get_context_data(self, **kwargs):
+        return {
+            **super().get_context_data(**kwargs),
+            'proposition_dissertation': proposition_dissertation
+        }
 
 
 @login_required
@@ -393,18 +408,6 @@ def dissertation_reader_delete(request, pk):
         return redirect('dissertation_detail', pk=dissert.pk)
     else:
         return redirect('dissertations')
-
-
-@login_required
-def dissertations_search(request):
-    person = mdl.person.find_by_user(request.user)
-    student = mdl.student.find_by_person(person)
-    memories = dissertation.search(terms=request.GET['search'], author=student)
-    return layout.render(request, "dissertations_list.html",
-                         {
-                             'student': student,
-                             'dissertations': memories
-                         })
 
 
 @login_required
