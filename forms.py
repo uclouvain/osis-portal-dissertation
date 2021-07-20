@@ -67,6 +67,24 @@ class CreateDissertationForm(forms.Form):
         location_obj = self.cleaned_data['location']
         return str(location_obj.uuid)
 
+    def clean_description(self):
+        return self.cleaned_data['description'] or ''
+
+
+class UpdateDissertationForm(forms.Form):
+    title = forms.CharField(label=_('Title'))
+    description = forms.CharField(label=_('Description'), required=False)
+    defend_year = forms.IntegerField(label=_('Defense year'))
+    defend_period = forms.ChoiceField(label=_('Defense period'), choices=defend_periodes.DEFEND_PERIODE)
+    location = forms.ModelChoiceField(label=_('Dissertation location'), queryset=DissertationLocation.objects.all())
+
+    def clean_location(self) -> str:
+        location_obj = self.cleaned_data['location']
+        return str(location_obj.uuid)
+
+    def clean_description(self):
+        return self.cleaned_data['description'] or ''
+
 
 class DissertationEditForm(ModelForm):
     class Meta:

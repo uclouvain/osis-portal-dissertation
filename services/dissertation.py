@@ -71,7 +71,15 @@ class DissertationService:
             return response.dissertation_uuid
 
     @staticmethod
-    def update(uuid: str, person: Person) -> str:
+    def update(
+            uuid: str,
+            title: str,
+            description: str,
+            defend_year: int,
+            defend_period: str,
+            location_uuid: str,
+            person: Person
+    ) -> str:
         configuration = dissertation_sdk.build_configuration(person)
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)

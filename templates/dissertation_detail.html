@@ -49,23 +49,19 @@
                 {% trans 'Dissertation updates' %}
             </a>
         </li>
-        {% if dissertation.status == 'DRAFT' or dissertation.status == 'DIR_KO' %}
-            <a class="btn btn-default btn-warning pull-right"
+        {% if can_delete_dissertation %}
+             <a class="btn btn-default btn-warning pull-right"
                href="{% url 'dissertation_delete' uuid=dissertation.uuid %}"
                onclick="return confirm('{% trans 'Confirm dissertation' %}')"
                title="{% trans 'Defend year' %}">
                 <span class="glyphicon glyphicon-remove"></span>
-            </a>
+             </a>
+        {% endif %}
+        {% if can_edit_dissertation %}
             <a class="btn btn-default btn-primary pull-right " href="{% url 'dissertation_edit' uuid=dissertation.uuid %}"
                style="margin-right: 5px;" title="{% trans 'Edit' %}">
                 <span class="glyphicon glyphicon-edit"></span>
             </a>
-        {% elif check_edit == True %}
-            <a class="btn btn-default btn-primary pull-right"
-               href="{% url 'dissertation_edit' uuid=dissertation.uuid %}"
-               style="margin-right: 5px;"
-               title="{% trans 'Edit' %}">
-                <span class="glyphicon glyphicon-edit"></span></a>
         {% endif %}
     </ul>
     <div class="panel panel-default">
@@ -80,7 +76,7 @@
                         <label>{% trans 'Author' %}</label>
                     </div>
                     <div class="col-md-8">
-                        {{ dissertation.author }}
+                        {{ dissertation.author.last_name|upper }} {{ dissertation.author.last_name }}
                     </div>
                 </div>
                 <div class="row">
@@ -211,7 +207,7 @@
                     <div class="panel-body">
                         {% for jury_member in dissertation.jury %}
                             <div class="row" style="margin: 10px;">
-                                {% if jury_member.status == "READER" and manage_readers == True and dissertation.status == 'DRAFT' %}
+                                {% if can_edit_jury_readers and jury_member.status.value == "READER" and dissertation.status.value == 'DRAFT' %}
                                     <div class="col-md-4" style="text-align: right">
                                         <label>{{ jury_member.status_text }}</label>
                                     </div>

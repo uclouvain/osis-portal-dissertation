@@ -30,7 +30,8 @@ from django.urls import path, include
 from dissertation.views import common, dissertation, proposition_dissertation, \
     upload_dissertation_file, upload_proposition_file
 from dissertation.views.dissertation import AdviserAutocomplete, DissertationCreateView, DissertationListView, \
-    DissertationJuryNewView, DissertationDeleteView, DissertationDetailView, DissertationHistoryView
+    DissertationJuryNewView, DissertationDeleteView, DissertationDetailView, DissertationHistoryView, \
+    DissertationUpdateView
 from dissertation.views.proposition_dissertation import PropositionDissertationListView, \
     PropositionDissertationDetailView
 from dissertation.views.upload_dissertation_file import DeleteDissertationFileView
@@ -43,7 +44,7 @@ urlpatterns = [
         path('<str:uuid>/', DissertationDetailView.as_view(), name='dissertation_detail'),
         path('<str:uuid>/history', DissertationHistoryView.as_view(), name='dissertation_history'),
         path('<str:uuid>/delete', DissertationDeleteView.as_view(), name='dissertation_delete'),
-        path('<str:uuid>/edit', dissertation.dissertation_edit, name='dissertation_edit'),
+        path('<str:uuid>/update', DissertationUpdateView.as_view(), name='dissertation_edit'),
         path('<str:uuid>/submit', dissertation.dissertation_to_dir_submit, name='dissertation_to_dir_submit'),
         path('<str:uuid>/back_to_draft', dissertation.dissertation_back_to_draft, name='dissertation_back_to_draft'),
         path('<str:uuid>/readers/', DissertationJuryNewView.as_view(), name='add_reader'),

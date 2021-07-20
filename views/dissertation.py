@@ -44,7 +44,7 @@ from base.models.offer_enrollment import OfferEnrollment
 from base.views import layout
 from base.views.mixin import AjaxTemplateMixin
 from dissertation.forms import DissertationEditForm, DissertationRoleForm, \
-    DissertationTitleForm, DissertationUpdateForm, CreateDissertationForm
+    DissertationTitleForm, DissertationUpdateForm, CreateDissertationForm, UpdateDissertationForm
 from dissertation.models import dissertation, dissertation_role, dissertation_update, \
     offer_proposition, proposition_dissertation
 from dissertation.models.adviser import Adviser
@@ -92,12 +92,32 @@ class DissertationDetailView(LoginRequiredMixin, TemplateView):
         return {
             **super().get_context_data(),
             'dissertation': self.dissertation,
-            'proposition_dissertation': self.get_proposition_dissertation()
+            'proposition_dissertation': self.get_proposition_dissertation(),
+            'can_delete_dissertation': self.can_delete_dissertation(),
+            'can_edit_dissertation': self.can_edit_dissertation(),
+            'can_edit_jury_readers': self.can_edit_jury_readers()
         }
 
     def get_proposition_dissertation(self):
         proposition_dissertation_uuid = self.dissertation['proposition_uuid']
         return PropositionDissertationService.get(proposition_dissertation_uuid, self.person)
+
+    def can_delete_dissertation(self) -> bool:
+        return str(self.dissertation.status) in [
+            dissertation.DissertationStatus.DRAFT.name,
+            dissertation.DissertationStatus.DIR_KO.name,
+        ]
+
+    def can_edit_dissertation(self) -> bool:
+        # TODO : periode d'edition offer_pro.start_edit_title <= timezone.now().date() <= offer_pro.end_edit_title
+        return str(self.dissertation.status) in [
+            dissertation.DissertationStatus.DRAFT.name,
+            dissertation.DissertationStatus.DIR_KO.name,
+        ]
+
+    def can_edit_jury_readers(self) -> bool:
+        # TODO: Implement can edit jury readers offer_pro.student_can_manage_readers,
+        return True
 
 
 class DissertationHistoryView(LoginRequiredMixin, TemplateView):
@@ -128,81 +148,47 @@ class DissertationDeleteView(LoginRequiredMixin, View):
     def person(self):
         return self.request.user.person
 
-    def post(self):
+    def get(self, *args, **kwargs):
+        # TODO Move to POST
         DissertationService.deactivate(self.kwargs['uuid'], self.person)
         return redirect('dissertations')
 
 
-@login_required
-def dissertation_detail(request, pk):
-    person = request.user.person
-    student = mdl.student.find_by_person(person)
-    current_ac_year = academic_year.starting_academic_year()
-    dissert = get_object_or_404(Dissertation.objects.
-                                select_related('author', 'author__person',
-                                               'proposition_dissertation__author__person', 'location').
-                                prefetch_related('dissertationrole_set', 'dissertationrole_set__adviser__person',
-                                                 'proposition_dissertation__offer_propositions'),
-                                pk=pk)
-    if dissert.author_is_logged_student(request):
-        student_offer_enrollments = OfferEnrollment.objects.filter(
-            student=student,
-            education_group_year__academic_year=current_ac_year,
-            enrollment_state__in=[
-                offer_enrollment_state.SUBSCRIBED,
-                offer_enrollment_state.PROVISORY
-            ]
-        ).values_list('id', flat=True)
-        educ_group = dissert.education_group_year.education_group
-        offer_pro = offer_proposition.get_by_education_group(educ_group)
-        offer_propositions = dissert.proposition_dissertation.offer_propositions.filter(
-            education_group__educationgroupyear__offerenrollment__id__in=student_offer_enrollments
-        ).annotate(
-            last_acronym=Subquery(
-                EducationGroupYear.objects.filter(
-                    education_group__offer_proposition=OuterRef('pk'),
-                    academic_year=current_ac_year).values('acronym')[:1]
-            )
+class DissertationUpdateView(LoginRequiredMixin, FormView):
+    # FormView
+    template_name = "dissertation_edit_form"
+
+    @cached_property
+    def person(self):
+        return self.request.user.person
+
+    @cached_property
+    def dissertation(self):
+        return DissertationService.get(self.kwargs['uuid'], self.person)
+
+    def get_form_class(self):
+        return UpdateDissertationForm
+
+    def get_initial(self):
+        return {
+            'title': self.dissertation.title,
+            'description': self.dissertation.description,
+            'defend_year': self.dissertation.defend_year,
+            'defend_period': self.dissertation.defend_period,
+            'location': self.dissertation.location,
+        }
+
+    def form_valid(self, form):
+        DissertationService.update(
+            uuid=self.kwargs['uuid'],
+            title=form.cleaned_data['title'],
+            description=form.cleaned_data['description'],
+            defend_year=form.cleaned_data['defend_year'],
+            defend_period=form.cleaned_data['defend_period'],
+            location_uuid=form.cleaned_data['location'],
+            person=self.person
         )
-        count = dissertation.count_disser_submit_by_student_in_educ_group(student, educ_group)
-
-        files = DissertationDocumentFile.objects.filter(dissertation=dissert)
-        filename = ""
-        for file in files:
-            filename = file.document_file.file_name
-
-        count_dissertation_role = dissertation_role.count_by_dissertation(dissert)
-        count_reader = dissertation_role.count_reader_by_dissertation(dissert)
-        count_proposition_role = PropositionRole.objects.filter(
-            proposition_dissertation=dissert.proposition_dissertation
-        ).count()
-        proposition_roles = PropositionRole.objects.filter(proposition_dissertation=dissert.proposition_dissertation)
-        jury_visibility = offer_pro.start_jury_visibility <= timezone.now().date() <= offer_pro.end_jury_visibility
-        check_edit = offer_pro.start_edit_title <= timezone.now().date() <= offer_pro.end_edit_title
-
-        if count_dissertation_role == 0:
-            if count_proposition_role == 0:
-                dissertation_role.add(dissertation_role_status.PROMOTEUR, dissert.proposition_dissertation.author,
-                                      dissert)
-            else:
-                for role in proposition_roles:
-                    dissertation_role.add(role.status, role.adviser, dissert)
-        dissertation_roles = dissert.dissertationrole_set.all()
-        return render(request, 'dissertation_detail.html',
-                      {
-                          'check_edit': check_edit,
-                          'count': count,
-                          'count_reader': count_reader,
-                          'count_dissertation_role': count_dissertation_role,
-                          'dissertation': dissert,
-                          'dissertation_roles': dissertation_roles,
-                          'jury_visibility': jury_visibility,
-                          'manage_readers': offer_pro.student_can_manage_readers,
-                          'filename': filename,
-                          'offer_propositions': offer_propositions
-                      })
-    else:
-        return redirect('dissertations')
+        return redirect("dissertation_detail", uuid=self.kwargs['uuid'])
 
 
 @login_required
