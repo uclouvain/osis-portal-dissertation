@@ -25,15 +25,11 @@
 ##############################################################################
 from dal import autocomplete
 from django import forms
-from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 
 from base.models.education_group_year import EducationGroupYear
-from dissertation.models import dissertation_role
-from dissertation.models.dissertation import Dissertation
 from dissertation.models.dissertation_location import DissertationLocation
-from dissertation.models.dissertation_role import DissertationRole
 from dissertation.models.dissertation_update import DissertationUpdate, JUSTIFICATION_LINK
 from dissertation.models.enums import defend_periodes
 
@@ -73,10 +69,18 @@ class CreateDissertationForm(forms.Form):
 
 class UpdateDissertationForm(forms.Form):
     title = forms.CharField(label=_('Title'))
-    description = forms.CharField(label=_('Description'), required=False)
+    description = forms.CharField(
+        label=_('Description'),
+        required=False,
+        widget=forms.Textarea
+    )
     defend_year = forms.IntegerField(label=_('Defense year'))
     defend_period = forms.ChoiceField(label=_('Defense period'), choices=defend_periodes.DEFEND_PERIODE)
-    location = forms.ModelChoiceField(label=_('Dissertation location'), queryset=DissertationLocation.objects.all())
+    location = forms.ModelChoiceField(
+        label=_('Dissertation location'),
+        queryset=DissertationLocation.objects.all(),
+        to_field_name='uuid'
+    )
 
     def clean_location(self) -> str:
         location_obj = self.cleaned_data['location']
@@ -86,36 +90,16 @@ class UpdateDissertationForm(forms.Form):
         return self.cleaned_data['description'] or ''
 
 
-class DissertationEditForm(ModelForm):
-    class Meta:
-        model = Dissertation
-        fields = ('title', 'author', 'education_group_year', 'proposition_dissertation', 'description',
-                  'defend_year', 'defend_periode', 'location')
-        widgets = {
-            'author': forms.HiddenInput(),
-            'education_group_year': forms.HiddenInput(),
-            'proposition_dissertation': forms.HiddenInput()
-        }
+class UpdateDissertationTitleForm(forms.Form):
+    title = forms.CharField(label=_('Title'))
 
 
-class DissertationRoleForm(ModelForm):
-
-    def clean(self):
-        data = self.cleaned_data
-        if dissertation_role.count_by_status_student_dissertation(data['status'],
-                                                                  data['adviser'],
-                                                                  data['dissertation']):
-            raise ValidationError('This reader has already been added')
-        return super().clean()
-
-    class Meta:
-        model = DissertationRole
-        fields = ('dissertation', 'status', 'adviser')
-        widgets = {
-            'dissertation': forms.HiddenInput(),
-            'status': forms.HiddenInput(),
-            'adviser': autocomplete.ModelSelect2(url='adviser-autocomplete', )
-        }
+class DissertationJuryAddForm(forms.Form):
+    adviser = autocomplete.Select2ListCreateChoiceField(
+        widget=autocomplete.ListSelect2(url='adviser-autocomplete'),
+        required=True,
+        label=_("Reader")
+    )
 
     class Media:
         css = {
@@ -123,10 +107,11 @@ class DissertationRoleForm(ModelForm):
         }
 
 
-class DissertationTitleForm(ModelForm):
-    class Meta:
-        model = Dissertation
-        fields = ('title',)
+class DissertationJustificationForm(forms.Form):
+    justification = forms.CharField(required=False, widget=forms.Textarea)
+
+    def clean_justification(self):
+        return self.cleaned_data['justification'] or ''
 
 
 class DissertationUpdateForm(ModelForm):

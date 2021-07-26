@@ -28,6 +28,8 @@ import logging
 from django.conf import settings
 from osis_dissertation_sdk.model.defend_period_enum import DefendPeriodEnum
 from osis_dissertation_sdk.model.dissertation_create_command import DissertationCreateCommand
+from osis_dissertation_sdk.model.dissertation_jury_add_command import DissertationJuryAddCommand
+from osis_dissertation_sdk.model.dissertation_update_command import DissertationUpdateCommand
 
 from frontoffice.settings.osis_sdk import dissertation as dissertation_sdk
 
@@ -79,11 +81,22 @@ class DissertationService:
             defend_period: str,
             location_uuid: str,
             person: Person
-    ) -> str:
+    ) -> None:
         configuration = dissertation_sdk.build_configuration(person)
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
-
+            cmd = DissertationUpdateCommand(
+                title=title,
+                description=description,
+                defend_year=defend_year,
+                defend_period=DefendPeriodEnum(defend_period),
+                location_uuid=location_uuid,
+            )
+            api_instance.dissertation_update(
+                uuid=uuid,
+                dissertation_update_command=cmd,
+                accept_language=person.language,
+            )
 
     @staticmethod
     def search(term: str, person: Person) -> str:
@@ -120,6 +133,18 @@ class DissertationService:
             )
 
     @staticmethod
+    def submit(uuid: str, justification: str, person: Person):
+        configuration = dissertation_sdk.build_configuration(person)
+        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+            api_instance = dissertation_api.DissertationApi(api_client)
+
+    @staticmethod
+    def back_to_draft(uuid: str, justification: str, person: Person):
+        configuration = dissertation_sdk.build_configuration(person)
+        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+            api_instance = dissertation_api.DissertationApi(api_client)
+
+    @staticmethod
     def history(uuid: str, person: Person):
         # TODO Implement pagination if usefull
         configuration = dissertation_sdk.build_configuration(person)
@@ -130,3 +155,26 @@ class DissertationService:
                 accept_language=person.language
             )
             return getattr(response, 'results', [])
+
+    @staticmethod
+    def delete_jury_member(uuid: str, uuid_jury_member: str, person: Person):
+        configuration = dissertation_sdk.build_configuration(person)
+        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+            api_instance = dissertation_api.DissertationApi(api_client)
+            api_instance.dissertation_deletejurymember(
+                uuid=uuid,
+                uuid_jury_member=uuid_jury_member,
+                accept_language=person.language
+            )
+
+    @staticmethod
+    def add_jury_member(uuid: str, adviser_uuid: str,  person: Person):
+        configuration = dissertation_sdk.build_configuration(person)
+        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+            api_instance = dissertation_api.DissertationApi(api_client)
+            cmd = DissertationJuryAddCommand(adviser_uuid=adviser_uuid)
+            api_instance.dissertation_addjurymember(
+                uuid=uuid,
+                dissertation_jury_add_command=cmd,
+                accept_language=person.language
+            )

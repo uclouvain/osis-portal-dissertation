@@ -27,11 +27,11 @@
 from django.conf.urls import url
 from django.urls import path, include
 
-from dissertation.views import common, dissertation, proposition_dissertation, \
-    upload_dissertation_file, upload_proposition_file
+from dissertation.views import common, dissertation, upload_dissertation_file, upload_proposition_file
 from dissertation.views.dissertation import AdviserAutocomplete, DissertationCreateView, DissertationListView, \
-    DissertationJuryNewView, DissertationDeleteView, DissertationDetailView, DissertationHistoryView, \
-    DissertationUpdateView
+    DissertationDeleteView, DissertationDetailView, DissertationHistoryView, \
+    DissertationUpdateView, DissertationJuryDeleteView, DissertationJuryAddView, DissertationSubmitView, \
+    DissertationBackToDraftView
 from dissertation.views.proposition_dissertation import PropositionDissertationListView, \
     PropositionDissertationDetailView
 from dissertation.views.upload_dissertation_file import DeleteDissertationFileView
@@ -45,21 +45,18 @@ urlpatterns = [
         path('<str:uuid>/history', DissertationHistoryView.as_view(), name='dissertation_history'),
         path('<str:uuid>/delete', DissertationDeleteView.as_view(), name='dissertation_delete'),
         path('<str:uuid>/update', DissertationUpdateView.as_view(), name='dissertation_edit'),
-        path('<str:uuid>/submit', dissertation.dissertation_to_dir_submit, name='dissertation_to_dir_submit'),
-        path('<str:uuid>/back_to_draft', dissertation.dissertation_back_to_draft, name='dissertation_back_to_draft'),
-        path('<str:uuid>/readers/', DissertationJuryNewView.as_view(), name='add_reader'),
+        path('<str:uuid>/submit', DissertationSubmitView.as_view(), name='dissertation_to_dir_submit'),
+        path('<str:uuid>/back_to_draft', DissertationBackToDraftView.as_view(), name='dissertation_back_to_draft'),
+        path('<str:uuid>/jury/', DissertationJuryAddView.as_view(), name='add_reader'),
         path(
-            '<str:uuid>/readers/<str:reader_uuid>/delete',
-            dissertation.dissertation_reader_delete,
-            name='dissertation_reader_delete',
+            '<str:uuid>/jury/<str:uuid_jury_member>/delete',
+            DissertationJuryDeleteView.as_view(),
+            name='dissertation_jury_delete',
         ),
-
     ]))),
 
     url(r'^adviser-autocomplete/$', AdviserAutocomplete.as_view(),
         name='adviser-autocomplete'),
-    # url(r'^dissertation_new/(?:(?P<pk>[0-9]+)/)?$', dissertation.dissertation_new,
-    #     name='dissertation_new'),
     path('proposition_dissertations/', include(([
         path('', PropositionDissertationListView.as_view(), name='proposition_dissertations'),
         path('<str:uuid>/', PropositionDissertationDetailView.as_view(), name='proposition_dissertation_detail'),
