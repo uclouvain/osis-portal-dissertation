@@ -18,7 +18,7 @@ msgstr ""
 
 #, python-format
 msgid "%%"
-msgstr ""
+msgstr "%%"
 
 msgid "(filtered from _MAX_ total entries)"
 msgstr "(filtered from _MAX_ total entries)"
