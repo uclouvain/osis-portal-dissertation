@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-06 18:07+0100\n"
+"POT-Creation-Date: 2021-10-29 10:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,10 +18,10 @@ msgstr ""
 
 #, python-format
 msgid "%%"
-msgstr ""
+msgstr "%%"
 
 msgid "(filtered from _MAX_ total entries)"
-msgstr ""
+msgstr "(filtered from _MAX_ total entries)"
 
 msgid ": activate to sort column ascending"
 msgstr "Activer pour trier la colonne par ordre croissant"
@@ -97,7 +97,7 @@ msgid "Current status"
 msgstr "Statut actuel"
 
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 msgid "Defend period"
 msgstr "Période de défense"
@@ -373,7 +373,7 @@ msgid "comment"
 msgstr "Commentaire"
 
 msgid "datatable_infopostfix"
-msgstr ""
+msgstr "datatable_infopostfix"
 
 msgid "empirical research"
 msgstr "Recherche empirique"
@@ -394,7 +394,7 @@ msgid "mail"
 msgstr "e-mail"
 
 msgid "mobile"
-msgstr ""
+msgstr "mobile"
 
 msgid "new title"
 msgstr "nouveau titre"
