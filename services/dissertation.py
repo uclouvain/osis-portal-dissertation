@@ -69,7 +69,6 @@ class DissertationService:
             )
             response = api_instance.dissertation_create(
                 dissertation_create_command=cmd,
-                accept_language=person.language,
                 **build_mandatory_auth_headers(person),
             )
             return response.dissertation_uuid
@@ -97,7 +96,6 @@ class DissertationService:
             api_instance.dissertation_update(
                 uuid=uuid,
                 dissertation_update_command=cmd,
-                accept_language=person.language,
                 **build_mandatory_auth_headers(person),
             )
 
@@ -111,7 +109,6 @@ class DissertationService:
                 limit=100,
                 offset=0,
                 search=term,
-                accept_language=person.language,
                 **build_mandatory_auth_headers(person),
             )
             return getattr(response, 'results', [])
@@ -123,7 +120,6 @@ class DissertationService:
             api_instance = dissertation_api.DissertationApi(api_client)
             return api_instance.dissertation_detail(
                 uuid=uuid,
-                accept_language=person.language,
                 **build_mandatory_auth_headers(person),
             )
 
@@ -134,7 +130,6 @@ class DissertationService:
             api_instance = dissertation_api.DissertationApi(api_client)
             api_instance.dissertation_deactivate(
                 uuid=uuid,
-                accept_language=person.language,
                 **build_mandatory_auth_headers(person),
             )
 
@@ -145,7 +140,6 @@ class DissertationService:
             api_instance = dissertation_api.DissertationApi(api_client)
             api_instance.dissertation_submit(
                 uuid=uuid,
-                accept_language=person.language,
                 **build_mandatory_auth_headers(person),
             )
 
@@ -163,7 +157,6 @@ class DissertationService:
             api_instance = dissertation_api.DissertationApi(api_client)
             response = api_instance.dissertation_history(
                 uuid=uuid,
-                accept_language=person.language,
                 **build_mandatory_auth_headers(person),
             )
             return getattr(response, 'results', [])
@@ -176,7 +169,6 @@ class DissertationService:
             api_instance.dissertation_deletejurymember(
                 uuid=uuid,
                 uuid_jury_member=uuid_jury_member,
-                accept_language=person.language,
                 **build_mandatory_auth_headers(person),
             )
 
@@ -189,6 +181,5 @@ class DissertationService:
             api_instance.dissertation_addjurymember(
                 uuid=uuid,
                 dissertation_jury_add_command=cmd,
-                accept_language=person.language,
                 **build_mandatory_auth_headers(person),
             )
