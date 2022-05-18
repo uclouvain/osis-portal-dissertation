@@ -38,6 +38,7 @@ from base.models.person import Person
 import osis_dissertation_sdk
 from osis_dissertation_sdk.api import dissertation_api
 
+from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
@@ -54,7 +55,7 @@ class DissertationService:
             education_group_year_uuid: str,
             person: Person
     ) -> str:
-        configuration = dissertation_sdk.build_configuration(person)
+        configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             cmd = DissertationCreateCommand(
@@ -69,6 +70,7 @@ class DissertationService:
             response = api_instance.dissertation_create(
                 dissertation_create_command=cmd,
                 accept_language=person.language,
+                **build_mandatory_auth_headers(person),
             )
             return response.dissertation_uuid
 
@@ -82,7 +84,7 @@ class DissertationService:
             location_uuid: str,
             person: Person
     ) -> None:
-        configuration = dissertation_sdk.build_configuration(person)
+        configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             cmd = DissertationUpdateCommand(
@@ -96,85 +98,97 @@ class DissertationService:
                 uuid=uuid,
                 dissertation_update_command=cmd,
                 accept_language=person.language,
+                **build_mandatory_auth_headers(person),
             )
 
     @staticmethod
     def search(term: str, person: Person) -> str:
         # TODO Implement pagination if usefull
-        configuration = dissertation_sdk.build_configuration(person)
+        configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             response = api_instance.dissertation_list(
                 limit=100,
                 offset=0,
                 search=term,
-                accept_language=person.language
+                accept_language=person.language,
+                **build_mandatory_auth_headers(person),
             )
             return getattr(response, 'results', [])
 
     @staticmethod
     def get(uuid: str, person: Person):
-        configuration = dissertation_sdk.build_configuration(person)
+        configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             return api_instance.dissertation_detail(
                 uuid=uuid,
-                accept_language=person.language
+                accept_language=person.language,
+                **build_mandatory_auth_headers(person),
             )
 
     @staticmethod
     def deactivate(uuid: str, person: Person):
-        configuration = dissertation_sdk.build_configuration(person)
+        configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             api_instance.dissertation_deactivate(
                 uuid=uuid,
-                accept_language=person.language
+                accept_language=person.language,
+                **build_mandatory_auth_headers(person),
             )
 
     @staticmethod
     def submit(uuid: str, justification: str, person: Person):
-        configuration = dissertation_sdk.build_configuration(person)
+        configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
+            api_instance.dissertation_submit(
+                uuid=uuid,
+                accept_language=person.language,
+                **build_mandatory_auth_headers(person),
+            )
 
     @staticmethod
     def back_to_draft(uuid: str, justification: str, person: Person):
-        configuration = dissertation_sdk.build_configuration(person)
+        configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
 
     @staticmethod
     def history(uuid: str, person: Person):
         # TODO Implement pagination if usefull
-        configuration = dissertation_sdk.build_configuration(person)
+        configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             response = api_instance.dissertation_history(
                 uuid=uuid,
-                accept_language=person.language
+                accept_language=person.language,
+                **build_mandatory_auth_headers(person),
             )
             return getattr(response, 'results', [])
 
     @staticmethod
     def delete_jury_member(uuid: str, uuid_jury_member: str, person: Person):
-        configuration = dissertation_sdk.build_configuration(person)
+        configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             api_instance.dissertation_deletejurymember(
                 uuid=uuid,
                 uuid_jury_member=uuid_jury_member,
-                accept_language=person.language
+                accept_language=person.language,
+                **build_mandatory_auth_headers(person),
             )
 
     @staticmethod
     def add_jury_member(uuid: str, adviser_uuid: str,  person: Person):
-        configuration = dissertation_sdk.build_configuration(person)
+        configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             cmd = DissertationJuryAddCommand(adviser_uuid=adviser_uuid)
             api_instance.dissertation_addjurymember(
                 uuid=uuid,
                 dissertation_jury_add_command=cmd,
-                accept_language=person.language
+                accept_language=person.language,
+                **build_mandatory_auth_headers(person),
             )
