@@ -326,7 +326,7 @@ class AdviserAutocomplete(autocomplete.Select2QuerySetView):
 
 
 @login_required
-def dissertation_new(request, pk):
+def dissertation_new(request, pk=None):
     person = request.user.person
     student = person.student_set.first()
     this_academic_year = academic_year.starting_academic_year()
