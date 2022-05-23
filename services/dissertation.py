@@ -25,19 +25,18 @@
 ##############################################################################
 import logging
 
+import osis_dissertation_sdk
 from django.conf import settings
+from osis_dissertation_sdk.api import dissertation_api
 from osis_dissertation_sdk.model.defend_period_enum import DefendPeriodEnum
+from osis_dissertation_sdk.model.dissertation_back_to_draft_command import DissertationBackToDraftCommand
 from osis_dissertation_sdk.model.dissertation_create_command import DissertationCreateCommand
 from osis_dissertation_sdk.model.dissertation_jury_add_command import DissertationJuryAddCommand
+from osis_dissertation_sdk.model.dissertation_submit_command import DissertationSubmitCommand
 from osis_dissertation_sdk.model.dissertation_update_command import DissertationUpdateCommand
 
-from frontoffice.settings.osis_sdk import dissertation as dissertation_sdk
-
 from base.models.person import Person
-
-import osis_dissertation_sdk
-from osis_dissertation_sdk.api import dissertation_api
-
+from frontoffice.settings.osis_sdk import dissertation as dissertation_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
@@ -138,8 +137,12 @@ class DissertationService:
         configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
+            cmd = DissertationSubmitCommand(
+                justification=justification,
+            )
             api_instance.dissertation_submit(
                 uuid=uuid,
+                dissertation_submit_command=cmd,
                 **build_mandatory_auth_headers(person),
             )
 
@@ -148,6 +151,14 @@ class DissertationService:
         configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
+            cmd = DissertationBackToDraftCommand(
+                justification=justification,
+            )
+            api_instance.dissertation_back_to_draft(
+                uuid=uuid,
+                dissertation_back_to_draft_command=cmd,
+                **build_mandatory_auth_headers(person),
+            )
 
     @staticmethod
     def history(uuid: str, person: Person):

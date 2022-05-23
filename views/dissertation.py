@@ -362,7 +362,7 @@ class DissertationBackToDraftView(LoginRequiredMixin, FormView):
         return DissertationService.get(self.kwargs['uuid'], self.person)
 
     def form_valid(self, form):
-        DissertationService.submit(
+        DissertationService.back_to_draft(
             uuid=self.kwargs['uuid'],
             justification=form.cleaned_data['justification'],
             person=self.person

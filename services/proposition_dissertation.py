@@ -37,6 +37,7 @@ from base.models.person import Person
 import osis_dissertation_sdk
 from osis_dissertation_sdk.api import proposition_dissertation_api
 
+from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
@@ -45,21 +46,21 @@ class PropositionDissertationService:
     @staticmethod
     def search(term: str, person: Person) -> List[PropositionDissertationRow]:
         # TODO: Support pagination
-        configuration = dissertation_sdk.build_configuration(person)
+        configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = proposition_dissertation_api.PropositionDissertationApi(api_client)
             api_response = api_instance.propositions_list(
                 search=term,
-                accept_language=person.language
+                **build_mandatory_auth_headers(person),
             )
             return getattr(api_response, 'results', [])
 
     @staticmethod
     def get(uuid: str, person: Person) -> PropositionDissertationDetail:
-        configuration = dissertation_sdk.build_configuration(person)
+        configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = proposition_dissertation_api.PropositionDissertationApi(api_client)
             return api_instance.proposition_detail(
                 uuid=uuid,
-                accept_language=person.language
+                **build_mandatory_auth_headers(person),
             )
