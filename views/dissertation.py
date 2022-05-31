@@ -97,11 +97,10 @@ class DissertationDetailView(LoginRequiredMixin, TemplateView):
         ]
 
     def can_edit_dissertation(self) -> bool:
-        # TODO : periode d'edition offer_pro.start_edit_title <= timezone.now().date() <= offer_pro.end_edit_title
         return str(self.dissertation.status) in [
             dissertation.DissertationStatus.DRAFT.name,
             dissertation.DissertationStatus.DIR_KO.name,
-        ]
+        ] and DissertationService.can_edit_dissertation(self.kwargs['uuid'], self.person)
 
     def can_delete_jury_readers(self) -> bool:
         return DissertationService.can_manage_jury_member(self.kwargs['uuid'], self.person)
