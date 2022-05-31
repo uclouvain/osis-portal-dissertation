@@ -27,7 +27,7 @@
 from django.conf.urls import url
 from django.urls import path, include
 
-from dissertation.views import common, dissertation, upload_dissertation_file, upload_proposition_file
+from dissertation.views import common, upload_dissertation_file, upload_proposition_file
 from dissertation.views.dissertation import AdviserAutocomplete, DissertationCreateView, DissertationListView, \
     DissertationDeleteView, DissertationDetailView, DissertationHistoryView, \
     DissertationUpdateView, DissertationJuryDeleteView, DissertationJuryAddView, DissertationSubmitView, \

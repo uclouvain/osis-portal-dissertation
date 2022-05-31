@@ -24,19 +24,17 @@
 #
 ##############################################################################
 from dal import autocomplete
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect
 from django.utils.functional import cached_property
 from django.views import View
 from django.views.generic import TemplateView, FormView
 
 import dissertation.models.enums.defend_periodes
 import dissertation.models.enums.dissertation_status
-from base.views import layout
 from base.views.mixin import AjaxTemplateMixin
-from dissertation.forms import DissertationUpdateForm, CreateDissertationForm, UpdateDissertationForm, \
+from dissertation.forms import CreateDissertationForm, UpdateDissertationForm, \
     UpdateDissertationTitleForm, DissertationJuryAddForm, DissertationJustificationForm
 from dissertation.models import dissertation, proposition_dissertation
 from dissertation.models.adviser import Adviser
@@ -106,27 +104,17 @@ class DissertationDetailView(LoginRequiredMixin, TemplateView):
         ]
 
     def can_delete_jury_readers(self) -> bool:
-        # TODO: Implement can edit jury readers offer_pro.student_can_manage_readers && dissertation.status.value == 'DRAFT'
-        return True
+        return DissertationService.can_manage_jury_member(self.kwargs['uuid'], self.person)
 
     def can_add_jury_readers(self) -> bool:
-        # TODO count_dissertation_role < 4 and count_reader < 2 and manage_readers == True
         all_jury_readers_members = [
             jury_member for jury_member in self.dissertation.jury
             if jury_member.status.value == dissertation_role_status.READER
         ]
-        return len(self.dissertation.jury) < 4 and len(all_jury_readers_members) < 2
+        return len(self.dissertation.jury) < 4 and len(all_jury_readers_members) < 2 \
+            and DissertationService.can_manage_jury_member(self.kwargs['uuid'], self.person)
 
 
-
-# TODO : Implement check on visibility date according to offerproposition
-# offer_propositions = OfferProposition.objects.filter(
-#         education_group__in=[
-#             offer_enrollment.education_group_year.education_group for offer_enrollment in offer_enrollements
-#         ]
-#     )
-#     date_now = timezone.now().date()
-#     if any(o.start_visibility_dissertation <= date_now <= o.end_visibility_dissertation for o in offer_propositions):
 class DissertationCreateView(LoginRequiredMixin, FormView):
     # FormView
     form_class = CreateDissertationForm
@@ -375,51 +363,3 @@ class DissertationBackToDraftView(LoginRequiredMixin, FormView):
             'new_status_display': dict(dissertation_status.DISSERTATION_STATUS).get(dissertation_status.DRAFT),
             'dissertation': self.dissertation
         }
-
-
-# @login_required
-# def dissertation_to_dir_submit(request, pk):
-#     dissert = get_object_or_404(dissertation.Dissertation, pk=pk)
-#     person = request.user.person
-#     student = person.student_set.first()
-#     submitted_memories_count = dissertation.count_disser_submit_by_student_in_educ_group(
-#         student,
-#         dissert.education_group_year.education_group)
-#     if dissert.author_is_logged_student(request) and submitted_memories_count == 0:
-#         new_status = dissertation.get_next_status(dissert, "go_forward")
-#         status_dict = dict(dissertation_status.DISSERTATION_STATUS)
-#         new_status_display = status_dict.get(new_status, dissertation_status.DIR_SUBMIT)
-#
-#         form = DissertationUpdateForm(
-#             request.POST or None,
-#             dissertation=dissert,
-#             person=person,
-#             action="go_forward")
-#         if form.is_valid():
-#             form.save()
-#             return redirect('dissertation_detail', pk=pk)
-#
-#         return layout.render(request, 'dissertation_add_justification.html',
-#                              {'form': form, 'dissertation': dissert, "new_status_display": new_status_display})
-#     else:
-#         return redirect('dissertations')
-#
-#
-# @login_required
-# def dissertation_back_to_draft(request, pk):
-#     dissert = get_object_or_404(dissertation.Dissertation, pk=pk)
-#     person = request.user.person
-#     new_status = dissertation.get_next_status(dissert, "go_back")
-#     status_dict = dict(dissertation_status.DISSERTATION_STATUS)
-#     new_status_display = status_dict.get(new_status, dissertation_status.DRAFT)
-#     form = DissertationUpdateForm(
-#         request.POST or None,
-#         dissertation=dissert,
-#         person=person,
-#         action="go_back")
-#     if form.is_valid():
-#         form.save()
-#         return redirect('dissertation_detail', pk=pk)
-#
-#     return layout.render(request, 'dissertation_add_justification.html',
-#                          {'form': form, 'dissertation': dissert, "new_status_display": new_status_display})

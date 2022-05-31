@@ -45,7 +45,6 @@ logger = logging.getLogger(settings.DEFAULT_LOGGER)
 class PropositionDissertationService:
     @staticmethod
     def search(term: str, person: Person) -> List[PropositionDissertationRow]:
-        # TODO: Support pagination
         configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = proposition_dissertation_api.PropositionDissertationApi(api_client)

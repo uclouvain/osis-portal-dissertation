@@ -100,7 +100,6 @@ class DissertationService:
 
     @staticmethod
     def search(term: str, person: Person) -> str:
-        # TODO Implement pagination if usefull
         configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
@@ -162,7 +161,6 @@ class DissertationService:
 
     @staticmethod
     def history(uuid: str, person: Person):
-        # TODO Implement pagination if usefull
         configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
@@ -194,3 +192,14 @@ class DissertationService:
                 dissertation_jury_add_command=cmd,
                 **build_mandatory_auth_headers(person),
             )
+
+    @staticmethod
+    def can_manage_jury_member(uuid: str, person: Person):
+        configuration = dissertation_sdk.build_configuration()
+        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+            api_instance = dissertation_api.DissertationApi(api_client)
+            response = api_instance.dissertation_can_manage_jury_member(
+                uuid=uuid,
+                **build_mandatory_auth_headers(person),
+            )
+            return getattr(response, 'can_manage_jury', False)
