@@ -89,7 +89,7 @@ class DissertationService:
                 title=title,
                 description=description,
                 defend_year=defend_year,
-                defend_period=DefendPeriodEnum(defend_period),
+                defend_period=DefendPeriodEnum(str(defend_period)),
                 location_uuid=location_uuid,
             )
             api_instance.dissertation_update(

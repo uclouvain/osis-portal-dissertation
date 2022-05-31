@@ -100,7 +100,7 @@ class DissertationDetailView(LoginRequiredMixin, TemplateView):
         return str(self.dissertation.status) in [
             dissertation.DissertationStatus.DRAFT.name,
             dissertation.DissertationStatus.DIR_KO.name,
-        ] and DissertationService.can_edit_dissertation(self.kwargs['uuid'], self.person)
+        ] or DissertationService.can_edit_dissertation(self.kwargs['uuid'], self.person)
 
     def can_delete_jury_readers(self) -> bool:
         return DissertationService.can_manage_jury_member(self.kwargs['uuid'], self.person)
@@ -193,7 +193,6 @@ class DissertationHistoryView(LoginRequiredMixin, TemplateView):
         return DissertationService.history(self.kwargs['uuid'], self.person)
 
 
-# TODO: Implement access view if offer_pro.start_edit_title <= timezone.now().date() <= offer_pro.end_edit_title
 class DissertationUpdateView(LoginRequiredMixin, FormView):
     @cached_property
     def person(self):
