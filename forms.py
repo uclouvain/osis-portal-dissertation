@@ -32,6 +32,9 @@ from base.models.education_group_year import EducationGroupYear
 from dissertation.models.dissertation_location import DissertationLocation
 from dissertation.models.dissertation_update import DissertationUpdate, JUSTIFICATION_LINK
 from dissertation.models.enums import defend_periodes
+from dissertation.services.dissertation_location import DissertationLocationService
+
+EMPTY_CHOICE = ('', ' - ')
 
 
 class CreateDissertationForm(forms.Form):
@@ -39,7 +42,7 @@ class CreateDissertationForm(forms.Form):
     description = forms.CharField(label=_('Description'), required=False)
     defend_year = forms.IntegerField(label=_('Defense year'))
     defend_period = forms.ChoiceField(label=_('Defense period'), choices=defend_periodes.DEFEND_PERIODE)
-    location = forms.ModelChoiceField(label=_('Dissertation location'), queryset=DissertationLocation.objects.all())
+    location = forms.ChoiceField(label=_('Dissertation location'))
     education_group_year = forms.ModelChoiceField(label=_('Offers'), queryset=EducationGroupYear.objects.all())
     proposition_dissertation = forms.CharField(label=_('Dissertation subject'), disabled=True, required=False)
 
@@ -50,10 +53,16 @@ class CreateDissertationForm(forms.Form):
         # TODO: Make a webservice to get enrollment
         self.fields['education_group_year'].queryset = EducationGroupYear.objects.filter(
             offerenrollment__student=student,
-            # acronym__in=[offer for offer in proposition_dissertation.offers]
+            acronym__in=[offer for offer in proposition_dissertation.offers]
         ).order_by(
             "academic_year__year", "acronym"
         )
+        locations = DissertationLocationService.get_dissertation_locations_list(
+            person=self.student.person
+        ).results
+
+        self.fields['location'].choices = [(location['uuid'], location['name']) for location in locations]
+        self.fields['location'].choices.insert(0, EMPTY_CHOICE)
 
     def clean_education_group_year(self) -> str:
         education_group_year_obj = self.cleaned_data['education_group_year']
@@ -61,7 +70,7 @@ class CreateDissertationForm(forms.Form):
 
     def clean_location(self) -> str:
         location_obj = self.cleaned_data['location']
-        return str(location_obj.uuid)
+        return location_obj
 
     def clean_description(self):
         return self.cleaned_data['description'] or ''
