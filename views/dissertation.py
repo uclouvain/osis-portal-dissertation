@@ -217,6 +217,12 @@ class DissertationUpdateView(LoginRequiredMixin, FormView):
             'location': self.dissertation.location.uuid,
         }
 
+    def get_form_kwargs(self):
+        return {
+            **super().get_form_kwargs(),
+            'person': self.person,
+        }
+
     def form_valid(self, form):
         update_kwargs = {
             'uuid': self.kwargs['uuid'],

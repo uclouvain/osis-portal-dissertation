@@ -69,8 +69,8 @@ class CreateDissertationForm(forms.Form):
         return str(education_group_year_obj.uuid)
 
     def clean_location(self) -> str:
-        location_obj = self.cleaned_data['location']
-        return location_obj
+        location_uuid = self.cleaned_data['location']
+        return location_uuid
 
     def clean_description(self):
         return self.cleaned_data['description'] or ''
@@ -85,15 +85,18 @@ class UpdateDissertationForm(forms.Form):
     )
     defend_year = forms.IntegerField(label=_('Defense year'))
     defend_period = forms.ChoiceField(label=_('Defense period'), choices=defend_periodes.DEFEND_PERIODE)
-    location = forms.ModelChoiceField(
-        label=_('Dissertation location'),
-        queryset=DissertationLocation.objects.all(),
-        to_field_name='uuid'
-    )
+    location = forms.ChoiceField(label=_('Dissertation location'))
+
+    def __init__(self, person, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        locations = DissertationLocationService.get_dissertation_locations_list(
+            person=person
+        ).results
+        self.fields['location'].choices = [(location['uuid'], location['name']) for location in locations]
 
     def clean_location(self) -> str:
-        location_obj = self.cleaned_data['location']
-        return str(location_obj.uuid)
+        location_uuid = self.cleaned_data['location']
+        return location_uuid
 
     def clean_description(self):
         return self.cleaned_data['description'] or ''
