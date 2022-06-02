@@ -49,18 +49,18 @@ class CreateDissertationForm(forms.Form):
         self.student = student
         super().__init__(*args, **kwargs)
 
-        # TODO: Make a webservice to get enrollment
         education_group_years_list = OfferEnrollmentService.get_education_group_years_from_my_enrollments_list(
             self.student.person,
         )
-
         self.fields['education_group_year'].choices = [
             (
                 f"{education_group_year['acronym']} - {education_group_year['year']}",
                 f"{education_group_year['acronym']} - {education_group_year['year']}"
             )
             for education_group_year in education_group_years_list
+            if education_group_year['acronym'] in proposition_dissertation["offers"]
         ]
+        self.fields['education_group_year'].choices.insert(0, EMPTY_CHOICE)
 
         locations = DissertationLocationService.get_dissertation_locations_list(
             person=self.student.person
