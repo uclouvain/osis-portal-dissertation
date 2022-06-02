@@ -51,7 +51,8 @@ class DissertationService:
             defend_year: int,
             defend_period: str,
             location_uuid: str,
-            education_group_year_uuid: str,
+            acronym: str,
+            year: int,
             person: Person
     ) -> str:
         configuration = dissertation_sdk.build_configuration()
@@ -64,7 +65,8 @@ class DissertationService:
                 defend_year=defend_year,
                 defend_period=DefendPeriodEnum(defend_period),
                 location_uuid=location_uuid,
-                education_group_year_uuid=education_group_year_uuid,
+                acronym=acronym,
+                year=year,
             )
             response = api_instance.dissertation_create(
                 dissertation_create_command=cmd,

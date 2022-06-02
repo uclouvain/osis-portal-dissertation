@@ -139,7 +139,8 @@ class DissertationCreateView(LoginRequiredMixin, FormView):
             defend_year=form.cleaned_data['defend_year'],
             defend_period=form.cleaned_data['defend_period'],
             location_uuid=form.cleaned_data['location'],
-            education_group_year_uuid=form.cleaned_data['education_group_year'],
+            acronym=form.cleaned_data['acronym'],
+            year=int(form.cleaned_data['year']),
             person=self.person
         )
         return redirect("dissertation_detail", uuid=uuid_dissertation)

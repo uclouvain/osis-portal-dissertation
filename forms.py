@@ -28,11 +28,10 @@ from django import forms
 from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 
-from base.models.education_group_year import EducationGroupYear
-from dissertation.models.dissertation_location import DissertationLocation
 from dissertation.models.dissertation_update import DissertationUpdate, JUSTIFICATION_LINK
 from dissertation.models.enums import defend_periodes
 from dissertation.services.dissertation_location import DissertationLocationService
+from dissertation.services.offer_enrollment import OfferEnrollmentService, EducationGroupYear
 
 EMPTY_CHOICE = ('', ' - ')
 
@@ -43,7 +42,7 @@ class CreateDissertationForm(forms.Form):
     defend_year = forms.IntegerField(label=_('Defense year'))
     defend_period = forms.ChoiceField(label=_('Defense period'), choices=defend_periodes.DEFEND_PERIODE)
     location = forms.ChoiceField(label=_('Dissertation location'))
-    education_group_year = forms.ModelChoiceField(label=_('Offers'), queryset=EducationGroupYear.objects.all())
+    education_group_year = forms.ChoiceField(label=_('Offers'))
     proposition_dissertation = forms.CharField(label=_('Dissertation subject'), disabled=True, required=False)
 
     def __init__(self, *args, student, proposition_dissertation, **kwargs):
@@ -51,26 +50,30 @@ class CreateDissertationForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         # TODO: Make a webservice to get enrollment
-        self.fields['education_group_year'].queryset = EducationGroupYear.objects.filter(
-            offerenrollment__student=student,
-            acronym__in=[offer for offer in proposition_dissertation.offers]
-        ).order_by(
-            "academic_year__year", "acronym"
+        education_group_years_list = OfferEnrollmentService.get_education_group_years_from_my_enrollments_list(
+            self.student.person,
         )
+
+        self.fields['education_group_year'].choices = [
+            (
+                f"{education_group_year['acronym']} - {education_group_year['year']}",
+                f"{education_group_year['acronym']} - {education_group_year['year']}"
+            )
+            for education_group_year in education_group_years_list
+        ]
+
         locations = DissertationLocationService.get_dissertation_locations_list(
             person=self.student.person
         ).results
-
-        self.fields['location'].choices = [(location['uuid'], location['name']) for location in locations]
+        self.fields['location'].choices = [
+            (location['uuid'], location['name']) for location in locations
+        ]
         self.fields['location'].choices.insert(0, EMPTY_CHOICE)
 
-    def clean_education_group_year(self) -> str:
-        education_group_year_obj = self.cleaned_data['education_group_year']
-        return str(education_group_year_obj.uuid)
-
-    def clean_location(self) -> str:
-        location_uuid = self.cleaned_data['location']
-        return location_uuid
+    def clean_education_group_year(self) -> EducationGroupYear:
+        self.cleaned_data["year"] = self.cleaned_data['education_group_year'][-4:]
+        self.cleaned_data["acronym"] = self.cleaned_data['education_group_year'][:-7]
+        return self.cleaned_data['education_group_year']
 
     def clean_description(self):
         return self.cleaned_data['description'] or ''
