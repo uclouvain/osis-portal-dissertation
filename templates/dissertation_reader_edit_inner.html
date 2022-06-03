@@ -1,12 +1,13 @@
 {% load bootstrap3 i18n %}
 
+<div class="modal-header">
+    <h4 class="modal-title" id="prevent-quitting-label">{% trans "Add dissertation reader" %}</h4>
+</div>
 <div class="modal-body" id="form-modal-body">
     <form method="POST" id="form-modal" class="post-form" action="{{ request.get_full_path }}">
         {% csrf_token %}
         <div class="row">
-            <div class="col-md-12">
-                {% bootstrap_field form.adviser label_class='w-100'%}
-            </div>
+            {% bootstrap_field form.adviser form_group_class="form-group col-md-6 col-lg-push-2" %}
         </div>
     </form>
     {{ form.media }}

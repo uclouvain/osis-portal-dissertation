@@ -25,10 +25,8 @@
 ##############################################################################
 from dal import autocomplete
 from django import forms
-from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 
-from dissertation.models.dissertation_update import DissertationUpdate, JUSTIFICATION_LINK
 from dissertation.models.enums import defend_periodes
 from dissertation.services.dissertation_location import DissertationLocationService
 from dissertation.services.offer_enrollment import OfferEnrollmentService, EducationGroupYear
@@ -116,41 +114,9 @@ class DissertationJuryAddForm(forms.Form):
         label=_("Reader")
     )
 
-    class Media:
-        css = {
-            'all': ('css/select2-bootstrap.css',)
-        }
-
 
 class DissertationJustificationForm(forms.Form):
     justification = forms.CharField(required=False, widget=forms.Textarea)
 
     def clean_justification(self):
         return self.cleaned_data['justification'] or ''
-
-
-class DissertationUpdateForm(ModelForm):
-
-    def __init__(self, *args, dissertation, person, action, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.instance.dissertation = dissertation
-        self.instance.person = person
-        self.action = action
-
-    class Meta:
-        model = DissertationUpdate
-        fields = ('justification',)
-
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        instance.status_from = instance.dissertation.status
-
-        # getattr action execute go_forward or go_back
-        getattr(instance.dissertation, self.action)()
-        instance.status_to = instance.dissertation.status
-
-        if not instance.justification:
-            instance.justification = "%s%s%s" % (instance.person, JUSTIFICATION_LINK, instance.dissertation.status)
-
-        instance.save()
-        return instance

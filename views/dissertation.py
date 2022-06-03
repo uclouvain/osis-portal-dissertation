@@ -23,9 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import json
+
 from dal import autocomplete
+from django import http
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
 from django.shortcuts import redirect
 from django.utils.functional import cached_property
 from django.views import View
@@ -37,8 +39,8 @@ from base.views.mixin import AjaxTemplateMixin
 from dissertation.forms import CreateDissertationForm, UpdateDissertationForm, \
     UpdateDissertationTitleForm, DissertationJuryAddForm, DissertationJustificationForm
 from dissertation.models import dissertation, proposition_dissertation
-from dissertation.models.adviser import Adviser
 from dissertation.models.enums import dissertation_status, dissertation_role_status
+from dissertation.services.adviser import AdviserService
 from dissertation.services.dissertation import DissertationService
 from dissertation.services.proposition_dissertation import PropositionDissertationService
 
@@ -283,18 +285,21 @@ class DissertationJuryAddView(AjaxTemplateMixin, FormView):
         return redirect("dissertation_detail", uuid=self.kwargs['uuid'])
 
 
-class AdviserAutocomplete(autocomplete.Select2QuerySetView):
-    def get_result_label(self, adviser: Adviser):
-        return "{} {}, {}".format(adviser.person.last_name, adviser.person.first_name, adviser.person.email)
+class AdviserAutocomplete(autocomplete.Select2ListView):
 
-    def get_result_value(self, adviser: Adviser):
-        return adviser.uuid
+    def get_list(self):
+        advisers_list = AdviserService.search(self.q, self.request.user.person)
+        advisers_list = [{"uuid": adviser["uuid"], "name": adviser["name"]} for adviser in advisers_list]
+        return advisers_list
 
-    def get_queryset(self):
-        qs = Adviser.objects.all().select_related("person").order_by("person")
-        if self.q:
-            qs = qs.filter(Q(person__last_name__icontains=self.q) | Q(person__first_name__icontains=self.q))
-        return qs
+    def get(self, request, *args, **kwargs):
+        advisers_list = self.get_list()
+        return http.HttpResponse(json.dumps({
+            'results': [
+                {'id': adviser['uuid'], 'text': adviser['name']}
+                for adviser in advisers_list
+            ]
+        }), content_type='application/json')
 
 
 class DissertationJuryDeleteView(LoginRequiredMixin, View):
