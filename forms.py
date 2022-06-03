@@ -95,10 +95,6 @@ class UpdateDissertationForm(forms.Form):
         ).results
         self.fields['location'].choices = [(location['uuid'], location['name']) for location in locations]
 
-    def clean_location(self) -> str:
-        location_uuid = self.cleaned_data['location']
-        return location_uuid
-
     def clean_description(self):
         return self.cleaned_data['description'] or ''
 
@@ -109,7 +105,8 @@ class UpdateDissertationTitleForm(forms.Form):
 
 class DissertationJuryAddForm(forms.Form):
     adviser = autocomplete.Select2ListCreateChoiceField(
-        widget=autocomplete.ListSelect2(url='adviser-autocomplete'),
+        widget=autocomplete.ListSelect2(
+            url='adviser-autocomplete', attrs={'style': 'width:100%'}),
         required=True,
         label=_("Reader")
     )
