@@ -216,3 +216,14 @@ class DissertationService:
                 **build_mandatory_auth_headers(person),
             )
             return getattr(response, 'can_edit_dissertation', False)
+
+    @classmethod
+    def update_dissertation_file(cls, person, data, uuid=None):
+        configuration = dissertation_sdk.build_configuration()
+        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+            api_instance = dissertation_api.DissertationApi(api_client)
+            return api_instance.update_dissertation_file(
+                uuid=str(uuid),
+                dissertation_file=data,
+                **build_mandatory_auth_headers(person),
+            )

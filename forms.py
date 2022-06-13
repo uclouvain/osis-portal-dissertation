@@ -26,6 +26,7 @@
 from dal import autocomplete
 from django import forms
 from django.utils.translation import gettext_lazy as _
+from osis_document.contrib.forms import FileUploadField
 
 from dissertation.models.enums import defend_periodes
 from dissertation.services.dissertation_location import DissertationLocationService
@@ -117,3 +118,11 @@ class DissertationJustificationForm(forms.Form):
 
     def clean_justification(self):
         return self.cleaned_data['justification'] or ''
+
+
+class DissertationFileForm(forms.Form):
+    dissertation_file = FileUploadField(
+        label=_('FIFA'),
+        required=True,
+        max_files=1,
+    )

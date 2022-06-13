@@ -37,7 +37,7 @@ import dissertation.models.enums.defend_periodes
 import dissertation.models.enums.dissertation_status
 from base.views.mixin import AjaxTemplateMixin
 from dissertation.forms import CreateDissertationForm, UpdateDissertationForm, \
-    UpdateDissertationTitleForm, DissertationJuryAddForm, DissertationJustificationForm
+    UpdateDissertationTitleForm, DissertationJuryAddForm, DissertationJustificationForm, DissertationFileForm
 from dissertation.models import dissertation, proposition_dissertation
 from dissertation.models.enums import dissertation_status, dissertation_role_status
 from dissertation.services.adviser import AdviserService
@@ -81,6 +81,7 @@ class DissertationDetailView(LoginRequiredMixin, TemplateView):
             **super().get_context_data(),
             'dissertation': self.dissertation,
             'proposition_dissertation': self.get_proposition_dissertation(),
+            'dissertation_file_upload': DissertationFileForm(),
             'can_delete_dissertation': self.can_delete_dissertation(),
             'can_edit_dissertation': self.can_edit_dissertation(),
             'can_delete_jury_readers': self.can_delete_jury_readers(),

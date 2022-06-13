@@ -72,49 +72,31 @@
                 </div>
                 <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-4" style="text-align: right">
+                    <div class="col-md-3" style="text-align: right">
                         <label>{% trans 'Author' %}</label>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-9">
                         {{ dissertation.author.last_name|upper }} {{ dissertation.author.last_name }}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4" style="text-align: right">
+                    <div class="col-md-3" style="text-align: right">
                         <label>{% trans 'Dissertation' %}</label>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-9">
                         {{ dissertation.title }}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4" style="text-align:right">
-                        <label>{% trans 'file' %}</label>
+                    <div class="col-md-3" style="text-align:right">
+                        <label>{% trans 'File' %}</label>
                     </div>
-                    {% if dissertation.link.document_url %}
-                        <div class="col-md-5">
-                            <a href="{{ dissertation.link.document_url }}"
-                               title="{% trans 'Download' %}">
-                                <em class="fa fa-file"> {{ filename }}</em>
-                            </a>
-                            <a data-url="{{ dissertation.link.delete_document_url }}"
-                               class="btn btn-warning btn-xs trigger_modal" role="button">
-                                <span class="fa fa-times">
-                             </span>
-                            </a>
-                        </div>
-                    {% else %}
-                        <div class="col-md-5">
-                            <a class="btn btn-default btn-primary btn-xs" data-toggle="modal"
-                               data-target="#pnl_upload_documents"
-                               id="btn_add_file" title="{% trans 'Add file' %}">
-                                <em class="fa fa-plus"></em>
-                                {% trans 'Add file' %}
-                                <span class="fa fa-file-upload" aria-hidden="true" id="spn_add_file">
-                            </span>
-                            </a>
-                        </div>
-                    {% endif %}
+                    <div class="col-md-6">
+                        <button class="btn btn-default" data-toggle="modal" data-target="#dissertation_file_upload">
+                            <span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>
+                            {% trans "Upload your file" %}
+                        </button>
+                    </div>
                 </div>
                 {% if dissertation.status == 'DRAFT' %}
                     <div class="row alert alert-danger"
@@ -122,10 +104,10 @@
                 {% else %}
                     <div class="row">
                 {% endif %}
-                <div class="col-md-4" style="text-align: right">
+                <div class="col-md-3" style="text-align: right">
                     <label>{% trans 'Status' %}</label>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-9">
                     {% if dissertation.status == 'DRAFT' %}
                         <span class="label label-danger">
                     {% elif dissertation.status == 'DIR_SUBMIT' %}
@@ -166,34 +148,34 @@
                 </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4" style="text-align: right">
+                    <div class="col-md-3" style="text-align: right">
                         <label>{% trans 'Description' %}</label>
                     </div>
-                    <div class="col-md-8" style="text-align: justify">
+                    <div class="col-md-9" style="text-align: justify">
                         {{ dissertation.description|linebreaks }}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4" style="text-align: right">
+                    <div class="col-md-3" style="text-align: right">
                         <label>{% trans 'Defend period' %}</label>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-9">
                         {{ dissertation.defend_period_text|default_if_none:_("undefined") }}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4" style="text-align: right">
+                    <div class="col-md-3" style="text-align: right">
                         <label>{% trans 'Defend year' %}</label>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-9">
                         {{ dissertation.defend_year|default_if_none:_("undefined") }}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4" style="text-align: right">
+                    <div class="col-md-3" style="text-align: right">
                         <label>{% trans 'Dissertation location' %}</label>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-9">
                         {{ dissertation.location.name|default_if_none:_("undefined") }}
                     </div>
                 </div>
@@ -342,91 +324,6 @@
             </div>
         </div>
     </div>
-    <!-- UploadFile modal -->
-    {% include "new_document.html" %}
-{% endblock %}
-
-{% block script %}
-    <script>
-        $("#bt_upload_document").click(function (event) {
-            var target = $(event.target);
-            var id = target.attr("id");
-            var form = target.form;
-
-            var description = $("#hdn_description").val();
-            //Clear existing fields
-            $('#hdn_file_' + $("#txt_file").val()).remove();
-            $('#hdn_file_name_' + description).remove();
-            $('#hdn_file_description_' + description).remove();
-            var fileSelect = document.getElementById('txt_file');
-            var files = fileSelect.files;
-            var file = files[0];
-            var data = new FormData();
-            data.append('description', description);
-            data.append('storage_duration', 0);
-            data.append('content_type', file.type);
-            data.append('filename', $("#txt_file").val());
-            data.append('dissertation_id', $("#hdn_current_dissertation_id").val());
-
-
-            var accepted_types = ['application/csv',
-                'application/doc',
-                'application/pdf',
-                'application/xls',
-                'application/xlsx',
-                'application/xml',
-                'application/zip',
-                'image/jpeg',
-                'image/gif',
-                'image/png',
-                'text/html',
-                'text/plain'];
-            if (file) {
-                if ($.inArray(file.type, accepted_types) >= 0) {
-                    data.append('file', file);
-                    $.ajax({
-                        url: "{% url 'dissertation_save_upload' %}",
-                        enctype: 'multipart/form-data',
-                        type: 'POST',
-                        data: data,
-                        processData: false,
-                        contentType: false,
-                        complete: function (xhr, statusText) {
-                            if (xhr.status == '0') {
-                                //problem occured
-                                $('#pnl_admission_error').remove();
-                                var msg_error = jQuery('<div class="alert alert-danger" id="pnl_admission_error">' + gettext('error_occured') + '</span>');
-                                $('#pnl_admission_errors').append(msg_error);
-                                return false;
-                            }
-                            window.location.reload(true);
-                        }
-
-                    });
-                    // update_upload_btn_class(file, description);
-                    return true;
-                } else {
-                    display_existing_files(description);
-                    $("#txt_file").val('')
-                    $('#pnl_upload_error').remove();
-                    var msg_error = jQuery('<div class="alert alert-danger" id="pnl_upload_error">' + file.name + ' : ' + gettext('invalid_content_type') + ' </span>');
-                    $('#pnl_modal_upload').append(msg_error);
-                    event.preventDefault();
-                    event.stopImmediatePropagation();
-                    return false;
-                }
-            } else {
-                display_existing_files(description);
-                $("#txt_file").val('')
-                $('#pnl_upload_error').remove();
-                var msg_error = jQuery('<div class="alert alert-warning" role="alert" id="pnl_upload_error">' + gettext('select_file') + ' </div>');
-                $('#pnl_modal_upload').append(msg_error);
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                return false;
-            }
-
-
-        });
-    </script>
+    <!-- Upload file modal -->
+    {% include 'file_upload_modal.html' with form=dissertation_file_upload %}
 {% endblock %}
