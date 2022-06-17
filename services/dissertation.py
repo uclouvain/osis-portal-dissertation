@@ -184,7 +184,7 @@ class DissertationService:
             )
 
     @staticmethod
-    def add_jury_member(uuid: str, adviser_uuid: str,  person: Person):
+    def add_jury_member(uuid: str, adviser_uuid: str, person: Person):
         configuration = dissertation_sdk.build_configuration()
         with osis_dissertation_sdk.ApiClient(configuration) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
@@ -225,5 +225,15 @@ class DissertationService:
             return api_instance.update_dissertation_file(
                 uuid=str(uuid),
                 dissertation_file=data,
+                **build_mandatory_auth_headers(person),
+            )
+
+    @classmethod
+    def retrieve_dissertation_file(cls, person, uuid=None):
+        configuration = dissertation_sdk.build_configuration()
+        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+            api_instance = dissertation_api.DissertationApi(api_client)
+            return api_instance.retrieve_dissertation_file(
+                uuid=str(uuid),
                 **build_mandatory_auth_headers(person),
             )

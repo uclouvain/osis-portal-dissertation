@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
-{% load static %}
-{% load i18n %}
+{% load i18n static dissertation %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -96,6 +95,14 @@
                             <span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>
                             {% trans "Upload your file" %}
                         </button>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-3" style="text-align:right">
+                    </div>
+                    <div class="col-md-6" style="text-align:right">
+                        {% field_data "" document.dissertation_file %}
                     </div>
                 </div>
                 {% if dissertation.status == 'DRAFT' %}
@@ -327,3 +334,7 @@
     <!-- Upload file modal -->
     {% include 'file_upload_modal.html' with form=dissertation_file_upload %}
 {% endblock %}
+
+{% block script %}
+    {{ dissertation_file_upload.media }}
+{% endblock script %}

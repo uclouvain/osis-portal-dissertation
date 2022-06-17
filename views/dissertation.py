@@ -28,10 +28,13 @@ import json
 from dal import autocomplete
 from django import http
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, resolve_url
 from django.utils.functional import cached_property
 from django.views import View
 from django.views.generic import TemplateView, FormView
+from django.http import HttpResponseRedirect
+from osis_admission_sdk import ApiException
+from django.contrib import messages
 
 import dissertation.models.enums.defend_periodes
 import dissertation.models.enums.dissertation_status
@@ -43,6 +46,7 @@ from dissertation.models.enums import dissertation_status, dissertation_role_sta
 from dissertation.services.adviser import AdviserService
 from dissertation.services.dissertation import DissertationService
 from dissertation.services.proposition_dissertation import PropositionDissertationService
+from django.utils.translation import gettext as _
 
 
 class DissertationListView(LoginRequiredMixin, TemplateView):
@@ -77,17 +81,51 @@ class DissertationDetailView(LoginRequiredMixin, TemplateView):
         return DissertationService.get(self.kwargs['uuid'], self.person)
 
     def get_context_data(self, **kwargs):
+        dissertation_file = DissertationService.retrieve_dissertation_file(
+            person=self.request.user.person,
+            uuid=self.dissertation.uuid,
+        )
         return {
             **super().get_context_data(),
             'dissertation': self.dissertation,
             'proposition_dissertation': self.get_proposition_dissertation(),
-            'dissertation_file_upload': DissertationFileForm(),
+            'dissertation_file_upload': DissertationFileForm(initial=dissertation_file),
+            'document': DissertationService.retrieve_dissertation_file(
+                person=self.request.user.person,
+                uuid=self.dissertation.uuid,
+            ),
             'can_delete_dissertation': self.can_delete_dissertation(),
             'can_edit_dissertation': self.can_edit_dissertation(),
             'can_delete_jury_readers': self.can_delete_jury_readers(),
             'can_add_jury_readers': self.can_add_jury_readers(),
             'have_already_submitted_a_dissertation': False
         }
+
+    def post(self, request, *args, **kwargs):
+        dissertation_uuid = str(self.kwargs.get('uuid', ''))
+        form = DissertationFileForm(
+            data=self.request.POST,
+        )
+        if form.is_valid():
+            try:
+                DissertationService.update_dissertation_file(
+                    person=self.request.user.person,
+                    data=form.cleaned_data,
+                    uuid=dissertation_uuid,
+                )
+                return self.redirect_after_valid_form()
+
+            except ApiException:
+                messages.error(self.request, _("An error has happened when uploading the file."))
+
+        return "ERROR"
+
+    def redirect_after_valid_form(self):
+        messages.info(self.request, _('The dissertation file has correctly been updated.'))
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return resolve_url('dissertation_detail', uuid=self.kwargs.get('uuid'))
 
     def get_proposition_dissertation(self):
         proposition_dissertation_uuid = self.dissertation['proposition_uuid']

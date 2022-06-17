@@ -122,7 +122,6 @@ class DissertationJustificationForm(forms.Form):
 
 class DissertationFileForm(forms.Form):
     dissertation_file = FileUploadField(
-        label=_('FIFA'),
-        required=True,
-        max_files=1,
+        label=_('Dissertation file'),
+        required=False,
     )
