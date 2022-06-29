@@ -118,8 +118,6 @@ class DissertationDetailView(LoginRequiredMixin, TemplateView):
             except ApiException:
                 messages.error(self.request, _("An error has happened when uploading the file."))
 
-        return "ERROR"
-
     def redirect_after_valid_form(self):
         messages.info(self.request, _('The dissertation file has correctly been updated.'))
         return HttpResponseRedirect(self.get_success_url())

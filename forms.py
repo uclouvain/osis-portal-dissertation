@@ -124,4 +124,5 @@ class DissertationFileForm(forms.Form):
     dissertation_file = FileUploadField(
         label=_('Dissertation file'),
         required=False,
+        max_files=1
     )
