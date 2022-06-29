@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
-{% load static %}
-{% load i18n %}
+{% load i18n static dissertation %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -68,16 +67,13 @@
                             {{ proposition_dissertation.title }}
                         </div>
                     </div>
-                    {% if proposition_dissertation.link.document_url != "" %}
-                        <div class="row">
-                            <div class="col-md-4" style="text-align: right">
-                                <label>{% trans 'File' %}</label>
-                            </div>
-                            <div class="col-md-8">
-                                <a href="{{ proposition_dissertation.link.document_url }}">{% trans 'Link' %}</a>
-                            </div>
-                        </div>
-                    {% endif %}
+                <div class="row">
+                    <div class="col-md-3" style="text-align:right">
+                    </div>
+                    <div class="col-md-6" style="text-align:right">
+                        {% field_data "" document.dissertation_file %}
+                    </div>
+                </div>
                     <div class="row">
                         <div class="col-md-4" style="text-align: right">
                             <label>{% trans 'Description' %}</label>

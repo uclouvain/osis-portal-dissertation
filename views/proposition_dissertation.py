@@ -56,9 +56,17 @@ class PropositionDissertationDetailView(LoginRequiredMixin, TemplateView):
     def person(self):
         return self.request.user.person
 
+    @cached_property
+    def proposition_dissertation(self):
+        return PropositionDissertationService.get(self.kwargs['uuid'], self.person)
+
     def get_context_data(self, **kwargs):
         return {
             **super().get_context_data(),
+            'document': PropositionDissertationService.retrieve_proposition_dissertation_file(
+                person=self.person,
+                uuid=self.proposition_dissertation.uuid,
+            ),
             'proposition_dissertation': self.get_proposition_dissertation()
         }
 

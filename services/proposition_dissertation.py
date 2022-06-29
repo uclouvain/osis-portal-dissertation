@@ -63,3 +63,24 @@ class PropositionDissertationService:
                 uuid=uuid,
                 **build_mandatory_auth_headers(person),
             )
+
+    @classmethod
+    def update_proposition_dissertation_file(cls, person, data, uuid=None):
+        configuration = dissertation_sdk.build_configuration()
+        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+            api_instance = proposition_dissertation_api.PropositionDissertationApi(api_client)
+            return api_instance.update_proposition_dissertation_file(
+                uuid=str(uuid),
+                dissertation_file=data,
+                **build_mandatory_auth_headers(person),
+            )
+
+    @classmethod
+    def retrieve_proposition_dissertation_file(cls, person, uuid=None):
+        configuration = dissertation_sdk.build_configuration()
+        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+            api_instance = proposition_dissertation_api.PropositionDissertationApi(api_client)
+            return api_instance.retrieve_proposition_dissertation_file(
+                uuid=str(uuid),
+                **build_mandatory_auth_headers(person),
+            )

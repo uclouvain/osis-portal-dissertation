@@ -82,7 +82,7 @@ class DissertationDetailView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         dissertation_file = DissertationService.retrieve_dissertation_file(
-            person=self.request.user.person,
+            person=self.person,
             uuid=self.dissertation.uuid,
         )
         return {
