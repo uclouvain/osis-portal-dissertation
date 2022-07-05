@@ -90,10 +90,7 @@ class DissertationDetailView(LoginRequiredMixin, TemplateView):
             'dissertation': self.dissertation,
             'proposition_dissertation': self.get_proposition_dissertation(),
             'dissertation_file_upload': DissertationFileForm(initial=dissertation_file),
-            'document': DissertationService.retrieve_dissertation_file(
-                person=self.request.user.person,
-                uuid=self.dissertation.uuid,
-            ),
+            'document': dissertation_file,
             'can_delete_dissertation': self.can_delete_dissertation(),
             'can_edit_dissertation': self.can_edit_dissertation(),
             'can_delete_jury_readers': self.can_delete_jury_readers(),
