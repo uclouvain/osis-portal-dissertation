@@ -102,7 +102,7 @@
                     <div class="col-md-3" style="text-align:right">
                     </div>
                     <div class="col-md-6" style="text-align:right">
-                        {% field_data "" document.dissertation_file %}
+                        {% field_data "" dissertation_file.dissertation_file %}
                     </div>
                 </div>
                 {% if dissertation.status == 'DRAFT' %}
@@ -257,6 +257,15 @@
                             {{ proposition_dissertation.title }}
                         </div>
                     </div>
+                    {% if proposition_dissertation_file %}
+                        <div class="row">
+                            <div class="col-md-3" style="text-align:right">
+                            </div>
+                            <div class="col-md-6" style="text-align:right">
+                                {% field_data "" proposition_dissertation_file.proposition_dissertation_file %}
+                            </div>
+                        </div>
+                    {% endif %}
                     <div class="row">
                         <div class="col-md-4" style="text-align: right">
                             <label>{% trans 'Offers' %}</label>
@@ -332,9 +341,10 @@
         </div>
     </div>
     <!-- Upload file modal -->
-    {% include 'file_upload_modal.html' with form=dissertation_file_upload %}
+    {% include 'file_upload_modal.html' with form=dissertation_file_form %}
 {% endblock %}
 
 {% block script %}
-    {{ dissertation_file_upload.media }}
+    {{ dissertation_file_form.media }}
+    {{ proposition_dissertation_file_form.media }}
 {% endblock script %}

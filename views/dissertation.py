@@ -40,7 +40,8 @@ import dissertation.models.enums.defend_periodes
 import dissertation.models.enums.dissertation_status
 from base.views.mixin import AjaxTemplateMixin
 from dissertation.forms import CreateDissertationForm, UpdateDissertationForm, \
-    UpdateDissertationTitleForm, DissertationJuryAddForm, DissertationJustificationForm, DissertationFileForm
+    UpdateDissertationTitleForm, DissertationJuryAddForm, DissertationJustificationForm, DissertationFileForm, \
+    PropositionDissertationFileForm
 from dissertation.models import dissertation, proposition_dissertation
 from dissertation.models.enums import dissertation_status, dissertation_role_status
 from dissertation.services.adviser import AdviserService
@@ -85,12 +86,21 @@ class DissertationDetailView(LoginRequiredMixin, TemplateView):
             person=self.person,
             uuid=self.dissertation.uuid,
         )
+        proposition_dissertation = self.get_proposition_dissertation()
+        proposition_dissertation_file = PropositionDissertationService.retrieve_proposition_dissertation_file(
+            person=self.person,
+            uuid=proposition_dissertation.uuid,
+        )
         return {
             **super().get_context_data(),
             'dissertation': self.dissertation,
-            'proposition_dissertation': self.get_proposition_dissertation(),
-            'dissertation_file_upload': DissertationFileForm(initial=dissertation_file),
-            'document': dissertation_file,
+            'proposition_dissertation': proposition_dissertation,
+            'dissertation_file_form': DissertationFileForm(initial=dissertation_file),
+            'dissertation_file': dissertation_file,
+            'proposition_dissertation_file_form': PropositionDissertationFileForm(
+                initial=proposition_dissertation_file
+            ),
+            'proposition_dissertation_file': proposition_dissertation_file,
             'can_delete_dissertation': self.can_delete_dissertation(),
             'can_edit_dissertation': self.can_edit_dissertation(),
             'can_delete_jury_readers': self.can_delete_jury_readers(),

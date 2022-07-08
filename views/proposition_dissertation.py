@@ -27,6 +27,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.functional import cached_property
 from django.views.generic import TemplateView
 
+from dissertation.forms import PropositionDissertationFileForm
 from dissertation.services.proposition_dissertation import PropositionDissertationService
 
 
@@ -61,12 +62,16 @@ class PropositionDissertationDetailView(LoginRequiredMixin, TemplateView):
         return PropositionDissertationService.get(self.kwargs['uuid'], self.person)
 
     def get_context_data(self, **kwargs):
+        proposition_dissertation_file = PropositionDissertationService.retrieve_proposition_dissertation_file(
+            person=self.person,
+            uuid=self.proposition_dissertation.uuid,
+        )
         return {
             **super().get_context_data(),
-            'document': PropositionDissertationService.retrieve_proposition_dissertation_file(
-                person=self.person,
-                uuid=self.proposition_dissertation.uuid,
+            'proposition_dissertation_file_form': PropositionDissertationFileForm(
+                initial=proposition_dissertation_file
             ),
+            'document': proposition_dissertation_file,
             'proposition_dissertation': self.get_proposition_dissertation()
         }
 

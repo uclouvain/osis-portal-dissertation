@@ -67,13 +67,15 @@
                             {{ proposition_dissertation.title }}
                         </div>
                     </div>
-                <div class="row">
-                    <div class="col-md-3" style="text-align:right">
-                    </div>
-                    <div class="col-md-6" style="text-align:right">
-                        {% field_data "" document.dissertation_file %}
-                    </div>
-                </div>
+                    {% if document %}
+                        <div class="row">
+                            <div class="col-md-3" style="text-align:right">
+                            </div>
+                            <div class="col-md-6" style="text-align:right">
+                                {% field_data "" document.proposition_dissertation_file %}
+                            </div>
+                        </div>
+                    {% endif %}
                     <div class="row">
                         <div class="col-md-4" style="text-align: right">
                             <label>{% trans 'Description' %}</label>
@@ -241,3 +243,8 @@
         </div>
     </div>
 {% endblock %}
+
+
+{% block script %}
+    {{ proposition_dissertation_file_form.media }}
+{% endblock script %}

@@ -126,3 +126,11 @@ class DissertationFileForm(forms.Form):
         required=False,
         max_files=1
     )
+
+
+class PropositionDissertationFileForm(forms.Form):
+    proposition_dissertation_file = FileUploadField(
+        label=_('Proposition dissertation file'),
+        required=False,
+        max_files=1
+    )
