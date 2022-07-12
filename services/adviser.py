@@ -37,13 +37,13 @@ logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
 
 class AdviserService:
-    @staticmethod
-    def search(term: str, person: Person) -> str:
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+    CONFIGURATION = dissertation_sdk.build_configuration()
+
+    @classmethod
+    def search(cls, term: str, person: Person) -> str:
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = adviser_api.AdviserApi(api_client)
             response = api_instance.advisers_list(
-                limit=100,
                 offset=0,
                 search=term,
                 **build_mandatory_auth_headers(person),

@@ -26,27 +26,25 @@
 import logging
 from typing import List
 
+import osis_dissertation_sdk
 from django.conf import settings
+from osis_dissertation_sdk.api import proposition_dissertation_api
 from osis_dissertation_sdk.model.proposition_dissertation_detail import PropositionDissertationDetail
 from osis_dissertation_sdk.model.proposition_dissertation_row import PropositionDissertationRow
 
-from frontoffice.settings.osis_sdk import dissertation as dissertation_sdk
-
 from base.models.person import Person
-
-import osis_dissertation_sdk
-from osis_dissertation_sdk.api import proposition_dissertation_api
-
+from frontoffice.settings.osis_sdk import dissertation as dissertation_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 
 logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
 
 class PropositionDissertationService:
-    @staticmethod
-    def search(term: str, person: Person) -> List[PropositionDissertationRow]:
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+    CONFIGURATION = dissertation_sdk.build_configuration()
+
+    @classmethod
+    def search(cls, term: str, person: Person) -> List[PropositionDissertationRow]:
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = proposition_dissertation_api.PropositionDissertationApi(api_client)
             api_response = api_instance.propositions_list(
                 search=term,
@@ -54,10 +52,9 @@ class PropositionDissertationService:
             )
             return getattr(api_response, 'results', [])
 
-    @staticmethod
-    def get(uuid: str, person: Person) -> PropositionDissertationDetail:
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+    @classmethod
+    def get(cls, uuid: str, person: Person) -> PropositionDissertationDetail:
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = proposition_dissertation_api.PropositionDissertationApi(api_client)
             return api_instance.proposition_detail(
                 uuid=uuid,
@@ -66,8 +63,7 @@ class PropositionDissertationService:
 
     @classmethod
     def update_proposition_dissertation_file(cls, person, data, uuid=None):
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = proposition_dissertation_api.PropositionDissertationApi(api_client)
             return api_instance.update_proposition_dissertation_file(
                 uuid=str(uuid),
@@ -77,8 +73,7 @@ class PropositionDissertationService:
 
     @classmethod
     def retrieve_proposition_dissertation_file(cls, person, uuid=None):
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = proposition_dissertation_api.PropositionDissertationApi(api_client)
             return api_instance.retrieve_proposition_dissertation_file(
                 uuid=str(uuid),

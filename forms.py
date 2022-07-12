@@ -51,7 +51,7 @@ class CreateDissertationForm(forms.Form):
         education_group_years_list = OfferEnrollmentService.get_education_group_years_from_my_enrollments_list(
             self.student.person,
         )
-        self.fields['education_group_year'].choices = [
+        self.fields['education_group_year'].choices = [EMPTY_CHOICE] + [
             (
                 f"{education_group_year['acronym']} - {education_group_year['year']}",
                 f"{education_group_year['acronym']} - {education_group_year['year']}"
@@ -59,15 +59,13 @@ class CreateDissertationForm(forms.Form):
             for education_group_year in education_group_years_list
             if education_group_year['acronym'] in proposition_dissertation["offers"]
         ]
-        self.fields['education_group_year'].choices.insert(0, EMPTY_CHOICE)
 
         locations = DissertationLocationService.get_dissertation_locations_list(
             person=self.student.person
         ).results
-        self.fields['location'].choices = [
+        self.fields['location'].choices = [EMPTY_CHOICE] + [
             (location['uuid'], location['name']) for location in locations
         ]
-        self.fields['location'].choices.insert(0, EMPTY_CHOICE)
 
     def clean_education_group_year(self) -> EducationGroupYear:
         self.cleaned_data["year"] = self.cleaned_data['education_group_year'][-4:]

@@ -43,8 +43,11 @@ logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
 
 class DissertationService:
-    @staticmethod
+    CONFIGURATION = dissertation_sdk.build_configuration()
+
+    @classmethod
     def create(
+            cls,
             proposition_dissertation_uuid: str,
             title: str,
             description: str,
@@ -55,8 +58,7 @@ class DissertationService:
             year: int,
             person: Person
     ) -> str:
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             cmd = DissertationCreateCommand(
                 proposition_dissertation_uuid=proposition_dissertation_uuid,
@@ -74,8 +76,9 @@ class DissertationService:
             )
             return response.dissertation_uuid
 
-    @staticmethod
+    @classmethod
     def update(
+            cls,
             uuid: str,
             title: str,
             description: str,
@@ -84,8 +87,7 @@ class DissertationService:
             location_uuid: str,
             person: Person
     ) -> None:
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             cmd = DissertationUpdateCommand(
                 title=title,
@@ -100,10 +102,9 @@ class DissertationService:
                 **build_mandatory_auth_headers(person),
             )
 
-    @staticmethod
-    def search(term: str, person: Person) -> str:
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+    @classmethod
+    def search(cls, term: str, person: Person) -> str:
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             response = api_instance.dissertation_list(
                 limit=100,
@@ -113,30 +114,27 @@ class DissertationService:
             )
             return getattr(response, 'results', [])
 
-    @staticmethod
-    def get(uuid: str, person: Person):
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+    @classmethod
+    def get(cls, uuid: str, person: Person):
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             return api_instance.dissertation_detail(
                 uuid=uuid,
                 **build_mandatory_auth_headers(person),
             )
 
-    @staticmethod
-    def deactivate(uuid: str, person: Person):
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+    @classmethod
+    def deactivate(cls, uuid: str, person: Person):
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             api_instance.dissertation_deactivate(
                 uuid=uuid,
                 **build_mandatory_auth_headers(person),
             )
 
-    @staticmethod
-    def submit(uuid: str, justification: str, person: Person):
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+    @classmethod
+    def submit(cls, uuid: str, justification: str, person: Person):
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             cmd = DissertationSubmitCommand(
                 justification=justification,
@@ -147,10 +145,9 @@ class DissertationService:
                 **build_mandatory_auth_headers(person),
             )
 
-    @staticmethod
-    def back_to_draft(uuid: str, justification: str, person: Person):
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+    @classmethod
+    def back_to_draft(cls, uuid: str, justification: str, person: Person):
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             cmd = DissertationBackToDraftCommand(
                 justification=justification,
@@ -161,10 +158,9 @@ class DissertationService:
                 **build_mandatory_auth_headers(person),
             )
 
-    @staticmethod
-    def history(uuid: str, person: Person):
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+    @classmethod
+    def history(cls, uuid: str, person: Person):
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             response = api_instance.dissertation_history(
                 uuid=uuid,
@@ -172,10 +168,9 @@ class DissertationService:
             )
             return getattr(response, 'results', [])
 
-    @staticmethod
-    def delete_jury_member(uuid: str, uuid_jury_member: str, person: Person):
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+    @classmethod
+    def delete_jury_member(cls, uuid: str, uuid_jury_member: str, person: Person):
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             api_instance.dissertation_deletejurymember(
                 uuid=uuid,
@@ -183,10 +178,9 @@ class DissertationService:
                 **build_mandatory_auth_headers(person),
             )
 
-    @staticmethod
-    def add_jury_member(uuid: str, adviser_uuid: str, person: Person):
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+    @classmethod
+    def add_jury_member(cls, uuid: str, adviser_uuid: str, person: Person):
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             cmd = DissertationJuryAddCommand(adviser_uuid=adviser_uuid)
             api_instance.dissertation_addjurymember(
@@ -195,10 +189,9 @@ class DissertationService:
                 **build_mandatory_auth_headers(person),
             )
 
-    @staticmethod
-    def can_manage_jury_member(uuid: str, person: Person):
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+    @classmethod
+    def can_manage_jury_member(cls, uuid: str, person: Person):
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             response = api_instance.dissertation_can_manage_jury_member(
                 uuid=uuid,
@@ -206,10 +199,9 @@ class DissertationService:
             )
             return getattr(response, 'can_manage_jury_members', False)
 
-    @staticmethod
-    def can_edit_dissertation(uuid: str, person: Person):
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+    @classmethod
+    def can_edit_dissertation(cls, uuid: str, person: Person):
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             response = api_instance.dissertation_can_edit_dissertation(
                 uuid=uuid,
@@ -219,8 +211,7 @@ class DissertationService:
 
     @classmethod
     def update_dissertation_file(cls, person, data, uuid=None):
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             return api_instance.update_dissertation_file(
                 uuid=str(uuid),
@@ -230,8 +221,7 @@ class DissertationService:
 
     @classmethod
     def retrieve_dissertation_file(cls, person, uuid=None):
-        configuration = dissertation_sdk.build_configuration()
-        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = dissertation_api.DissertationApi(api_client)
             return api_instance.retrieve_dissertation_file(
                 uuid=str(uuid),
