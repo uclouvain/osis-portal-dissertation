@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load i18n static dissertation %}
+{% load i18n static osis_document %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -98,13 +98,15 @@
                     </div>
                 </div>
                 <br>
-                <div class="row">
-                    <div class="col-md-3" style="text-align:right">
+                {% if dissertation_file.dissertation_file %}
+                    <div class="row">
+                        <div class="col-md-3" style="text-align:right">
+                        </div>
+                        <div class="col-md-6" style="text-align:right">
+                            {% document_visualizer dissertation_file.dissertation_file %}
+                        </div>
                     </div>
-                    <div class="col-md-6" style="text-align:right">
-                        {% field_data "" dissertation_file.dissertation_file %}
-                    </div>
-                </div>
+                {% endif %}
                 {% if dissertation.status == 'DRAFT' %}
                     <div class="row alert alert-danger"
                          title="{% trans "Don't forget to submit your dissertation to your promoter" %}">
@@ -257,12 +259,12 @@
                             {{ proposition_dissertation.title }}
                         </div>
                     </div>
-                    {% if proposition_dissertation_file %}
+                    {% if proposition_dissertation_file.proposition_dissertation_file %}
                         <div class="row">
                             <div class="col-md-3" style="text-align:right">
                             </div>
                             <div class="col-md-6" style="text-align:right">
-                                {% field_data "" proposition_dissertation_file.proposition_dissertation_file %}
+                                {% document_visualizer proposition_dissertation_file.proposition_dissertation_file %}
                             </div>
                         </div>
                     {% endif %}
