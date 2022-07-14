@@ -38,6 +38,7 @@ from django.contrib import messages
 
 import dissertation.models.enums.defend_periodes
 import dissertation.models.enums.dissertation_status
+from base.business.student import find_by_user_and_discriminate
 from base.views.mixin import AjaxTemplateMixin
 from dissertation.forms import CreateDissertationForm, UpdateDissertationForm, \
     UpdateDissertationTitleForm, DissertationJuryAddForm, DissertationJustificationForm, DissertationFileForm, \
@@ -171,7 +172,7 @@ class DissertationCreateView(LoginRequiredMixin, FormView):
 
     @cached_property
     def student(self):
-        return self.person.student_set.first()
+        return find_by_user_and_discriminate(self.request.user)
 
     @cached_property
     def proposition_dissertation(self):
