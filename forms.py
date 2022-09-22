@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -25,94 +25,110 @@
 ##############################################################################
 from dal import autocomplete
 from django import forms
-from django.core.exceptions import ValidationError
-from django.forms import ModelForm
+from django.utils.translation import gettext_lazy as _
+from osis_document.contrib.forms import FileUploadField
 
-from dissertation.models import dissertation_role
-from dissertation.models.dissertation import Dissertation
-from dissertation.models.dissertation_role import DissertationRole
-from dissertation.models.dissertation_update import DissertationUpdate, JUSTIFICATION_LINK
+from dissertation.models.enums import defend_periodes
+from dissertation.services.dissertation_location import DissertationLocationService
+from dissertation.services.offer_enrollment import OfferEnrollmentService, EducationGroupYear
+
+EMPTY_CHOICE = ('', ' - ')
 
 
-class DissertationForm(ModelForm):
-    class Meta:
-        model = Dissertation
-        fields = ('title', 'author', 'proposition_dissertation', 'description', 'defend_year',
-                  'defend_periode', 'location', 'education_group_year')
-        widgets = {'author': forms.HiddenInput()}
+class CreateDissertationForm(forms.Form):
+    title = forms.CharField(label=_('Title'))
+    description = forms.CharField(label=_('Description'), required=False)
+    defend_year = forms.IntegerField(label=_('Defense year'))
+    defend_period = forms.ChoiceField(label=_('Defense period'), choices=defend_periodes.DEFEND_PERIODE)
+    location = forms.ChoiceField(label=_('Dissertation location'))
+    education_group_year = forms.ChoiceField(label=_('Offers'))
+    proposition_dissertation = forms.CharField(label=_('Dissertation subject'), disabled=True, required=False)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, student, proposition_dissertation, **kwargs):
+        self.student = student
         super().__init__(*args, **kwargs)
-        if "proposition_dissertation" in self.initial:
-            self.fields['proposition_dissertation'].disabled = True
-            self.fields['proposition_dissertation'].required = False
+
+        education_group_years_list = OfferEnrollmentService.get_education_group_years_from_my_enrollments_list(
+            self.student.person,
+        )
+        self.fields['education_group_year'].choices = [EMPTY_CHOICE] + [
+            (
+                f"{education_group_year['acronym']} - {education_group_year['year']}",
+                f"{education_group_year['acronym']} - {education_group_year['year']}"
+            )
+            for education_group_year in education_group_years_list
+            if education_group_year['acronym'] in proposition_dissertation["offers"]
+        ]
+
+        locations = DissertationLocationService.get_dissertation_locations_list(
+            person=self.student.person
+        ).results
+        self.fields['location'].choices = [EMPTY_CHOICE] + [
+            (location['uuid'], location['name']) for location in locations
+        ]
+
+    def clean_education_group_year(self) -> EducationGroupYear:
+        self.cleaned_data["year"] = self.cleaned_data['education_group_year'][-4:]
+        self.cleaned_data["acronym"] = self.cleaned_data['education_group_year'][:-7]
+        return self.cleaned_data['education_group_year']
+
+    def clean_description(self):
+        return self.cleaned_data['description'] or ''
 
 
-class DissertationEditForm(ModelForm):
-    class Meta:
-        model = Dissertation
-        fields = ('title', 'author', 'education_group_year', 'proposition_dissertation', 'description',
-                  'defend_year', 'defend_periode', 'location')
-        widgets = {
-            'author': forms.HiddenInput(),
-            'education_group_year': forms.HiddenInput(),
-            'proposition_dissertation': forms.HiddenInput()
-        }
+class UpdateDissertationForm(forms.Form):
+    title = forms.CharField(label=_('Title'))
+    description = forms.CharField(
+        label=_('Description'),
+        required=False,
+        widget=forms.Textarea
+    )
+    defend_year = forms.IntegerField(label=_('Defense year'))
+    defend_period = forms.ChoiceField(label=_('Defense period'), choices=defend_periodes.DEFEND_PERIODE)
+    location = forms.ChoiceField(label=_('Dissertation location'))
 
-
-class DissertationRoleForm(ModelForm):
-
-    def clean(self):
-        data = self.cleaned_data
-        if dissertation_role.count_by_status_student_dissertation(data['status'],
-                                                                  data['adviser'],
-                                                                  data['dissertation']):
-            raise ValidationError('This reader has already been added')
-        return super().clean()
-
-    class Meta:
-        model = DissertationRole
-        fields = ('dissertation', 'status', 'adviser')
-        widgets = {
-            'dissertation': forms.HiddenInput(),
-            'status': forms.HiddenInput(),
-            'adviser': autocomplete.ModelSelect2(url='adviser-autocomplete', )
-        }
-
-    class Media:
-        css = {
-            'all': ('css/select2-bootstrap.css',)
-        }
-
-
-class DissertationTitleForm(ModelForm):
-    class Meta:
-        model = Dissertation
-        fields = ('title',)
-
-
-class DissertationUpdateForm(ModelForm):
-
-    def __init__(self, *args, dissertation, person, action, **kwargs):
+    def __init__(self, person, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.instance.dissertation = dissertation
-        self.instance.person = person
-        self.action = action
+        locations = DissertationLocationService.get_dissertation_locations_list(
+            person=person
+        ).results
+        self.fields['location'].choices = [(location['uuid'], location['name']) for location in locations]
 
-    class Meta:
-        model = DissertationUpdate
-        fields = ('justification',)
+    def clean_description(self):
+        return self.cleaned_data['description'] or ''
 
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        instance.status_from = instance.dissertation.status
 
-        # getattr action execute go_forward or go_back
-        getattr(instance.dissertation, self.action)()
-        instance.status_to = instance.dissertation.status
+class UpdateDissertationTitleForm(forms.Form):
+    title = forms.CharField(label=_('Title'))
 
-        if not instance.justification:
-            instance.justification = "%s%s%s" % (instance.person, JUSTIFICATION_LINK, instance.dissertation.status)
 
-        instance.save()
-        return instance
+class DissertationJuryAddForm(forms.Form):
+    adviser = autocomplete.Select2ListCreateChoiceField(
+        widget=autocomplete.ListSelect2(
+            url='adviser-autocomplete', attrs={'style': 'width:100%'}),
+        required=True,
+        label=_("Reader")
+    )
+
+
+class DissertationJustificationForm(forms.Form):
+    justification = forms.CharField(required=False, widget=forms.Textarea)
+
+    def clean_justification(self):
+        return self.cleaned_data['justification'] or ''
+
+
+class DissertationFileForm(forms.Form):
+    dissertation_file = FileUploadField(
+        label=_('Dissertation file'),
+        required=False,
+        max_files=1
+    )
+
+
+class PropositionDissertationFileForm(forms.Form):
+    proposition_dissertation_file = FileUploadField(
+        label=_('Proposition dissertation file'),
+        required=False,
+        max_files=1
+    )

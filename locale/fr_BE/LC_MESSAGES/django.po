@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-29 10:29+0200\n"
+"POT-Creation-Date: 2022-06-03 14:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,10 +15,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#, python-format
-msgid "%%"
-msgstr "%%"
 
 msgid "(filtered from _MAX_ total entries)"
 msgstr "(filtered from _MAX_ total entries)"
@@ -43,6 +39,9 @@ msgstr "Accompagnateur"
 
 msgid "Add a reader"
 msgstr "Ajouter un lecteur"
+
+msgid "Add dissertation reader"
+msgstr "Ajout d'un lecteur"
 
 msgid "Add file"
 msgstr "Ajouter un fichier"
@@ -396,14 +395,8 @@ msgstr "e-mail"
 msgid "mobile"
 msgstr "mobile"
 
-msgid "new title"
-msgstr "nouveau titre"
-
 msgid "of"
 msgstr "sur"
-
-msgid "original title"
-msgstr "titre original"
 
 msgid "other"
 msgstr "Autre"

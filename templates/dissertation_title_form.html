@@ -28,8 +28,11 @@
 
 {% block content %}
     <ol class="breadcrumb">
-        <li><a href="{% url 'dissertation' %}" id="lnk_home_osis"><span class="glyphicon glyphicon-home"
-                                                                        aria-hidden="true"></span></a></li>
+        <li>
+            <a href="{% url 'dissertation' %}" id="lnk_home_osis">
+                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            </a>
+        </li>
         <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
         <li class="active">{% trans 'Dissertation title' %}</li>
     </ol>
@@ -37,11 +40,6 @@
         <div class="panel-body">
             <form method="POST" class="post-form">
                 {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-3 col-lg-offset-3">
-                        {{ form.author }}
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-md-3 col-lg-offset-1" style="text-align:right">
                         <label for="txt_title" {% if form.title.errors %}
@@ -53,7 +51,9 @@
                     </div>
                 </div>
                 <br>
-                <button type="submit" class="save btn btn-primary pull-right">Save</button>
+                <button type="submit" class="save btn btn-primary pull-right">
+                    {% trans 'Save' %}
+                </button>
             </form>
         </div>
     </div>
