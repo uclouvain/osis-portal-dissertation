@@ -33,7 +33,7 @@ from django.utils.functional import cached_property
 from django.views import View
 from django.views.generic import TemplateView, FormView
 from django.http import HttpResponseRedirect
-from osis_admission_sdk import ApiException
+from osis_dissertation_sdk import ApiException
 from django.contrib import messages
 
 import dissertation.models.enums.defend_periodes

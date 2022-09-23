@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-03 14:55+0200\n"
+"POT-Creation-Date: 2022-09-23 09:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,13 +46,10 @@ msgstr ""
 msgid "Add dissertation reader"
 msgstr "Dissertations"
 
-msgid "Add file"
-msgstr ""
-
 msgid "Add justification"
 msgstr ""
 
-msgid "Are you sure you want to delete this document?"
+msgid "An error has happened when uploading the file."
 msgstr ""
 
 msgid ""
@@ -118,12 +115,6 @@ msgstr ""
 msgid "Defense year"
 msgstr ""
 
-msgid "Delete"
-msgstr ""
-
-msgid "Delete file"
-msgstr ""
-
 msgid "Description"
 msgstr ""
 
@@ -138,6 +129,11 @@ msgstr ""
 
 msgid "Dissertation edit"
 msgstr ""
+
+#, fuzzy
+#| msgid "project dissertation"
+msgid "Dissertation file"
+msgstr "Dissertations"
 
 msgid "Dissertation history"
 msgstr ""
@@ -178,9 +174,6 @@ msgstr ""
 msgid "Don't forget to submit your dissertation to your promoter"
 msgstr ""
 
-msgid "Download"
-msgstr ""
-
 msgid "Draft"
 msgstr ""
 
@@ -217,9 +210,6 @@ msgid "Last"
 msgstr ""
 
 msgid "Level"
-msgstr ""
-
-msgid "Link"
 msgstr ""
 
 #, fuzzy
@@ -280,6 +270,11 @@ msgstr ""
 msgid "Promoter"
 msgstr ""
 
+#, fuzzy
+#| msgid "project dissertation"
+msgid "Proposition dissertation file"
+msgstr "Dissertations"
+
 msgid "Reader"
 msgstr ""
 
@@ -331,6 +326,9 @@ msgstr ""
 msgid "Taken places"
 msgstr ""
 
+msgid "The dissertation file has correctly been updated."
+msgstr ""
+
 msgid ""
 "The status update is nearly done. This update is detailed just after. Please "
 "add your explanation for this update."
@@ -354,6 +352,12 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
+msgid "Upload"
+msgstr ""
+
+msgid "Upload your file"
+msgstr ""
+
 msgid ""
 "Warning : you will submit the draft memorandum to the promotor. Are you sure "
 "you want to continue ?"
@@ -369,9 +373,6 @@ msgid ""
 "You are ready to delete this jury member. Are you sure you want to continue ?"
 msgstr ""
 
-msgid "cancel"
-msgstr ""
-
 msgid "comment"
 msgstr ""
 
@@ -379,9 +380,6 @@ msgid "datatable_infopostfix"
 msgstr ""
 
 msgid "empirical research"
-msgstr ""
-
-msgid "file"
 msgstr ""
 
 msgid "forbidden"
