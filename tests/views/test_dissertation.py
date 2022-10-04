@@ -24,7 +24,6 @@
 #
 ##############################################################################
 import json
-from unittest.mock import patch
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.test import TestCase
@@ -35,7 +34,6 @@ from base.tests.factories.education_group import EducationGroupFactory
 from base.tests.factories.education_group_year import EducationGroupYearFactory
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
-from dissertation.forms import DissertationUpdateForm
 from dissertation.models.enums import dissertation_role_status
 from dissertation.tests.factories.adviser import AdviserManagerFactory, AdviserTeacherFactory
 from dissertation.tests.factories.dissertation import DissertationFactory
@@ -121,72 +119,6 @@ class DissertationViewTestCase(TestCase):
             None)
         self.assertIn('Vous avez reçu une demande d\'encadrement de mémoire',
                       message_history_result.last().subject)
-
-    def test_dissertation_to_dir_submit(self):
-        self.client.force_login(self.student_with_1_dissertation.person.user)
-        form = DissertationUpdateForm(
-            dissertation=self.dissertation_to_dir_submit,
-            person=self.student_with_1_dissertation.person,
-            action="go_forward",
-        )
-        response = self.client.post(
-            reverse('dissertation_to_dir_submit', args=[self.dissertation_to_dir_submit.pk]),
-            {"form": form, }
-        )
-        self.assertEqual(response.status_code, HttpResponseRedirect.status_code)
-
-    def test_dissertation_to_dir_submit_with_another_student(self):
-        form = DissertationUpdateForm(
-            dissertation=self.dissertation_to_dir_submit,
-            person=self.student_with_1_dissertation.person,
-            action="go_forward",
-        )
-        response = self.client.post(
-            reverse('dissertation_to_dir_submit', args=[self.dissertation_to_dir_submit.pk]),
-            {"form": form, }
-        )
-        self.assertEqual(response.status_code, HttpResponseRedirect.status_code)
-
-    @patch("dissertation.forms.DissertationUpdateForm.is_valid", return_value=False)
-    def test_dissertation_to_dir_submit_with_invalid_form(self, *args):
-        self.client.force_login(self.student_with_1_dissertation.person.user)
-        form = DissertationUpdateForm(
-            dissertation=self.dissertation_to_dir_submit,
-            person=self.student_with_1_dissertation.person,
-            action="go_forward",
-        )
-        response = self.client.post(
-            reverse('dissertation_to_dir_submit', args=[self.dissertation_to_dir_submit.pk]),
-            {"form": form, }
-        )
-        self.assertEqual(response.status_code, HttpResponse.status_code)
-
-    def test_dissertation_back_to_draft(self):
-        form = DissertationUpdateForm(
-            dissertation=self.dissertation,
-            person=self.student.person,
-            action="go_back",
-        )
-        response = self.client.post(
-            reverse('dissertation_back_to_draft', args=[self.dissertation.pk]),
-            {"form": form, }
-        )
-        self.assertEqual(response.status_code, HttpResponseRedirect.status_code)
-        self.dissertation.refresh_from_db()
-        self.assertEqual(self.dissertation.status, 'DRAFT')
-
-    @patch("dissertation.forms.DissertationUpdateForm.is_valid", return_value=False)
-    def test_dissertation_back_to_draft_with_invalid_form(self, mock_form):
-        form = DissertationUpdateForm(
-            dissertation=self.dissertation,
-            person=self.student.person,
-            action="go_back",
-        )
-        response = self.client.post(
-            reverse('dissertation_back_to_draft', args=[self.dissertation.pk]),
-            {"form": form}
-        )
-        self.assertEqual(response.status_code, HttpResponse.status_code)
 
     def test_dissertation_jury_new_view(self):
         response = self.client.post(

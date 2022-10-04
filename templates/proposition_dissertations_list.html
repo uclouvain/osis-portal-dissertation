@@ -30,8 +30,11 @@
 {% endblock %}
 {% block content %}
     <ol class="breadcrumb">
-        <li><a href="{% url 'dissertation' %}" id="lnk_home_osis"><span class="glyphicon glyphicon-home"
-                                                                        aria-hidden="true"></span></a></li>
+        <li>
+            <a href="{% url 'dissertation' %}" id="lnk_home_osis">
+                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            </a>
+        </li>
         <li class="active">{% trans 'Dissertation subjects' %}</li>
     </ol>
     <div class="page-header">
@@ -51,24 +54,18 @@
             {% for proposition_dissertation in propositions_dissertations %}
                 <tr>
                     <td>
-                        <a href="{% url 'proposition_dissertation_detail' pk=proposition_dissertation.pk %}">{{ proposition_dissertation.title }}</a>
+                        <a href="{% url 'proposition_dissertation_detail' uuid=proposition_dissertation.uuid %}">{{ proposition_dissertation.title }}</a>
                     </td>
                     <td>{{ proposition_dissertation.author }}</td>
                     <td>
-                        {% for offer_prop in proposition_dissertation.offer_propositions.all %}
-                            {% if offer_prop.pk in student_offer_propositions_id_list %}
-                                <span class="label label-default">
-                            {{ offer_prop.last_acronym }}
+                        {% for offer in proposition_dissertation.offers %}
+                            <span class="label label-default">
+                                {{ offer }}
                             </span>
-                            {% endif %}
                         {% endfor %}
                     </td>
                     <td>{{ proposition_dissertation.max_number_student }}</td>
-                    {% if proposition_dissertation.remaining_places >= 0 %}
-                        <td>{{ proposition_dissertation.remaining_places }}</td>
-                    {% else %}
-                        <td>0</td>
-                    {% endif %}
+                    <td>{{ proposition_dissertation.remaining_places }}</td>
                 </tr>
             {% endfor %}
         </table>
@@ -116,6 +113,5 @@
                 $("i", this).toggleClass("glyphicon glyphicon-collapse-down glyphicon glyphicon-expand");
             });
         });
-
     </script>
 {% endblock %}

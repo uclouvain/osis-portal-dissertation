@@ -33,7 +33,7 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 class OfferPropositionAdmin(SerializableModelAdmin):
     list_display = ('acronym',
                     'recent_acronym_education_group')
-    raw_id_fields = ('education_group')
+    raw_id_fields = ('education_group', )
     search_fields = ('uuid', 'acronym', 'education_group_id',)
 
 
