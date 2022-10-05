@@ -27,11 +27,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.functional import cached_property
 from django.views.generic import TemplateView
 
+from base.utils.api_utils import ApiRetrieveAllObjectsMixin
 from dissertation.forms import PropositionDissertationFileForm
 from dissertation.services.proposition_dissertation import PropositionDissertationService
 
 
-class PropositionDissertationListView(LoginRequiredMixin, TemplateView):
+class PropositionDissertationListView(LoginRequiredMixin, TemplateView, ApiRetrieveAllObjectsMixin):
     # TemplateView
     template_name = "proposition_dissertations_list.html"
 
@@ -46,7 +47,7 @@ class PropositionDissertationListView(LoginRequiredMixin, TemplateView):
         }
 
     def get_propositions_dissertations(self):
-        return PropositionDissertationService.search('', self.person)
+        return PropositionDissertationService.search('', self.person).results
 
 
 class PropositionDissertationDetailView(LoginRequiredMixin, TemplateView):
