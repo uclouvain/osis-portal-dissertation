@@ -101,6 +101,9 @@ class UpdateDissertationForm(forms.Form):
 class UpdateDissertationTitleForm(forms.Form):
     title = forms.CharField(label=_('Title'))
 
+    def __init__(self, person, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
 
 class DissertationJuryAddForm(forms.Form):
     adviser = autocomplete.Select2ListCreateChoiceField(
