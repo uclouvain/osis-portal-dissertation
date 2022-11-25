@@ -36,6 +36,7 @@ from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import TemplateView, FormView
 from osis_admission_sdk import ApiException
+from osis_dissertation_sdk import ApiException
 
 import dissertation.models.enums.defend_periodes
 import dissertation.models.enums.dissertation_status

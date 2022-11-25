@@ -33,6 +33,7 @@ from osis_dissertation_sdk.model.proposition_dissertation_detail import Proposit
 from osis_dissertation_sdk.model.proposition_dissertation_row import PropositionDissertationRow
 
 from base.models.person import Person
+from base.utils.api_utils import gather_all_api_paginated_results
 from frontoffice.settings.osis_sdk import dissertation as dissertation_sdk
 from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
 
@@ -43,14 +44,17 @@ class PropositionDissertationService:
     CONFIGURATION = dissertation_sdk.build_configuration()
 
     @classmethod
-    def search(cls, term: str, person: Person) -> List[PropositionDissertationRow]:
+    @gather_all_api_paginated_results
+    def search(cls, term: str, person: Person, **kwargs) -> List[PropositionDissertationRow]:
         with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = proposition_dissertation_api.PropositionDissertationApi(api_client)
+            kwargs['limit'] = 100
             api_response = api_instance.propositions_list(
                 search=term,
                 **build_mandatory_auth_headers(person),
+                **kwargs
             )
-            return getattr(api_response, 'results', [])
+            return api_response
 
     @classmethod
     def get(cls, uuid: str, person: Person) -> PropositionDissertationDetail:
