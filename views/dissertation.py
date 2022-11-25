@@ -28,7 +28,7 @@ import json
 from dal import autocomplete
 from django import http
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, resolve_url
+from django.shortcuts import redirect, resolve_url, render
 from django.utils.functional import cached_property
 from django.views import View
 from django.views.generic import TemplateView, FormView
@@ -125,6 +125,7 @@ class DissertationDetailView(LoginRequiredMixin, TemplateView):
 
             except ApiException:
                 messages.error(self.request, _("An error has happened when uploading the file."))
+                return render(request, self.template_name, self.get_context_data())
 
     def redirect_after_valid_form(self):
         messages.info(self.request, _('The dissertation file has correctly been updated.'))
