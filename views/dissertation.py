@@ -27,14 +27,15 @@ import json
 
 from dal import autocomplete
 from django import http
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, resolve_url, render
 from django.utils.functional import cached_property
+from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import TemplateView, FormView
-from django.http import HttpResponseRedirect
 from osis_dissertation_sdk import ApiException
-from django.contrib import messages
 
 import dissertation.models.enums.defend_periodes
 import dissertation.models.enums.dissertation_status
@@ -48,7 +49,6 @@ from dissertation.models.enums import dissertation_status, dissertation_role_sta
 from dissertation.services.adviser import AdviserService
 from dissertation.services.dissertation import DissertationService
 from dissertation.services.proposition_dissertation import PropositionDissertationService
-from django.utils.translation import gettext as _
 
 
 class DissertationListView(LoginRequiredMixin, TemplateView):
