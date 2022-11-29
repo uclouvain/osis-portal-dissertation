@@ -9,7 +9,7 @@
     * The core business involves the administration of students, teachers,
     * courses, programs and so on.
     *
-    * Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+    * Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
     *
     * This program is free software: you can redistribute it and/or modify
     * it under the terms of the GNU General Public License as published by
@@ -28,11 +28,17 @@
 
 {% block content %}
     <ol class="breadcrumb">
-        <li><a href="{% url 'dissertation' %}" id="lnk_home_osis"><span class="glyphicon glyphicon-home"
-                                                                        aria-hidden="true"></span></a></li>
+        <li>
+            <a href="{% url 'dissertation' %}" id="lnk_home_osis">
+                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            </a>
+        </li>
         <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
-        <li><a href="{% url 'dissertation_detail' pk=dissertation.pk %}"
-               id="lnk_dissertation_detail">{{ dissertation.title }}</a></li>
+        <li>
+            <a href="{% url 'dissertation_detail' uuid=dissertation.uuid %}" id="lnk_dissertation_detail">
+                {{ dissertation.title }}
+            </a>
+        </li>
         <li class="active">{% trans 'Add justification' %}</li>
     </ol>
     <div class="panel panel-default">
@@ -56,13 +62,13 @@
                         {% trans 'Author' %} :
                     </div>
                     <div class="col-md-8">
-                        {{ dissertation.author }}
+                        {{ dissertation.author.last_name|upper }} {{ dissertation.author.last_name }}
                     </div>
                 </div>
                 <br>
                 <div class="row" style="margin:10px;">
                     <div class="col-md-5 well">
-                        {% trans 'Current status' %} : {{ dissertation.get_status_display }}
+                        {% trans 'Current status' %} : {{ dissertation.status_text }}
                     </div>
                     <div class="col-md-2" style="text-align: center; padding: 1em;">
                         <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
@@ -81,7 +87,6 @@
                         {% trans 'Save' %}
                     </button>
                 </div>
-
             </form>
         </div>
     </div>
