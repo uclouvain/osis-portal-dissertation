@@ -1,1 +1,1 @@
-git+https://github.com/uclouvain/osis-dissertation-sdk.git@wip-build-1.00
+git+https://github.com/uclouvain/osis-dissertation-sdk.git@wip-build-1.01
