@@ -345,8 +345,3 @@
     <!-- Upload file modal -->
     {% include 'file_upload_modal.html' with form=dissertation_file_form %}
 {% endblock %}
-
-{% block script %}
-    {{ dissertation_file_form.media }}
-    {{ proposition_dissertation_file_form.media }}
-{% endblock script %}
