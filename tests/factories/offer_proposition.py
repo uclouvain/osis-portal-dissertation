@@ -24,10 +24,12 @@
 #
 ##############################################################################
 import factory
+from factory.django import DjangoModelFactory
 
 from base.tests.factories.education_group import EducationGroupFactory
 
-class OfferPropositionFactory(factory.DjangoModelFactory):
+
+class OfferPropositionFactory(DjangoModelFactory):
     class Meta:
         model = 'dissertation.OfferProposition'
 

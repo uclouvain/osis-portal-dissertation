@@ -24,12 +24,13 @@
 #
 ##############################################################################
 import factory
+from factory.django import DjangoModelFactory
 
 from dissertation.models.enums import dissertation_role_status
 from dissertation.tests.factories.adviser import AdviserTeacherFactory
 
 
-class DissertationRoleFactory(factory.DjangoModelFactory):
+class DissertationRoleFactory(DjangoModelFactory):
     class Meta:
         model = 'dissertation.DissertationRole'
 
