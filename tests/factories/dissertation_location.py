@@ -23,10 +23,9 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory
+from factory.django import DjangoModelFactory
 
-
-class DissertationLocationFactory(factory.DjangoModelFactory):
+class DissertationLocationFactory(DjangoModelFactory):
     class Meta:
         model = 'dissertation.DissertationLocation'
 

@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import factory.fuzzy
+from factory.django import DjangoModelFactory
 
 from base.tests.factories.education_group_year import EducationGroupYearFactory
 from base.tests.factories.student import StudentFactory
@@ -34,7 +35,7 @@ from dissertation.tests.factories.dissertation_role import DissertationRoleFacto
 from dissertation.tests.factories.proposition_dissertation import PropositionDissertationFactory
 
 
-class DissertationFactory(factory.DjangoModelFactory):
+class DissertationFactory(DjangoModelFactory):
     class Meta:
         model = 'dissertation.Dissertation'
 
