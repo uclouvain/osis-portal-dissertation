@@ -24,11 +24,12 @@
 #
 ##############################################################################
 import factory
+from factory.django import DjangoModelFactory
 
 from base.tests.factories.person import PersonFactory
 
 
-class AdviserTeacherFactory(factory.DjangoModelFactory):
+class AdviserTeacherFactory(DjangoModelFactory):
     class Meta:
         model = 'dissertation.Adviser'
 

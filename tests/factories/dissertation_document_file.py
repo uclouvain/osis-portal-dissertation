@@ -24,12 +24,13 @@
 #
 ##############################################################################
 import factory.fuzzy
+from factory.django import DjangoModelFactory
 
 from dissertation.tests.factories.dissertation import DissertationFactory
 from osis_common.tests.factories.document_file import DocumentFileFactory
 
 
-class DissertationDocumentFileFactory(factory.DjangoModelFactory):
+class DissertationDocumentFileFactory(DjangoModelFactory):
     class Meta:
         model = 'dissertation.DissertationDocumentFile'
 

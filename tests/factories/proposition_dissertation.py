@@ -25,6 +25,7 @@
 ##############################################################################
 import factory.fuzzy
 from django.utils import timezone
+from factory.django import DjangoModelFactory
 
 from base.tests.factories.person import PersonFactory
 from dissertation.models.enums import proposition_dissertation_types, proposition_dissertation_levels
@@ -32,7 +33,7 @@ from dissertation.models.enums.proposition_dissertation_collaboration import COL
 from dissertation.tests.factories.adviser import AdviserTeacherFactory
 
 
-class PropositionDissertationFactory(factory.DjangoModelFactory):
+class PropositionDissertationFactory(DjangoModelFactory):
     class Meta:
         model = 'dissertation.PropositionDissertation'
 

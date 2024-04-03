@@ -24,9 +24,9 @@
 #
 ##############################################################################
 import factory
+from factory.django import DjangoModelFactory
 
-
-class OfferPropositionGroupFactory(factory.DjangoModelFactory):
+class OfferPropositionGroupFactory(DjangoModelFactory):
     class Meta:
         model = 'dissertation.OfferPropositionGroup'
 

@@ -24,12 +24,13 @@
 #
 ##############################################################################
 import factory
+from factory.django import DjangoModelFactory
 
 from dissertation.tests.factories.offer_proposition import OfferPropositionFactory
 from dissertation.tests.factories.proposition_dissertation import PropositionDissertationFactory
 
 
-class PropositionOfferFactory(factory.DjangoModelFactory):
+class PropositionOfferFactory(DjangoModelFactory):
     class Meta:
         model = 'dissertation.PropositionOffer'
 
