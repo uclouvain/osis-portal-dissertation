@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -26,23 +26,26 @@
     * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block content %}
-    <ol class="breadcrumb">
-        <li>
-            <a href="{% url 'dissertation' %}" id="lnk_home_osis">
-                <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-            </a>
-        </li>
-        <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
-        <li>
-            <a href="{% url 'dissertation_detail' uuid=dissertation.uuid %}" id="lnk_dissertation_detail">
-                {{ dissertation.title }}
-            </a>
-        </li>
-        <li class="active">{% trans 'Add justification' %}</li>
-    </ol>
-    <div class="panel panel-default">
-        <div class="panel-body">
+    {% block breadcrumbarea %}
+        <ol class="breadcrumb py-2 px-3">
+            <li class="breadcrumb-item">
+                <a href="{% url 'dissertation' %}" id="lnk_home_osis">
+                    <span><i class="fas fa-home" aria-hidden="true"></i></span>
+                </a>
+            </li>
+            <li class="breadcrumb-item"><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'dissertation_detail' uuid=dissertation.uuid %}" id="lnk_dissertation_detail">
+                    {{ dissertation.title }}
+                </a>
+            </li>
+            <li class="breadcrumb-item active">{% trans 'Add justification' %}</li>
+    {% endblock %}
+
+    {% block content %}
+
+    <div class="card">
+        <div class="card-body">
             <form method="POST" class="post-form">
                 {% csrf_token %}
                 <div>
@@ -50,30 +53,30 @@
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-lg-4">
                         {% trans 'Dissertation' %} :
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-lg-8">
                         {{ dissertation.title }}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-lg-4">
                         {% trans 'Author' %} :
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-lg-8">
                         {{ dissertation.author.last_name|upper }} {{ dissertation.author.last_name }}
                     </div>
                 </div>
                 <br>
-                <div class="row" style="margin:10px;">
-                    <div class="col-md-5 well">
+                <div class="row m-2">
+                    <div class="col-lg-5 card-header border p-3">
                         {% trans 'Current status' %} : {{ dissertation.status_text }}
                     </div>
-                    <div class="col-md-2" style="text-align: center; padding: 1em;">
-                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                    <div class="col-lg-2 text-center p-3">
+                        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
                     </div>
-                    <div class="col-md-5 well">
+                    <div class="col-lg-5 card-header border p-3">
                         {% trans 'Next status' %} : {{ new_status_display }}
                     </div>
                 </div>
@@ -81,7 +84,7 @@
                 <div>
                     <div class="form-group">
                         <label>{% trans 'Add justification' %}</label>
-                        <textarea class="form-control" id="txt_justification" name="justification" style=""></textarea>
+                        <textarea class="form-control" id="txt_justification" name="justification"></textarea>
                     </div>
                     <button type="submit" class="save btn btn-primary">
                         {% trans 'Save' %}

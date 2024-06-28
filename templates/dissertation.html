@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -30,27 +30,27 @@
     <div class="page-header">
         <h2>{% trans 'Dissertation management' %}</h2>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="card">
+        <div class="card-body">
             <div class="row">
-                <div class="col-md-1">
+                <div class="col-lg-1">
                     <a href="{% url 'proposition_dissertations' %}" id="lnk_icon_proposition_dissertations">
                         <span class="far fa-lightbulb" style="font-size: 400%;"></span></a>
                 </div>
-                <div class="col-md-5">
-                    <h4 class="media-heading" style="margin-top: 10px;">
+                <div class="col-lg-5">
+                    <h4 class="media-heading mt-2">
                         <a href="{% url 'proposition_dissertations' %}" id="lnk_proposition_dissertations">
                             {% trans 'Dissertation subjects' %}
                         </a>
                     </h4>
                     <p>{% trans 'Dissertation subjects submitted by teachers' %}</p>
                 </div>
-                <div class="col-md-1">
+                <div class="col-lg-1">
                     <a href="{% url 'dissertations' %}" id="lnk_icon_dissertations">
                         <span class="far fa-pencil-square" style="font-size: 400%;"></span></a>
                 </div>
-                <div class="col-md-5">
-                    <h4 class="media-heading" style="margin-top: 10px;">
+                <div class="col-lg-5">
+                    <h4 class="media-heading mt-2">
                         <a href="{% url 'dissertations' %}" id="lnk_dissertations">
                             {% trans 'Dissertations' %}
                         </a>

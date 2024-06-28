@@ -1,4 +1,4 @@
-{% extends 'modal.html' %}{% load bootstrap3 i18n %}
+{% extends 'modal.html' %}{% load django_bootstrap5 i18n %}
 
 {% comment "License" %}
   * OSIS stands for Open Student Information System. It's an application
@@ -31,12 +31,12 @@
 {% block modal_body %}
   <form class="osis-form" method="post" action="#upload" id="dissertation_file_upload_form">
     {% csrf_token %}
-    {% bootstrap_field form.dissertation_file form_group_class="form-group required_field" %}
+    {% bootstrap_field form.dissertation_file wrapper_class="form-group required_field" %}
   </form>
 {% endblock %}
 
 {% block modal_footer %}
-  <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
+  <button type="button" class="btn btn-default" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
   <button type="submit" class="btn btn-primary" name="dissertation_file_upload" form="dissertation_file_upload_form">
     {% trans "Upload" %}
   </button>
