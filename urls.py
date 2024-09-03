@@ -27,14 +27,13 @@
 from django.conf.urls import url
 from django.urls import path, include
 
-from dissertation.views import common, upload_dissertation_file, upload_proposition_file
+from dissertation.views import common
 from dissertation.views.dissertation import AdviserAutocomplete, DissertationCreateView, DissertationListView, \
     DissertationDeleteView, DissertationDetailView, DissertationHistoryView, \
     DissertationUpdateView, DissertationJuryDeleteView, DissertationJuryAddView, DissertationSubmitView, \
     DissertationBackToDraftView
 from dissertation.views.proposition_dissertation import PropositionDissertationListView, \
     PropositionDissertationDetailView
-from dissertation.views.upload_dissertation_file import DeleteDissertationFileView
 
 urlpatterns = [
     url(r'^$', common.home, name='dissertation'),
@@ -63,12 +62,4 @@ urlpatterns = [
 
         path('<str:uuid>/create_dissertation', DissertationCreateView.as_view(), name='dissertation_new')
     ]))),
-
-    url(r'^upload/proposition_download/(?P<pk>[0-9]+)$', upload_proposition_file.download, name='proposition_download'),
-    url(r'^upload/proposition_save/$', upload_proposition_file.save_uploaded_file, name="proposition_save_upload"),
-    url(r'^upload/dissertation_delete_file/(?P<dissertation_pk>[0-9]+)$', DeleteDissertationFileView.as_view(),
-        name='dissertation_file_delete'),
-    url(r'^upload/dissertation_download/(?P<pk>[0-9]+)$', upload_dissertation_file.download,
-        name='dissertation_download'),
-    url(r'^upload/dissertation_save/$', upload_dissertation_file.save_uploaded_file, name="dissertation_save_upload"),
 ]
