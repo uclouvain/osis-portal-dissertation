@@ -24,20 +24,23 @@
 #
 ##############################################################################
 
-from django.conf.urls import url
 from django.urls import path, include
 
 from dissertation.views import common, upload_dissertation_file, upload_proposition_file
-from dissertation.views.dissertation import AdviserAutocomplete, DissertationCreateView, DissertationListView, \
-    DissertationDeleteView, DissertationDetailView, DissertationHistoryView, \
-    DissertationUpdateView, DissertationJuryDeleteView, DissertationJuryAddView, DissertationSubmitView, \
-    DissertationBackToDraftView
-from dissertation.views.proposition_dissertation import PropositionDissertationListView, \
-    PropositionDissertationDetailView
+from dissertation.views.dissertation import (
+    AdviserAutocomplete, DissertationCreateView, DissertationListView,
+    DissertationDeleteView, DissertationDetailView, DissertationHistoryView,
+    DissertationUpdateView, DissertationJuryDeleteView, DissertationJuryAddView, DissertationSubmitView,
+    DissertationBackToDraftView,
+)
+from dissertation.views.proposition_dissertation import (
+    PropositionDissertationListView,
+    PropositionDissertationDetailView,
+)
 from dissertation.views.upload_dissertation_file import DeleteDissertationFileView
 
 urlpatterns = [
-    url(r'^$', common.home, name='dissertation'),
+    path('', common.home, name='dissertation'),
 
     path('dissertations/', include(([
         path('', DissertationListView.as_view(), name='dissertations'),
@@ -55,7 +58,7 @@ urlpatterns = [
         ),
     ]))),
 
-    url(r'^adviser-autocomplete/$', AdviserAutocomplete.as_view(),
+    path('adviser-autocomplete/', AdviserAutocomplete.as_view(),
         name='adviser-autocomplete'),
     path('proposition_dissertations/', include(([
         path('', PropositionDissertationListView.as_view(), name='proposition_dissertations'),
@@ -64,11 +67,11 @@ urlpatterns = [
         path('<str:uuid>/create_dissertation', DissertationCreateView.as_view(), name='dissertation_new')
     ]))),
 
-    url(r'^upload/proposition_download/(?P<pk>[0-9]+)$', upload_proposition_file.download, name='proposition_download'),
-    url(r'^upload/proposition_save/$', upload_proposition_file.save_uploaded_file, name="proposition_save_upload"),
-    url(r'^upload/dissertation_delete_file/(?P<dissertation_pk>[0-9]+)$', DeleteDissertationFileView.as_view(),
+    path('upload/proposition_download/<int:pk>', upload_proposition_file.download, name='proposition_download'),
+    path('upload/proposition_save/', upload_proposition_file.save_uploaded_file, name="proposition_save_upload"),
+    path('upload/dissertation_delete_file/<int:dissertation_pk>', DeleteDissertationFileView.as_view(),
         name='dissertation_file_delete'),
-    url(r'^upload/dissertation_download/(?P<pk>[0-9]+)$', upload_dissertation_file.download,
+    path('upload/dissertation_download/<int:pk>', upload_dissertation_file.download,
         name='dissertation_download'),
-    url(r'^upload/dissertation_save/$', upload_dissertation_file.save_uploaded_file, name="dissertation_save_upload"),
+    path('upload/dissertation_save/', upload_dissertation_file.save_uploaded_file, name="dissertation_save_upload"),
 ]
