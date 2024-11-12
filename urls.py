@@ -24,7 +24,6 @@
 #
 ##############################################################################
 
-from django.conf.urls import url
 from django.urls import path, include
 
 from dissertation.views import common
@@ -36,7 +35,7 @@ from dissertation.views.proposition_dissertation import PropositionDissertationL
     PropositionDissertationDetailView
 
 urlpatterns = [
-    url(r'^$', common.home, name='dissertation'),
+    path('', common.home, name='dissertation'),
 
     path('dissertations/', include(([
         path('', DissertationListView.as_view(), name='dissertations'),
@@ -54,7 +53,7 @@ urlpatterns = [
         ),
     ]))),
 
-    url(r'^adviser-autocomplete/$', AdviserAutocomplete.as_view(),
+    path('adviser-autocomplete/', AdviserAutocomplete.as_view(),
         name='adviser-autocomplete'),
     path('proposition_dissertations/', include(([
         path('', PropositionDissertationListView.as_view(), name='proposition_dissertations'),
