@@ -1,5 +1,5 @@
-{% extends "layout.html" %}
-{% load static bootstrap3 %}
+{% extends "bootstrap5/layout.html" %}
+{% load static django_bootstrap5 %}
 {% load i18n %}
 
 {% comment "License" %}
@@ -26,53 +26,59 @@
     * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block content %}
-    <ol class="breadcrumb">
-        <li><a href="{% url 'dissertation' %}" id="lnk_home_osis">
-            <span class="glyphicon glyphicon-home" aria-hidden="true"></span></a>
-        </li>
-        <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
-        <li class="active">{% trans 'Dissertation creation' %}</li>
-    </ol>
-    <div class="panel panel-default">
-        <div class="panel-body">
+    {% block breadcrumbarea %}
+        <ol class="breadcrumb py-2 px-3">
+            <li class="breadcrumb-item">
+                <a href="{% url 'dissertation' %}" id="lnk_home_osis">
+                    <span><i class="fas fa-home" aria-hidden="true"></i></span>
+                </a>
+            </li>
+            <li class="breadcrumb-item"><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
+            <li class="breadcrumb-item active">{% trans 'Dissertation creation' %}</li>
+        </ol>
+    {% endblock %}
+
+    {% block content %}
+
+    <div class="card">
+        <div class="card-body">
             <form method="POST" class="post-form">
                 {% csrf_token %}
                  <div class="row">
-                    <div class="col-md-12 required_field">
+                    <div class="col-lg-12 required_field">
                         {% bootstrap_field form.title %}
                     </div>
                  </div>
                 <div class="row">
-                    <div class="col-md-6 required_field" {% if form.education_group_year.errors %} style="color:red;" {% endif %}>
+                    <div class="col-lg-6 required_field {% if form.education_group_year.errors %}text-danger {% endif %}" >
                         {% bootstrap_field form.education_group_year %}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-lg-6">
                         {% bootstrap_field form.proposition_dissertation %}
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 required_field">
+                    <div class="col-lg-6 required_field">
                         {% bootstrap_field form.defend_period %}
                     </div>
-                    <div class="col-md-6 required_field">
+                    <div class="col-lg-6 required_field">
                         {% bootstrap_field form.defend_year %}
                     </div>
                 </div>
 
                 <div class="row">
-                     <div class="col-md-12 required_field">
+                     <div class="col-lg-12 required_field">
                           {% bootstrap_field form.location %}
                      </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-lg-12">
                         {% bootstrap_field form.description %}
                     </div>
                 </div>
 
-                <div style="text-align:right">
+                <div class="text-end">
                     <button type="submit" class="save btn btn-primary"
                             onclick="return confirm('{% trans 'Confirm dissertation' %}')">
                         {% trans 'Save' %}
