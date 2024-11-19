@@ -5,8 +5,6 @@ from __future__ import unicode_literals
 from django.db import connection
 from django.db import migrations
 
-from dissertation.models.proposition_offer import PropositionOffer
-
 
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
@@ -23,10 +21,6 @@ def move_data_from_offer_proposition_to_proposition_offer(apps, schema_editor):
     for record in dictfetchall(cursor):
         proposition_dissertation_id = record['propositiondissertation_id']
         offer_proposition_id = record['offerproposition_id']
-        offer = PropositionOffer()
-        offer.proposition_dissertation_id = proposition_dissertation_id
-        offer.offer_proposition_id = offer_proposition_id
-        offer.save()
 
 
 class Migration(migrations.Migration):
