@@ -38,13 +38,11 @@ from django.views.generic import TemplateView, FormView
 from osis_dissertation_sdk import ApiException
 
 import dissertation.models.enums.defend_periodes
-import dissertation.models.enums.dissertation_status
 from base.business.student import find_by_user_and_discriminate
 from base.views.mixin import AjaxTemplateMixin
 from dissertation.forms import CreateDissertationForm, UpdateDissertationForm, \
     UpdateDissertationTitleForm, DissertationJuryAddForm, DissertationJustificationForm, DissertationFileForm, \
     PropositionDissertationFileForm
-from dissertation.models import dissertation, proposition_dissertation
 from dissertation.models.enums import dissertation_status, dissertation_role_status
 from dissertation.services.adviser import AdviserService
 from dissertation.services.dissertation import DissertationService
@@ -140,14 +138,14 @@ class DissertationDetailView(LoginRequiredMixin, TemplateView):
 
     def can_delete_dissertation(self) -> bool:
         return str(self.dissertation.status) in [
-            dissertation.DissertationStatus.DRAFT.name,
-            dissertation.DissertationStatus.DIR_KO.name,
+            dissertation_status.DissertationStatus.DRAFT.name,
+            dissertation_status.DissertationStatus.DIR_KO.name,
         ]
 
     def can_edit_dissertation(self) -> bool:
         return str(self.dissertation.status) in [
-            dissertation.DissertationStatus.DRAFT.name,
-            dissertation.DissertationStatus.DIR_KO.name,
+            dissertation_status.DissertationStatus.DRAFT.name,
+            dissertation_status.DissertationStatus.DIR_KO.name,
         ] or DissertationService.can_edit_dissertation(self.kwargs['uuid'], self.person)
 
     def can_delete_jury_readers(self) -> bool:
@@ -215,7 +213,7 @@ class DissertationCreateView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         return {
             **super().get_context_data(**kwargs),
-            'proposition_dissertation': proposition_dissertation
+            'proposition_dissertation': self.proposition_dissertation
         }
 
 
@@ -297,8 +295,8 @@ class DissertationUpdateView(LoginRequiredMixin, FormView):
 
     def _can_edit_all_form(self) -> bool:
         return self.dissertation.status.value in [
-            dissertation.DissertationStatus.DRAFT.name,
-            dissertation.DissertationStatus.DIR_KO.name,
+            dissertation_status.DissertationStatus.DRAFT.name,
+            dissertation_status.DissertationStatus.DIR_KO.name,
         ]
 
 

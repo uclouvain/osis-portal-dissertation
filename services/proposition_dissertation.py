@@ -60,7 +60,7 @@ class PropositionDissertationService:
     def get(cls, uuid: str, person: Person) -> PropositionDissertationDetail:
         with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
             api_instance = proposition_dissertation_api.PropositionDissertationApi(api_client)
-            return api_instance.proposition_detail(
+            return api_instance.proposition_infos(
                 uuid=uuid,
                 **build_mandatory_auth_headers(person),
             )
