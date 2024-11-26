@@ -55,18 +55,18 @@
         </ul>
         {% if can_delete_dissertation or can_edit_dissertation %}
             <span class="ml-auto text-nowrap border-0">
+                {% if can_edit_dissertation %}
+                    <a class="btn btn-primary ms-auto me-2" href="{% url 'dissertation_edit' uuid=dissertation.uuid %}"
+                     title="{% trans 'Edit' %}">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </a>
+                {% endif %}
                 {% if can_delete_dissertation %}
                     <a class="btn btn-warning ms-auto me-2"
                     href="{% url 'dissertation_delete' uuid=dissertation.uuid %}"
                     onclick="return confirm('{% trans 'Confirm dissertation' %}')"
-                    title="{% trans 'Defend year' %}">
+                    title="{% trans 'Delete' %}">
                         <i class="fa-solid fa-xmark"></i>
-                    </a>
-                {% endif %}
-                {% if can_edit_dissertation %}
-                    <a class="btn btn-primary float-end ms-auto me-2" href="{% url 'dissertation_edit' uuid=dissertation.uuid %}"
-                     title="{% trans 'Edit' %}">
-                        <i class="fa-regular fa-pen-to-square"></i>
                     </a>
                 {% endif %}
             </span>
