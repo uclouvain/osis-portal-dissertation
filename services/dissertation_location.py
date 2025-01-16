@@ -1,12 +1,12 @@
 ##############################################################################
 #
-# OSIS stands for Open Student Information System. It's an application
+#    OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,20 +23,26 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
+import logging
 
-from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
-from . import dissertation
+import osis_dissertation_sdk
+from django.conf import settings
+from osis_dissertation_sdk.api import dissertation_location_api
+
+from base.models.person import Person
+from frontoffice.settings.osis_sdk import dissertation as dissertation_sdk
+from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
+
+logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
 
-class DissertationGroupAdmin(SerializableModelAdmin):
-    list_display = ('dissertation',)
-    raw_id_fields = ('dissertation',)
-    search_fields = ('uuid',)
+class DissertationLocationService:
 
-
-class DissertationGroup(SerializableModel):
-    dissertation = models.ForeignKey(dissertation.Dissertation, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.dissertation.title
+    @staticmethod
+    def get_dissertation_locations_list(person: Person):
+        configuration = dissertation_sdk.build_configuration()
+        with osis_dissertation_sdk.ApiClient(configuration) as api_client:
+            api_instance = dissertation_location_api.DissertationLocationApi(api_client)
+            return api_instance.dissertation_locations_list(
+                **build_mandatory_auth_headers(person),
+            )

@@ -24,53 +24,41 @@
 #
 ##############################################################################
 
-from django.conf.urls import url
+from django.urls import path, include
 
-from dissertation.views import common, dissertation, proposition_dissertation, \
-    upload_dissertation_file, upload_proposition_file
-from dissertation.views.dissertation import AdviserAutocomplete
-from dissertation.views.upload_dissertation_file import DeleteDissertationFileView
+from dissertation.views import common
+from dissertation.views.dissertation import AdviserAutocomplete, DissertationCreateView, DissertationListView, \
+    DissertationDeleteView, DissertationDetailView, DissertationHistoryView, \
+    DissertationUpdateView, DissertationJuryDeleteView, DissertationJuryAddView, DissertationSubmitView, \
+    DissertationBackToDraftView
+from dissertation.views.proposition_dissertation import PropositionDissertationListView, \
+    PropositionDissertationDetailView
 
 urlpatterns = [
-    url(r'^$', common.home, name='dissertation'),
+    path('', common.home, name='dissertation'),
 
-    url(r'^dissertations/$', dissertation.dissertations,
-        name='dissertations'),
-    url(r'^dissertation_delete/(?P<pk>[0-9]+)$', dissertation.dissertation_delete,
-        name='dissertation_delete'),
-    url(r'^dissertation_detail/(?P<pk>[0-9]+)/$', dissertation.dissertation_detail,
-        name='dissertation_detail'),
-    url(r'^dissertation_edit/(?P<pk>[0-9]+)$', dissertation.dissertation_edit,
-        name='dissertation_edit'),
-    url(r'^dissertation_history/(?P<pk>[0-9]+)$', dissertation.dissertation_history,
-        name='dissertation_history'),
-    url(r'^add_reader/(?P<pk>[0-9]+)$', dissertation.DissertationJuryNewView.as_view(),
-        name='add_reader'),
-    url(r'^adviser-autocomplete/$', AdviserAutocomplete.as_view(),
+    path('dissertations/', include(([
+        path('', DissertationListView.as_view(), name='dissertations'),
+        path('<str:uuid>/', DissertationDetailView.as_view(), name='dissertation_detail'),
+        path('<str:uuid>/history', DissertationHistoryView.as_view(), name='dissertation_history'),
+        path('<str:uuid>/delete', DissertationDeleteView.as_view(), name='dissertation_delete'),
+        path('<str:uuid>/update', DissertationUpdateView.as_view(), name='dissertation_edit'),
+        path('<str:uuid>/submit', DissertationSubmitView.as_view(), name='dissertation_to_dir_submit'),
+        path('<str:uuid>/back_to_draft', DissertationBackToDraftView.as_view(), name='dissertation_back_to_draft'),
+        path('<str:uuid>/jury/', DissertationJuryAddView.as_view(), name='add_reader'),
+        path(
+            '<str:uuid>/jury/<str:uuid_jury_member>/delete',
+            DissertationJuryDeleteView.as_view(),
+            name='dissertation_jury_delete',
+        ),
+    ]))),
+
+    path('adviser-autocomplete/', AdviserAutocomplete.as_view(),
         name='adviser-autocomplete'),
-    url(r'^dissertation_new/(?:(?P<pk>[0-9]+)/)?$', dissertation.dissertation_new,
-        name='dissertation_new'),
-    url(r'^dissertation_reader_delete/(?P<pk>[0-9]+)$', dissertation.dissertation_reader_delete,
-        name='dissertation_reader_delete'),
-    url(r'^dissertations_search$', dissertation.dissertations_search,
-        name='dissertations_search'),
-    url(r'^dissertation_to_dir_submit/(?P<pk>[0-9]+)$', dissertation.dissertation_to_dir_submit,
-        name='dissertation_to_dir_submit'),
-    url(r'^dissertation_back_to_draft/(?P<pk>[0-9]+)$', dissertation.dissertation_back_to_draft,
-        name='dissertation_back_to_draft'),
+    path('proposition_dissertations/', include(([
+        path('', PropositionDissertationListView.as_view(), name='proposition_dissertations'),
+        path('<str:uuid>/', PropositionDissertationDetailView.as_view(), name='proposition_dissertation_detail'),
 
-    url(r'^proposition_dissertations/$', proposition_dissertation.proposition_dissertations,
-        name='proposition_dissertations'),
-    url(r'^proposition_dissertation_detail/(?P<pk>[0-9]+)/$', proposition_dissertation.proposition_dissertation_detail,
-        name='proposition_dissertation_detail'),
-    url(r'^proposition_dissertations_search$', proposition_dissertation.proposition_dissertations_search,
-        name='proposition_dissertations_search'),
-
-    url(r'^upload/proposition_download/(?P<pk>[0-9]+)$', upload_proposition_file.download, name='proposition_download'),
-    url(r'^upload/proposition_save/$', upload_proposition_file.save_uploaded_file, name="proposition_save_upload"),
-    url(r'^upload/dissertation_delete_file/(?P<dissertation_pk>[0-9]+)$', DeleteDissertationFileView.as_view(),
-        name='dissertation_file_delete'),
-    url(r'^upload/dissertation_download/(?P<pk>[0-9]+)$', upload_dissertation_file.download,
-        name='dissertation_download'),
-    url(r'^upload/dissertation_save/$', upload_dissertation_file.save_uploaded_file, name="dissertation_save_upload"),
+        path('<str:uuid>/create_dissertation', DissertationCreateView.as_view(), name='dissertation_new')
+    ]))),
 ]

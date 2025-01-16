@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -27,67 +27,75 @@
 {% endcomment %}
 
 {% load tz %}
-{% block content %}
-    <ol class="breadcrumb">
-        <li><a href="{% url 'dissertation' %}" id="lnk_home_osis"><span class="glyphicon glyphicon-home"
-                                                                        aria-hidden="true"></span></a></li>
-        <li><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
-        <li class="active">{{ dissertation.title }}</li>
-    </ol>
+    {% block breadcrumbarea %}
+        <ol class="breadcrumb py-2 px-3">
+            <li class="breadcrumb-item">
+                <a href="{% url 'dissertation' %}" id="lnk_home_osis">
+                    <span><i class="fas fa-home" aria-hidden="true"></i></span>
+                </a>
+            </li>
+            <li class="breadcrumb-item"><a href="{% url 'dissertations' %}" id="lnk_dissertations">{% trans 'Dissertations' %}</a></li>
+            <li class="breadcrumb-item active">{{ dissertation.title }}</li>
+        </ol>
+    {% endblock %}
+    {% block content %}
+
+
     <ul class="nav nav-tabs">
-        <li><a href="{% url 'dissertation_detail' pk=dissertation.pk %}">{% trans 'Dissertation' %}</a></li>
-        <li class="active"><a href="#">{% trans 'Dissertation history' %}</a></li>
+        <li class="nav-item"><a href="{% url 'dissertation_detail' uuid=dissertation.uuid %}" class="nav-link">{% trans 'Dissertation' %}</a></li>
+        <li class="nav-item" ><a href="#" class="nav-link active">{% trans 'Dissertation history' %}</a></li>
     </ul>
-    <div class="panel panel-default">
-        <div class="panel-body">
+
+    <div class="card border-top-0">
+        <div class="card-body">
             <h3>{% trans 'Current status' %}</h3>
-            <p>{{ dissertation.get_status_display }}</p>
+                <p>{{ dissertation.status_text }}</p>
             <h3>{% trans 'History' %}</h3>
             <table class="table table-hover">
                 <tr>
-                    <td style="text-align: center">{% trans 'Change' %}</td>
-                    <td style="text-align: center">{% trans 'Person' %}</td>
-                    <td style="text-align: center">{% trans 'Date' %}</td>
-                    <td style="text-align: center">{% trans 'Add justification' %}</td>
+                    <td class="text-center">{% trans 'Change' %}</td>
+                    <td class="text-center">{% trans 'Person' %}</td>
+                    <td class="text-center">{% trans 'Date' %}</td>
+                    <td class="text-center">{% trans 'Add justification' %}</td>
                 </tr>
-                {% for dissertation_update in dissertation_updates %}
+                {% for history_entry in dissertation_history %}
                     <tr>
-                        <td style="text-align: center">
-                            {% if dissertation_update.status_from != dissertation_update.status_to %}
-                                {% if dissertation_update.status_from == 'DIR_SUBMIT' %}
-                                    <span class="label label-primary">
-                                {% elif dissertation_update.status_from == 'DIR_OK' %}
-                                    <span class="label label-success">
-                                {% elif dissertation_update.status_from == 'DIR_KO' %}
-                                    <span class="label label-danger">
-                                {% elif dissertation_update.status_from == 'COM_SUBMIT' %}
-                                    <span class="label label-primary">
+                        <td class="text-center">
+                            {% if history_entry.status_from != history_entry.status_to %}
+                                {% if history_entry.status_from == 'DIR_SUBMIT' %}
+                                    <span class="badge mb-1 lh-base bg-primary">
+                                {% elif history_entry.status_from == 'DIR_OK' %}
+                                    <span class="badge mb-1 lh-base bg-success">
+                                {% elif history_entry.status_from == 'DIR_KO' %}
+                                    <span class="badge mb-1 lh-base bg-danger">
+                                {% elif history_entry.status_from == 'COM_SUBMIT' %}
+                                    <span class="badge mb-1 lh-base bg-primary">
                                 {% else %}
-                                    <span class="label label-default">
+                                    <span class="badge mb-1 lh-base bg-secondary">
                                 {% endif %}
-                            {{ dissertation_update.get_status_from_display }}
+                            {{ history_entry.status_from_text }}
                             </span><br>
-                                <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span><br>
-                                {% if dissertation_update.status_to == 'DIR_SUBMIT' %}
-                                    <span class="label label-primary">
-                                {% elif dissertation_update.status_to == 'DIR_OK' %}
-                                    <span class="label label-success">
-                                {% elif dissertation_update.status_to == 'DIR_KO' %}
-                                    <span class="label label-danger">
-                                {% elif dissertation_update.status_to == 'COM_SUBMIT' %}
-                                    <span class="label label-primary">
+                                <i class="fa-solid fa-arrow-down" aria-hidden="true"></i><br>
+                                {% if history_entry.status_to == 'DIR_SUBMIT' %}
+                                    <span class="badge mb-1 lh-base bg-primary">
+                                {% elif history_entry.status_to == 'DIR_OK' %}
+                                    <span class="badge mb-1 lh-base bg-success">
+                                {% elif history_entry.status_to == 'DIR_KO' %}
+                                    <span class="badge mb-1 lh-base bg-danger">
+                                {% elif history_entry.status_to == 'COM_SUBMIT' %}
+                                    <span class="badge mb-1 lh-base bg-primary">
                                 {% else %}
-                                    <span class="label label-default">
+                                    <span class="badge mb-1 lh-base bg-secondary">
                                 {% endif %}
-                            {{ dissertation_update.get_status_to_display }}
+                            {{ history_entry.status_to_text }}
                             </span>
                             {% else %}
-                                <span class="label label-info">{% trans 'Information' %}</span>
+                                <span class="badge mb-1 lh-base bg-info">{% trans 'Information' %}</span>
                             {% endif %}
                         </td>
-                        <td style="text-align: center">{{ dissertation_update.person }}</td>
-                        <td style="text-align: center">{{ dissertation_update.created|localtime }}</td>
-                        <td style="text-align: center">{{ dissertation_update.justification|linebreaks }}</td>
+                        <td class="text-center">{{ history_entry.author }}</td>
+                        <td class="text-center">{{ history_entry.created_at }}</td>
+                        <td class="text-center">{{ history_entry.justification|linebreaks }}</td>
                     </tr>
                 {% endfor %}
             </table>

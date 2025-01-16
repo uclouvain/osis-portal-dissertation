@@ -1,17 +1,17 @@
-{% load bootstrap3 i18n %}
-
+{% load django_bootstrap5 i18n %}
+<div class="modal-header">
+    <h4 class="modal-title" id="prevent-quitting-label">{% trans "Add dissertation reader" %}</h4>
+</div>
 <div class="modal-body" id="form-modal-body">
     <form method="POST" id="form-modal" class="post-form" action="{{ request.get_full_path }}">
         {% csrf_token %}
-        {% bootstrap_field form.status %}
-        {% bootstrap_field form.dissertation %}
-        <div>
-            {% bootstrap_field form.adviser %}
+        <div class="row">
+            <div class="col-lg-12">
+                {% bootstrap_field form.adviser %}
+            </div>
         </div>
     </form>
-    {{ form.media }}
-
 </div>
-<div class="modal-footer" style="text-align:right">
+<div class="modal-footer text-end">
     <button type="submit" class="save btn btn-primary" onclick="$('#form-modal').submit();">{% trans 'Save' %}</button>
 </div>

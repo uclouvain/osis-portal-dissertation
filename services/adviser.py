@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2018-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,26 +23,29 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
+import logging
 
-from base.tests.factories.education_group import EducationGroupFactory
-from dissertation.models.offer_proposition import get_by_education_group, search_by_education_groups
-from dissertation.tests.factories.offer_proposition import OfferPropositionFactory
+import osis_dissertation_sdk
+from django.conf import settings
+from osis_dissertation_sdk.api import adviser_api
+
+from base.models.person import Person
+from frontoffice.settings.osis_sdk import dissertation as dissertation_sdk
+from frontoffice.settings.osis_sdk.utils import build_mandatory_auth_headers
+
+logger = logging.getLogger(settings.DEFAULT_LOGGER)
 
 
-class OfferPropositionModelTestCase(TestCase):
+class AdviserService:
+    CONFIGURATION = dissertation_sdk.build_configuration()
+
     @classmethod
-    def setUpTestData(cls):
-        cls.education_group1 = EducationGroupFactory()
-        cls.education_group2 = EducationGroupFactory()
-        cls.offer_prop1 = OfferPropositionFactory(education_group=cls.education_group1)
-        cls.offer_prop2 = OfferPropositionFactory(education_group=cls.education_group2)
-
-    def test_get_by_education_group(self):
-        self.assertEqual(get_by_education_group(self.education_group1), self.offer_prop1)
-        self.assertEqual(get_by_education_group(self.education_group2), self.offer_prop2)
-
-    def search_by_education_groups(self):
-        self.assertCountEqual(
-            search_by_education_groups([self.education_group1, self.education_group2]),
-            [self.offer_prop1, self.offer_prop2])
+    def search(cls, term: str, person: Person) -> str:
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
+            api_instance = adviser_api.AdviserApi(api_client)
+            response = api_instance.advisers_list(
+                offset=0,
+                search=term,
+                **build_mandatory_auth_headers(person),
+            )
+            return getattr(response, 'results', [])

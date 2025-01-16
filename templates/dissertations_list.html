@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -26,48 +26,55 @@
     * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block content %}
-    <ol class="breadcrumb">
-        <li><a href="{% url 'dissertation' %}" id="lnk_home_osis"><span class="glyphicon glyphicon-home"
-                                                                        aria-hidden="true"></span></a></li>
-        <li class="active">{% trans 'Dissertations' %}</li>
-    </ol>
+    {% block breadcrumbarea %}
+        <ol class="breadcrumb py-2 px-3">
+            <li class="breadcrumb-item">
+                <a href="{% url 'dissertation' %}" id="lnk_home_osis">
+                    <span><i class="fas fa-home" aria-hidden="true"></i></span>
+                </a>
+            </li>
+            <li class="breadcrumb-item active">{% trans 'Dissertations' %}</li>
+        </ol>
+    {% endblock %}
+
+    {% block content %}
+
     <div class="page-header">
         <h2>{% trans 'Dissertations' %}</h2>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <form method="get" action="{% url 'dissertations_search' %}">
+    <div class="card">
+        <div class="card-body">
+            <form method="get" action="{% url 'dissertations' %}">
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-lg-10">
                         <input class="form-control" id="txt_submit_search" placeholder="{% trans 'Search' %}"
                                name="search"
                                value="{{ request.GET.search }}">
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-lg-1">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-lg-6">
                                 <button type="submit" id="bt_submit_search" class="btn btn-primary" role="button"
-                                        title="{% trans 'Search' %}"><span class="glyphicon glyphicon-search"
-                                                                           aria-hidden="true"></span></button>
+                                        title="{% trans 'Search' %}">
+                                    <i class="fas fa-search" aria-hidden="true"></i>
+                                </button>
                             </div>
-                            {% if visibility == True %}
-                                <div class="col-md-6">
-                                    <a href="{% url 'dissertation_new' %}" id="lnk_dissertation_new"
-                                       class="btn btn-default"
-                                       role="button" title="{% trans 'Create' %}"><span class="glyphicon glyphicon-plus"
-                                                                                        aria-hidden="true"></span></a>
-                                </div>
-                            {% endif %}
+
+                            <div class="col-lg-6">
+                                <a href="{% url 'proposition_dissertations' %}" id="lnk_dissertation_new"
+                                   class="btn btn-default"
+                                   role="button" title="{% trans 'Create' %}">
+                                    <i class="fa-solid fa-plus fs-5" aria-hidden="true"></i>
+                                </a>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </form>
         </div>
         {% if dissertations|length == 0 %}
-            <br>
-            <label class="alert alert-info"
-                   style="margin-left:10%;width:80%;text-align:center;">{% trans 'No result' %}</label>
+            <label class="alert alert-info col-9 mx-auto text-center d-block mt-2">{% trans 'No result' %}</label>
         {% else %}
             <table class="table table-hover">
                 <tr>
@@ -87,53 +94,52 @@
                         <tr>
                     {% endif %}
 
-                <td><a href="{% url 'dissertation_detail' pk=dissertation.pk %}">{{ dissertation.title }}</a></td>
-                <td>{{ dissertation.author.person.first_name }} &nbsp;
-                    {{ dissertation.author.person.last_name }} &nbsp;- &nbsp;
-                    {{ dissertation.author.registration_id }}</td>
+                <td>
+                    <a href="{% url 'dissertation_detail' uuid=dissertation.uuid %}">
+                        {{ dissertation.title }}
+                    </a>
+                </td>
+                <td>{{ dissertation.author }}</td>
                 <td>
                     {% if dissertation.status == 'DRAFT' %}
-                        <span class="label label-danger">
+                        <span class="badge mb-1 lh-base bg-danger">
                     {% elif dissertation.status == 'DIR_SUBMIT' %}
-                        <span class="label label-primary">
+                        <span class="badge mb-1 lh-base bg-primary">
                     {% elif dissertation.status == 'DIR_OK' %}
-                        <span class="label label-success">
+                        <span class="badge mb-1 lh-base bg-success">
                     {% elif dissertation.status == 'DIR_KO' %}
-                        <span class="label label-danger">
+                        <span class="badge mb-1 lh-base bg-danger">
                     {% elif dissertation.status == 'COM_SUBMIT' %}
-                        <span class="label label-primary">
+                        <span class="badge mb-1 lh-base bg-primary">
                     {% elif dissertation.status == 'COM_OK' %}
-                        <span class="label label-default">
+                        <span class="badge mb-1 lh-base bg-secondary">
                     {% elif dissertation.status == 'COM_KO' %}
-                        <span class="label label-danger">
+                        <span class="badge mb-1 lh-base bg-danger">
                     {% elif dissertation.status == 'EVA_SUBMIT' %}
-                        <span class="label label-primary">
+                        <span class="badge mb-1 lh-base bg-primary">
                     {% elif dissertation.status == 'EVA_OK' %}
-                        <span class="label label-default">
+                        <span class="badge mb-1 lh-base bg-secondary">
                     {% elif dissertation.status == 'EVA_KO' %}
-                        <span class="label label-danger">
+                        <span class="badge mb-1 lh-base bg-danger">
                     {% elif dissertation.status == 'TO_RECEIVE' %}
-                        <span class="label label-default">
+                        <span class="badge mb-1 lh-base bg-secondary">
                     {% elif dissertation.status == 'TO_DEFEND' %}
-                        <span class="label label-default">
+                        <span class="badge mb-1 lh-base bg-secondary">
                     {% elif dissertation.status == 'DEFENDED' %}
-                        <span class="label label-default">
+                        <span class="badge mb-1 lh-base bg-secondary">
                     {% elif dissertation.status == 'ENDED' %}
-                        <span class="label label-default">
+                        <span class="badge mb-1 lh-base bg-secondary">
                     {% elif dissertation.status == 'ENDED_WIN' %}
-                        <span class="label label-default">
+                        <span class="badge mb-1 lh-base bg-secondary">
                     {% elif dissertation.status == 'ENDED_LOS' %}
-                        <span class="label label-danger">
+                        <span class="badge mb-1 lh-base bg-danger">
                     {% endif %}
-                    {{ dissertation.get_status_display }}
+                    {{ dissertation.status_text }}
                     </span>
                 </td>
-                <td>{{ dissertation.education_group_year.academic_year.year }} -
-                    {{ dissertation.education_group_year.academic_year.year |add:"1"}}
-                </td>
-                <td>{{ dissertation.education_group_year.acronym }}</td>
-                <td>{{ dissertation.proposition_dissertation.title }}
-                    - {{ dissertation.proposition_dissertation.author.person }}</td>
+                <td>{{ dissertation.start_year }} - {{ dissertation.start_year |add:"1"}}</td>
+                <td>{{ dissertation.offer_acronym }}</td>
+                <td>{{ dissertation.dissertation_subject }}</td>
                 </tr>
                 {% endfor %}
             </table>
