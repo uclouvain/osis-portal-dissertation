@@ -110,6 +110,9 @@ msgstr "Session de la défense"
 msgid "Defense year"
 msgstr "Année de la défense"
 
+msgid "Delete"
+msgstr "Supprimer"
+
 msgid "Description"
 msgstr "Description"
 
@@ -202,9 +205,6 @@ msgstr "Dernier"
 
 msgid "Level"
 msgstr "Niveau de développment du sujet"
-
-msgid "Links to offer_propositions"
-msgstr "Lien vers offer propositions"
 
 msgid "Loading..."
 msgstr "Chargement..."
@@ -321,12 +321,6 @@ msgstr ""
 "La mise-à-jour de l'état du mémoire est sur le point d'être effectuée. Le "
 "changement d'état qui sera appliqué est renseigné ci-dessous. Veuillez "
 "indiquer un message d'explication."
-
-msgid "The student added the file :"
-msgstr "L'étudiant a ajouté le fichier :"
-
-msgid "The student has deleted the file :"
-msgstr "L'étudiant a supprimé le fichier :"
 
 msgid "Title"
 msgstr "titre"

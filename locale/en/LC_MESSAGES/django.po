@@ -115,6 +115,9 @@ msgstr ""
 msgid "Defense year"
 msgstr ""
 
+msgid "Delete"
+msgstr ""
+
 msgid "Description"
 msgstr ""
 
@@ -211,11 +214,6 @@ msgstr ""
 
 msgid "Level"
 msgstr ""
-
-#, fuzzy
-#| msgid "offer_proposition"
-msgid "Links to offer_propositions"
-msgstr "Offer"
 
 msgid "Loading..."
 msgstr ""
@@ -332,12 +330,6 @@ msgstr ""
 msgid ""
 "The status update is nearly done. This update is detailed just after. Please "
 "add your explanation for this update."
-msgstr ""
-
-msgid "The student added the file :"
-msgstr ""
-
-msgid "The student has deleted the file :"
 msgstr ""
 
 msgid "Title"
