@@ -355,3 +355,11 @@
     <!-- Upload file modal -->
     {% include 'file_upload_modal.html' with form=dissertation_file_form %}
 {% endblock %}
+
+{% block script %}
+    {# Vue, Vue i18n and vue packages #}
+    {# We use 'vue.runtime.global.prod.js' https://github.com/vuejs/core/tree/main/packages/vue#which-dist-file-to-use #}
+    <script src="{% static 'js/vue.min.js' %}"></script>
+    <script src="{% static 'js/vue-i18n.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'osis_document/osis-document.umd.min.js' %}"></script>
+{% endblock script %}

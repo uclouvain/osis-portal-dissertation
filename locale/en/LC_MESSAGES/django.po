@@ -115,6 +115,9 @@ msgstr ""
 msgid "Defense year"
 msgstr ""
 
+msgid "Delete"
+msgstr ""
+
 msgid "Description"
 msgstr ""
 
@@ -211,11 +214,6 @@ msgstr ""
 
 msgid "Level"
 msgstr ""
-
-#, fuzzy
-#| msgid "offer_proposition"
-msgid "Links to offer_propositions"
-msgstr "Offer"
 
 msgid "Loading..."
 msgstr ""
@@ -334,12 +332,6 @@ msgid ""
 "add your explanation for this update."
 msgstr ""
 
-msgid "The student added the file :"
-msgstr ""
-
-msgid "The student has deleted the file :"
-msgstr ""
-
 msgid "Title"
 msgstr ""
 
@@ -426,47 +418,3 @@ msgstr ""
 
 msgid "year start"
 msgstr ""
-
-#, fuzzy
-#~| msgid "copromotor"
-#~ msgid "Promoteur"
-#~ msgstr "Co-promoter"
-
-#~ msgid "ACCOMPANIST"
-#~ msgstr "Accompanist"
-
-#~ msgid "case_study"
-#~ msgstr "Case Study"
-
-#~ msgid "CO_PROMOTEUR"
-#~ msgstr "Co-Promotor"
-
-#~ msgid "domain"
-#~ msgstr "Domain"
-
-#~ msgid "INTERNSHIP"
-#~ msgstr "Internship Master"
-
-#~ msgid "justification_confirmation_message"
-#~ msgstr "Confirm justification"
-
-#~ msgid "optional"
-#~ msgstr "Optional"
-
-#~ msgid "PRESIDENT"
-#~ msgstr "President"
-
-#~ msgid "PROMOTEUR"
-#~ msgstr "Promotor"
-
-#~ msgid "question"
-#~ msgstr "Question"
-
-#~ msgid "READER"
-#~ msgstr "Reader"
-
-#~ msgid "visibility"
-#~ msgstr "Visibility"
-
-#~ msgid "work"
-#~ msgstr "Work"
