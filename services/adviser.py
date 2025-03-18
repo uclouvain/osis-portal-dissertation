@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import logging
+from uuid import UUID
 
 import osis_dissertation_sdk
 from django.conf import settings
@@ -49,3 +50,12 @@ class AdviserService:
                 **build_mandatory_auth_headers(person),
             )
             return getattr(response, 'results', [])
+
+    @classmethod
+    def get(cls, uuid: UUID, person: Person) -> str:
+        with osis_dissertation_sdk.ApiClient(cls.CONFIGURATION) as api_client:
+            api_instance = adviser_api.AdviserApi(api_client)
+            return api_instance.adviser_detail(
+                uuid=str(uuid),
+                **build_mandatory_auth_headers(person),
+            )
