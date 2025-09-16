@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='dissertation',
             name='education_group_year_start',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='dissertations', to='base.EducationGroupYear', verbose_name='Offers'),
+            field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AlterField(
             model_name='dissertation',
