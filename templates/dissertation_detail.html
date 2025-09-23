@@ -1,5 +1,5 @@
 {% extends "bootstrap5/layout.html" %}
-{% load i18n static osis_document %}
+{% load i18n static osis_document_components %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -361,5 +361,5 @@
     {# We use 'vue.runtime.global.prod.js' https://github.com/vuejs/core/tree/main/packages/vue#which-dist-file-to-use #}
     <script src="{% static 'js/vue.min.js' %}"></script>
     <script src="{% static 'js/vue-i18n.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'osis_document/osis-document.umd.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'osis_document_components/osis-document.umd.min.js' %}"></script>
 {% endblock script %}

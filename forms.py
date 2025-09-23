@@ -26,7 +26,7 @@
 from dal import autocomplete
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from osis_document.contrib.forms import FileUploadField
+from osis_document_components.fields import FileUploadField
 
 from dissertation.models.enums import defend_periodes
 from dissertation.services.dissertation_location import DissertationLocationService
